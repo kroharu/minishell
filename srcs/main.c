@@ -43,13 +43,20 @@ int	main(int argc, char **argv, char **envp)
 	/*int	i = -1;*/
 
 	info.envp = envp;
+	info.exit_flag = 0;
 	/*while (envp[++i])*/
 		/*printf("%s\n", envp[i]);*/
 	info.token = init_args(argc, argv);
 	info.env_list = init_env(envp);
-	/*init_builtins(&info);*/
-	/*init_blt_names(&info);*/
+	init_builtins(info.builtins);
+	init_blt_names(info.blt_names);
 	execute(&info);
+	/*cd(&info, info.token);*/
+	/*pwd(&info, info.token);*/
+	/*echo(&info, info.token);*/
+	/*unset(&info, info.token);*/
+	/*env(&info, info.token);*/
+	/*ft_exit(&info, info.token);*/
 	free_all(&info);
 	return (0);
 }

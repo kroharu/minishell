@@ -6,8 +6,11 @@
 #include <stdlib.h>
 #include <sys/errno.h>
 
+#define PROMPT "💩"
 #define ER_MALLOC 1
 #define ER_EXECVE 2
+#define ER_GETCWD 3
+#define ER_CHDIR 4
 
 typedef struct s_env
 {
@@ -22,6 +25,12 @@ typedef struct s_cmd
 	struct s_cmd	*next;
 }	t_cmd;
 
+//typedef struct s_export
+//{
+	//char	**env_arr;
+	//t_env	*env_list
+//}	t_export;
+
 typedef struct s_info
 {
 	t_env	*env_list;
@@ -35,10 +44,17 @@ typedef struct s_info
 
 typedef int (*t_builtins)(t_info *, char **);
 
+int		pwd(t_info *info, char **args);
+int		echo(t_info *info, char **args);
+int		cd(t_info *info, char **args);
+int		unset(t_info *info, char **args);
+int		env(t_info *info, char **args);
+int		ft_exit(t_info *info, char **args);
 void	error(int err_code);
 int		ft_strlen(const char *str);
 int		ft_strcmp(char *s1, char *s2, char ch);
 int		ft_atoi(char *nptr);
+int		ft_isspace(char *nptr);
 char	**ft_split(char const *s, char c);
 char	*ft_strdup(const char *s1);
 char	*ft_strjoin(char *s1, char *s2);
@@ -53,6 +69,8 @@ t_cmd	*ft_cmdadd_back(t_cmd *lst, t_cmd *new_lst);
 t_env	*init_env(char	**envp);
 char	**init_args(int argc, char **argv);
 t_cmd	*init_cmd(char **token, int pipe_cnt);
+void	init_blt_names(char *blt_names[]);
+void	init_builtins(void *builtins[]);
 int		check_pipes(char **token);
 int		find_builtin(t_info *info);
 char	*find_bin(t_info *info, char **cmd);

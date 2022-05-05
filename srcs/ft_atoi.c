@@ -6,16 +6,19 @@
 /*   By: cgoth <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/05 18:50:45 by cgoth             #+#    #+#             */
-/*   Updated: 2022/05/02 14:10:28 by cgoth            ###   ########.fr       */
+/*   Updated: 2022/05/03 15:05:08 by cgoth            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static int	ft_isspace(char *nptr, int i)
+int	ft_isspace(char *nptr)
 {
+	int	i;
+
 	if (!nptr)
 		return (0);
+	i = 0;
 	while (nptr[i] == ' ' || nptr[i] == '\t' || nptr[i] == '\n' || \
 			nptr[i] == '\v' || nptr[i] == '\f' || nptr[i] == '\r')
 		i++;
@@ -28,10 +31,9 @@ int	ft_atoi(char *nptr)
 	long long	res;
 	int			sign;
 
-	i = 0;
 	sign = 1;
 	res = 0;
-	i = ft_isspace(nptr, i);
+	i = ft_isspace(nptr);
 	if (nptr && (nptr[i] == '+' || nptr[i] == '-'))
 	{
 		if (nptr[i] == '-')

@@ -1,5 +1,27 @@
 #include "minishell.h"
 
+void	init_builtins(void *builtins[])
+{
+	builtins[0] = &echo;
+	builtins[1] = &cd;
+	builtins[2] = &env;
+	/*builtins[3] = &export;*/
+	builtins[4] = &exit;
+	builtins[5] = &pwd;
+	builtins[6] = &unset;
+}
+
+void	init_blt_names(char *blt_names[])
+{
+	blt_names[0] = "echo";
+	blt_names[1] = "cd";
+	blt_names[2] = "env";
+	/*blt_names[3] = "export";*/
+	blt_names[4] = "exit";
+	blt_names[5] = "pwd";
+	blt_names[6] = "unset";
+}
+
 t_env	*init_env(char	**envp)
 {
 	t_env	*env_list;
@@ -18,13 +40,6 @@ t_env	*init_env(char	**envp)
 		free(split);
 		split = 0;
 	}
-	/*t_env	*tmp = env_list;*/
-	/*printf("\n\n");*/
-	/*while (tmp)*/
-	/*{*/
-		/*printf("%s=%s\n", tmp->key, tmp->value);*/
-		/*tmp = tmp->next;*/
-	/*}*/
 	return (env_list);
 }
 

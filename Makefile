@@ -1,14 +1,16 @@
 NAME = minishell
 CC = gcc
-CFLAGS = -Wall -Wextra -Werror -Iincludes -g #-fsanitize=address
+CFLAGS = -Wall -Wextra -Werror -Iincludes -g -fsanitize=address
 
 FILES = main.c	init.c	executor.c\
 	   	lst_utils.c	cmd_lst_utils.c\
 	   	exec_utils.c	utils.c\
-	   	ft_atoi.c	ft_split.c	errors.c
+	   	ft_atoi.c	ft_split.c	errors.c\
+		pwd.c	echo.c	cd.c	unset.c\
+		env.c	ft_exit.c
 
 VPATH = srcs/\
-		#srcs/builtins\
+		srcs/builtins\
 
 HEADERS = includes/minishell.h\
 

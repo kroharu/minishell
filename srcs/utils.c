@@ -10,14 +10,10 @@ int	ft_strlen(const char *str)
 	return (len);
 }
 
-int	ft_strcmp(char *s1, char *s2, char ch)
+int	ft_strcmp(char *str1, char *str2, char ch)
 {
-	size_t			i;
-	unsigned char	*str1;
-	unsigned char	*str2;
+	size_t	i;
 
-	str1 = (unsigned char *)s1;
-	str2 = (unsigned char *)s2;
 	if (!str1 && str2)
 		return (*str2);
 	else if (!str2 && str1)
@@ -43,7 +39,7 @@ char	*ft_strnstr(char *haystack, char *needle, size_t len)
 	i = 0;
 	if (!*needle)
 		return ((char *)haystack);
-	while (haystack[i] && i < len)
+	while (haystack && haystack[i] && i < len)
 	{
 		if (haystack[i] == needle[0])
 		{
@@ -69,12 +65,12 @@ char	*ft_strjoin(char *s1, char *s2)
 	str = malloc(sizeof(char) * (ft_strlen(s1) + ft_strlen(s2) + 1));
 	if (!str)
 		return (NULL);
-	while (s1[i])
+	while (s1 && s1[i])
 	{
 		str[i] = s1[i];
 		i++;
 	}
-	while (s2[j])
+	while (s2 && s2[j])
 	{
 		str[i + j] = s2[j];
 		j++;

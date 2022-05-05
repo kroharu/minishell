@@ -6,5 +6,7 @@ void	error(int err_code)
 		perror(" malloc");
 	if (err_code == ER_EXECVE)
 		perror(" execve");
+	if (err_code == ER_GETCWD)
+		perror(" getcwd");
 	exit(0);
 }
