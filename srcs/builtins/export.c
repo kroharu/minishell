@@ -1,140 +1,91 @@
 #include "minishell.h"
 
-char	*fill_copy(char *copy, t_env *tmp)
-{
-	int	i;
-	int	j;
-
-	i = -1;
-	while (tmp->key[++i])
-		copy[i] = tmp->key[i];
-	if (tmp->value)
-	{
-		copy[i] = '=';
-		copy[++i] = '"';
-		if (*tmp->value)
-		{
-			j = -1;
-			while (tmp->value[++j])
-				copy[++i] = tmp->value[j];
-		}
-		copy[++i] = '"';
-		i++;
-	}
-	copy[i] = '\0';
-	return (copy);
-}
-
-void	empty_args(t_env *env_list, int	eq_mode)
+static char	*check_add(char *arg, int *add_flag)
 {
 	int		i;
-	int		len;
-	char	**copy;
+	char	*tmp;
 
-	len = node_cnt(env_list);
-	copy = malloc(sizeof(char *)*(len + 1));
-	if (!copy)
-		error(ER_MALLOC);
-	copy[len] = 0;
 	i = -1;
-	while (copy[++i] && tmp)
+	while (arg[i + 1])
+		i++;
+	if (arg[i] == '+')
 	{
-		if (!tmp->value)
-			copy[i] = malloc(sizeof(char *)*(ft_strlen(tmp->key)+1));
-		else if (tmp->value && !*tmp->value)
-			copy[i] = malloc(sizeof(char *)*(ft_strlen(tmp->key)+4));
-		else
-			copy[i] = malloc(sizeof(char *)*(ft_strlen(tmp->key)+ft_strlen(tmp->value)+4));
-		if (!copy)
+		*add_flag = 1;
+		tmp = malloc(sizeof(char *)*(i + 1));
+		if (!tmp)
 			error(ER_MALLOC);
-		copy[i] = fill_copy(copy[i], tmp);
-		tmp = tmp->next;
+		tmp[i] = 0;
+		i = -1;
+		while (tmp[++i])
+			tmp[i] = arg[i];
+		free(arg);
+		return (tmp);
 	}
+	return(arg);
 }
 
-int	func()
+static void	new_var(t_info *info, char *arg)
 {
-        if (!ft_strcmp(tmp->key, var, '='))
-            cmp_flag = 1;
-        tmp = tmp->next;
-    }
-    return (cmp_flag);
-}
+	char	**split;
+	int		add_flag;
+	t_env	*tmp;
 
-int split_eq(t_env **env_list, char *args, int eq_mode)
-{
-	char    **split;
-	int     cmp_flag;
-	t_env   *tmp;
-	int     i;
-
-	if (eq_mode == 2)
-	    args = trim_first(args, '+');
-	split = ft_split(args, '=');
-	if (!split)
-	    error(ER_MALLOC);
-	cmp_flag = 0;
-	tmp = *env_list;
-	while (tmp && !cmp_flag) 
+	add_flag = 0;
+	split = ft_split(arg, '=');
+	split[0] = ft_strdup(check_add(split[0], &add_flag));
+	if (check_env(info->env_list, split[0]) == 0)
 	{
-		if (!ft_strcmp_export(tmp->var, split[0]))
-		{
-			cmp_flag = 1;
-			break ;
-		}
-		tmp = tmp->next;
+		info->env_list = ft_lstadd_back(info->env_list, \
+				ft_lstnew(ft_strdup(split[0]), ft_strdup(split[1])));
 	}
-	if (!cmp_flag)
-	    *env_list = ft_lstadd_back(*env_list, ft_lstnew(ft_strdup(split[0]), ft_strdup(split[1])));
 	else
 	{
-		if (eq_mode == 2)
+		tmp = info->env_list;
+		while (ft_strcmp(split[0], tmp->key, -1))
+			tmp = tmp->next;
+		if (add_flag)
 			tmp->value = ft_strjoin(tmp->value, split[1]);
-		else if (eq_mode == 1)
+		else
 		{
-			if (tmp->value)
-				free(tmp->value);
+			if (info->env_list->value)
+				free(info->env_list->value);
 			tmp->value = ft_strdup(split[1]);
 		}
 	}
-	i = -1;
-	while (split[++i])
-		free(split[i]);
+	free(split[0]);
+	free(split[1]);
 	free(split);
-	free(args);
-	return (0);
+}
+
+static void	parse_args(t_info *info, char **args)
+{
+	int	i;
+
+	if (!valid_args(args))
+	{
+		write(2, "not a valid identifier\n", 23);
+		info->status = 22;//EINVAL
+		return ;
+	}
+	i = 0;
+	while (args[++i])
+	{
+		if (find_eq(args[i]))
+			new_var(info, args[i]);
+		else
+		{
+			if (check_env(info->env_list, args[i]) == 0)
+				info->env_list = ft_lstadd_back(info->env_list, \
+						ft_lstnew(ft_strdup(args[i]), 0));
+		}
+	}
 }
 
 int export(t_info *info, char **args)
 {
-	int			i;
-	static int	eq_mode = 0;
-
-	/*i = -1;*/
-	/*while (args[++i])*/
-		/*printf("%s\n", args[i]);*/
 	if (!args[1])
-	{
-		copy = empty_args(info->env_list, copy);
-		eq_mode = 0;
-	}
+		empty_args(info->env_list);
 	else
-	{
-		if (!valid_args(args))
-			error("not a valid identifier");
-		i = 0;
-		while (args[++i])
-		{
-			eq_mode = find_eq(args[i]);
-			if (eq_mode)
-				split_eq(&info->env_list, ft_strdup(args[i]), eq_mode);
-			else
-			{
-				if (!check_var(info->env_list, args[i]))
-					info->env_list = ft_lstadd_back(info->env_list, \
-							ft_lstnew(ft_strdup(args[i]), 0));
-			}
-		}
-	}
-	return (0);
+		parse_args(info, args);
+	return (info->status);
 }

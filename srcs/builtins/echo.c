@@ -7,10 +7,10 @@ int	echo(t_info *info, char **args)
 
 	(void)info;
 	n_flag = 0;
-	if (args)
+	if (args[1])
 	{
-		i = -1;
-		if (!ft_strcmp(args[0], "-n", 0))
+		i = 0;
+		if (!ft_strcmp(args[1], "-n", 0))
 		{
 			n_flag = 1;
 			i++;

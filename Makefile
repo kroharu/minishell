@@ -7,7 +7,8 @@ FILES = main.c	init.c	executor.c\
 	   	exec_utils.c	utils.c\
 	   	ft_atoi.c	ft_split.c	errors.c\
 		pwd.c	echo.c	cd.c	unset.c\
-		env.c	ft_exit.c
+		env.c	ft_exit.c	export.c\
+		export_empty_args.c	export_utils.c
 
 VPATH = srcs/\
 		srcs/builtins\

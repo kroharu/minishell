@@ -40,7 +40,6 @@ void	free_all(t_info *info)
 int	main(int argc, char **argv, char **envp)
 {
 	t_info	info;
-	/*int	i = -1;*/
 
 	info.envp = envp;
 	info.exit_flag = 0;
@@ -51,6 +50,8 @@ int	main(int argc, char **argv, char **envp)
 	init_builtins(info.builtins);
 	init_blt_names(info.blt_names);
 	execute(&info);
+	/*printf("\n----------------------------------------------------------\n\n");*/
+	empty_args(info.env_list);
 	/*cd(&info, info.token);*/
 	/*pwd(&info, info.token);*/
 	/*echo(&info, info.token);*/

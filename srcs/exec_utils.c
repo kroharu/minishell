@@ -17,7 +17,14 @@ int	check_pipes(char **token)
 
 int	find_builtin(t_info *info)
 {
-	(void)info;
+	int	i;
+
+	i = -1;
+	while (++i < 7)
+	{
+		if (!ft_strcmp(info->token[0], info->blt_names[i], -1))
+			return (i);
+	}
 	return (-1);
 }
 
