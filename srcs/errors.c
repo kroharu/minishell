@@ -8,5 +8,9 @@ void	error(int err_code)
 		perror(" execve");
 	if (err_code == ER_GETCWD)
 		perror(" getcwd");
+	if (err_code == ER_CHDIR)
+		perror(" chdir");
+	if (err_code == ER_FORK)
+		perror(" fork");
 	exit(0);
 }

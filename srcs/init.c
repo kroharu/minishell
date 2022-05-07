@@ -72,7 +72,7 @@ t_cmd	*init_cmd(char **token, int pipe_cnt)
 	while (pipe_cnt-- != -1)
 	{
 	    tmp = 0;
-	    while (token[end] && ft_strcmp(token[end], "|", 0))
+	    while (token[end] && ft_strcmp(token[end], "|", -1) != 0)
 	        end++;
 	    tmp = malloc(sizeof(char *)*(end - start));
 	    if (!tmp)

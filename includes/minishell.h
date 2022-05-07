@@ -11,6 +11,7 @@
 #define ER_EXECVE 2
 #define ER_GETCWD 3
 #define ER_CHDIR 4
+#define ER_FORK 5
 
 typedef struct s_env
 {
@@ -79,7 +80,7 @@ t_cmd	*init_cmd(char **token, int pipe_cnt);
 void	init_blt_names(char *blt_names[]);
 void	init_builtins(void *builtins[]);
 int		check_pipes(char **token);
-int		find_builtin(t_info *info);
+int		find_builtin(t_info *info, char *token);
 char	*find_bin(t_info *info, char **cmd);
 void	execute(t_info *info);
 

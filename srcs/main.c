@@ -51,7 +51,7 @@ int	main(int argc, char **argv, char **envp)
 	init_blt_names(info.blt_names);
 	execute(&info);
 	/*printf("\n----------------------------------------------------------\n\n");*/
-	empty_args(info.env_list);
+	/*empty_args(info.env_list);*/
 	/*cd(&info, info.token);*/
 	/*pwd(&info, info.token);*/
 	/*echo(&info, info.token);*/

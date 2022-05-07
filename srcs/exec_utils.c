@@ -9,20 +9,20 @@ int	check_pipes(char **token)
 	pipe_cnt = 0;
 	while (token && token[++i])
 	{
-		if (!ft_strcmp(token[i], "|", 0))
+		if (ft_strcmp(token[i], "|", -1) == 0)
 			pipe_cnt++;
 	}
 	return (pipe_cnt);
 }
 
-int	find_builtin(t_info *info)
+int	find_builtin(t_info *info, char *token)
 {
 	int	i;
 
 	i = -1;
 	while (++i < 7)
 	{
-		if (!ft_strcmp(info->token[0], info->blt_names[i], -1))
+		if (ft_strcmp(token, info->blt_names[i], -1) == 0)
 			return (i);
 	}
 	return (-1);
@@ -36,7 +36,7 @@ char	*find_bin(t_info *info, char **cmd)
 	int		i;
 
 	tmp = info->env_list;
-	while (tmp && ft_strcmp(tmp->key, "PATH", 0))
+	while (tmp && ft_strcmp(tmp->key, "PATH", -1) != 0)
 		tmp = tmp->next;
 	split = ft_split(tmp->value, ':');
 	i = -1;

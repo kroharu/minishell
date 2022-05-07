@@ -47,8 +47,8 @@ static void	new_var(t_info *info, char *arg)
 			tmp->value = ft_strjoin(tmp->value, split[1]);
 		else
 		{
-			if (info->env_list->value)
-				free(info->env_list->value);
+			if (tmp->value)
+				free(tmp->value);
 			tmp->value = ft_strdup(split[1]);
 		}
 	}
