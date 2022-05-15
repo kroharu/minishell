@@ -71,18 +71,18 @@ t_cmd	*init_cmd(char **token, int pipe_cnt)
 	end = 0;
 	while (pipe_cnt-- != -1)
 	{
-	    tmp = 0;
-	    while (token[end] && ft_strcmp(token[end], "|", -1) != 0)
-	        end++;
-	    tmp = malloc(sizeof(char *)*(end - start));
-	    if (!tmp)
-	        error(ER_MALLOC);
-	    i = -1;
-	    while (++start < end)
-	        tmp[++i] = ft_strdup(token[start]);
-	    tmp[++i] = 0;
-	    cmd = ft_cmdadd_back(cmd, ft_cmdnew(tmp));
-	    end++;
+		tmp = 0;
+		while (token[end] && ft_strcmp(token[end], "|", -1) != 0)
+		    end++;
+		tmp = malloc(sizeof(char *)*(end - start));
+		if (!tmp)
+		    error(ER_MALLOC);
+		i = -1;
+		while (++start < end)
+		    tmp[++i] = ft_strdup(token[start]);
+		tmp[++i] = 0;
+		cmd = ft_cmdadd_back(cmd, ft_cmdnew(tmp));
+		end++;
 	}
 	return (cmd);
 }

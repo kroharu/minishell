@@ -5,13 +5,28 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <sys/errno.h>
+#include <sys/dir.h>
+#include <sys/types.h>
+#include <fcntl.h>
 
-#define PROMPT "💩"
+#define PROMPT "💩$"
+
 #define ER_MALLOC 1
 #define ER_EXECVE 2
 #define ER_GETCWD 3
 #define ER_CHDIR 4
 #define ER_FORK 5
+#define ER_ACCESS 6
+#define ER_DIR 7
+#define ER_OPEN 8
+#define ER_DUP 9
+
+#define REDIR_IN 128
+#define REDIR_OUT 256
+#define REDIR_OUT_APP 512
+
+#define FAIL 0
+#define SUCCESS 1
 
 typedef struct s_env
 {
@@ -23,14 +38,10 @@ typedef struct s_env
 typedef struct s_cmd
 {
 	char	**token;
+	int		redir;
+	int		redir_file;
 	struct s_cmd	*next;
 }	t_cmd;
-
-//typedef struct s_export
-//{
-	//char	**env_arr;
-	//t_env	*env_list
-//}	t_export;
 
 typedef struct s_info
 {
@@ -65,9 +76,10 @@ int		ft_atoi(char *nptr);
 int		ft_isspace(char *nptr);
 char	**ft_split(char const *s, char c);
 char	*ft_strdup(const char *s1);
-char	*ft_strjoin(char *s1, char *s2);
+char	*ft_strjoin(char *s1, char *s2, int free_mode);
 char	*ft_strnstr(char *haystack, char *needle, size_t len);
 void	free_all(t_info *info);
+void	free_split(char **split);
 t_env	*ft_lstlast(t_env *lst);
 t_env	*ft_lstnew(char *key, char *value);
 t_env	*ft_lstadd_back(t_env *lst, t_env *new_lst);
@@ -83,5 +95,6 @@ int		check_pipes(char **token);
 int		find_builtin(t_info *info, char *token);
 char	*find_bin(t_info *info, char **cmd);
 void	execute(t_info *info);
+t_cmd	*check_redir(t_cmd *cmd);
 
 #endif

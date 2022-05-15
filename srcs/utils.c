@@ -54,7 +54,7 @@ char	*ft_strnstr(char *haystack, char *needle, size_t len)
 	return (NULL);
 }
 
-char	*ft_strjoin(char *s1, char *s2)
+char	*ft_strjoin(char *s1, char *s2, int	free_mode)
 {
 	int		i;
 	int		j;
@@ -76,7 +76,8 @@ char	*ft_strjoin(char *s1, char *s2)
 		j++;
 	}
 	str[i + j] = '\0';
-	free(s1);
+	if (free_mode)
+		free(s1);
 	return (str);
 }
 

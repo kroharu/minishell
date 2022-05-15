@@ -44,7 +44,7 @@ static void	new_var(t_info *info, char *arg)
 		while (ft_strcmp(split[0], tmp->key, -1))
 			tmp = tmp->next;
 		if (add_flag)
-			tmp->value = ft_strjoin(tmp->value, split[1]);
+			tmp->value = ft_strjoin(tmp->value, split[1], 1);
 		else
 		{
 			if (tmp->value)

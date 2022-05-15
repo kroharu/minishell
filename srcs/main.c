@@ -58,6 +58,7 @@ int	main(int argc, char **argv, char **envp)
 	/*unset(&info, info.token);*/
 	/*env(&info, info.token);*/
 	/*ft_exit(&info, info.token);*/
+	while (1) ;
 	free_all(&info);
 	return (0);
 }

@@ -1,34 +1,47 @@
 #include "minishell.h"
 
-void	exec_cmd(t_info *info, char **token)
+static void	dup_hub(t_cmd *cmd)
+{
+	if (cmd->redir == REDIR_OUT || cmd->redir == REDIR_OUT_APP)
+	{
+		if (dup2(cmd->redir_file, STDOUT_FILENO) < 0)
+			error(ER_DUP);
+		close(cmd->redir_file);
+	}
+	if (cmd->redir == REDIR_IN)
+	{
+		if (dup2(cmd->redir_file, STDIN_FILENO) < 0)
+			error(ER_DUP);
+		close(cmd->redir_file);
+	}
+}
+
+static void	exec_cmd(t_info *info, t_cmd *cmd)
 {
 	int builtin;
 	pid_t	cpid;
 
-	builtin = find_builtin(info, token[0]);
-	if (builtin >= 0)
+	builtin = find_builtin(info, cmd->token[0]);
+	cpid = fork();
+	if (cpid == 0)
 	{
-	    info->status = ((t_builtins)(info->builtins[builtin]))(info, token);
-	}
-	else
-	{
-		cpid = fork();
-		if (cpid == 0)
+		dup_hub(cmd);
+		if (builtin >= 0)
+		    info->status = ((t_builtins)(info->builtins[builtin]))(info, cmd->token);
+		else
 		{
-			if (execve(find_bin(info, token), token, info->envp))
+			if (execve(find_bin(info, cmd->token), cmd->token, info->envp))
 				error(ER_EXECVE);
 		}
-		/*waitpid(-1, &info->status, 0);*/
 	}
+	waitpid(-1, &info->status, 0);
 }
 
-void	multiple_pipe(t_info *info, int pipe_cnt)
+static void	multiple_pipe(t_info *info, t_cmd *cmd)
 {
-	t_cmd   *cmd;
 	pid_t   cpid;
 	int pipefd[2];
 
-	cmd = init_cmd(info->token, pipe_cnt);
 	cpid = fork();
 	if (cpid < 0)
 		error(ER_FORK);
@@ -42,13 +55,15 @@ void	multiple_pipe(t_info *info, int pipe_cnt)
 			{
 				close(pipefd[1]);
 				dup2(pipefd[0], STDIN_FILENO);
+				close(pipefd[0]);
 				cmd = cmd->next;
 			}
 			else if (cpid > 0)
 			{
 				close(pipefd[0]);
 				dup2(pipefd[1], STDOUT_FILENO);
-				exec_cmd(info, cmd->token);
+				close(pipefd[1]);
+				exec_cmd(info, cmd);
 				waitpid(-1, &info->status, 0);
 				exit(info->status);
 			}
@@ -57,9 +72,7 @@ void	multiple_pipe(t_info *info, int pipe_cnt)
 		}
 		if (cpid == 0 && !cmd->next)
 		{
-			/*close(pipefd[0]);*/
-			/*dup2(pipefd[1], STDIN_FILENO);*/
-			exec_cmd(info, cmd->token);
+			exec_cmd(info, cmd);
 			waitpid(-1, &info->status, 0);
 			exit(info->status);
 		}
@@ -70,27 +83,14 @@ void	multiple_pipe(t_info *info, int pipe_cnt)
 
 void	execute(t_info *info)
 {
-	int	blt_index;
 	int pipe_cnt;
-	pid_t	cpid;
+	t_cmd   *cmd;
 	
 	pipe_cnt = check_pipes(info->token);
+	cmd = init_cmd(info->token, pipe_cnt);
+	cmd = check_redir(cmd);
 	if (!pipe_cnt)
-	{
-	    blt_index = find_builtin(info, info->token[0]);
-	    if (blt_index >= 0)
-	        info->status = ((t_builtins)(info->builtins[blt_index]))(info, info->token);
-	    else
-	    {
-			cpid = fork();
-			if (cpid == 0)
-			{
-	        	if (execve(find_bin(info, info->token), info->token, info->envp))
-	        		error(ER_EXECVE);
-			}
-			waitpid(-1, &info->status, 0);
-	    }
-	}
+		exec_cmd(info, cmd);
 	else
-	    multiple_pipe(info, pipe_cnt);
+		multiple_pipe(info, cmd);
 }
