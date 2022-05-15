@@ -8,7 +8,7 @@ static void	dup_hub(t_cmd *cmd)
 			error(ER_DUP);
 		close(cmd->redir_fd_out);
 	}
-	if (cmd->redir_fd_in != STDOUT_FILENO)
+	if (cmd->redir_fd_in != STDIN_FILENO)
 	{
 		if (dup2(cmd->redir_fd_in, STDIN_FILENO) < 0)
 			error(ER_DUP);
@@ -27,7 +27,10 @@ static void	exec_cmd(t_info *info, t_cmd *cmd)
 	{
 		dup_hub(cmd);
 		if (builtin >= 0)
+		{
 		    info->status = ((t_builtins)(info->builtins[builtin]))(info, cmd->token);
+			exit(info->status);
+		}
 		else
 		{
 			if (execve(find_bin(info, cmd->token), cmd->token, info->envp))
@@ -64,7 +67,7 @@ static void	multiple_pipe(t_info *info, t_cmd *cmd)
 				dup2(pipefd[1], STDOUT_FILENO);
 				close(pipefd[1]);
 				exec_cmd(info, cmd);
-				waitpid(-1, &info->status, 0);
+				/*waitpid(-1, &info->status, 0);*/
 				exit(info->status);
 			}
 			else

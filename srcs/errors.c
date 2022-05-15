@@ -2,24 +2,24 @@
 
 void	error(int err_code)
 {
-	write(1, PROMPT, ft_strlen(PROMPT));
+	write(2, PROMPT, ft_strlen(PROMPT));
 	if (err_code == ER_MALLOC)
-		perror("minishell: malloc");
+		perror(": malloc");
 	if (err_code == ER_EXECVE)
-		perror("minishell: execve");
+		perror(": execve");
 	if (err_code == ER_GETCWD)
-		perror("minishell: getcwd");
+		perror(": getcwd");
 	if (err_code == ER_CHDIR)
-		perror("minishell: chdir");
+		perror(": chdir");
 	if (err_code == ER_FORK)
-		perror("minishell: fork");
+		perror(": fork");
 	if (err_code == ER_ACCESS)
-		perror("minishell: access");
+		perror(": access");
 	if (err_code == ER_DIR)
-		perror("minishell: opendir");
+		perror(": opendir");
 	if (err_code == ER_OPEN)
-		perror("minishell: open");
+		perror(": open");
 	if (err_code == ER_DUP)
-		perror("minishell: dup2");
+		perror(": dup2");
 	exit(0);
 }
