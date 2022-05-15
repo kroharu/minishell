@@ -2,17 +2,17 @@
 
 static void	dup_hub(t_cmd *cmd)
 {
-	if (cmd->redir == REDIR_OUT || cmd->redir == REDIR_OUT_APP)
+	if (cmd->redir_fd_out != STDOUT_FILENO)
 	{
-		if (dup2(cmd->redir_file, STDOUT_FILENO) < 0)
+		if (dup2(cmd->redir_fd_out, STDOUT_FILENO) < 0)
 			error(ER_DUP);
-		close(cmd->redir_file);
+		close(cmd->redir_fd_out);
 	}
-	if (cmd->redir == REDIR_IN)
+	if (cmd->redir_fd_in != STDOUT_FILENO)
 	{
-		if (dup2(cmd->redir_file, STDIN_FILENO) < 0)
+		if (dup2(cmd->redir_fd_in, STDIN_FILENO) < 0)
 			error(ER_DUP);
-		close(cmd->redir_file);
+		close(cmd->redir_fd_in);
 	}
 }
 

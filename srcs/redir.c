@@ -14,22 +14,30 @@ static int	redir_type(char *token)
 	return (redir);
 }
 
-static int	open_file(t_cmd *tmp, char *token)
+static void	open_file(t_cmd **cmd, char *token)
 {
-	int	file;
+	t_cmd	*tmp;
 
-	file = 0;
-	if (tmp->redir_file)
-		close(tmp->redir_file);
-	if (tmp->redir == REDIR_OUT)
-		file = open(token, O_WRONLY | O_CREAT | O_TRUNC, 0644);
-	if (tmp->redir == REDIR_OUT_APP)
-		file = open(token, O_WRONLY | O_CREAT | O_APPEND, 0644);
+	tmp = *cmd;
+	if (tmp->redir == REDIR_OUT || tmp->redir == REDIR_OUT_APP)
+	{
+		if (tmp->redir_fd_out != STDOUT_FILENO)
+			close(tmp->redir_fd_out);
+		if (tmp->redir == REDIR_OUT)
+			tmp->redir_fd_out = open(token, O_WRONLY | O_CREAT | O_TRUNC, 0644);
+		else
+			tmp->redir_fd_out = open(token, O_WRONLY | O_CREAT | O_APPEND, 0644);
+		if (tmp->redir_fd_out < 0)
+			error(ER_OPEN);
+	}
 	if (tmp->redir == REDIR_IN)
-		file = open(token, O_RDONLY);
-	if (file < 0)
-		error(ER_OPEN);
-	return (file);
+	{
+		if (tmp->redir_fd_in != STDIN_FILENO)
+			close(tmp->redir_fd_in);
+		tmp->redir_fd_in = open(token, O_RDONLY);
+		if (tmp->redir_fd_in < 0)
+			error(ER_OPEN);
+	}
 }
 
 static int	redir_num(char **token)
@@ -87,16 +95,13 @@ t_cmd	*check_redir(t_cmd *cmd)
 	while (tmp)
 	{
 		i = -1;
-		tmp->redir = 0;
-		tmp->redir_file = 0;
+		tmp->redir_fd_in = STDIN_FILENO;
+		tmp->redir_fd_out = STDOUT_FILENO;
 		while (tmp->token[++i] && tmp->token[i + 1])
 		{
 			tmp->redir = redir_type(tmp->token[i]);
 			if (tmp->redir)
-			{
-				tmp->redir_file = open_file(tmp, tmp->token[i + 1]); 
-				/*tmp->token = update_token(tmp->token);*/
-			}
+				open_file(&tmp, tmp->token[i + 1]); 
 		}
 		tmp->token = update_token(tmp->token);
 		tmp = tmp->next;

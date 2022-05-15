@@ -39,7 +39,8 @@ typedef struct s_cmd
 {
 	char	**token;
 	int		redir;
-	int		redir_file;
+	int		redir_fd_in;
+	int		redir_fd_out;
 	struct s_cmd	*next;
 }	t_cmd;
 
