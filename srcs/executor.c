@@ -28,7 +28,7 @@ static void	exec_cmd(t_info *info, t_cmd *cmd)
 		dup_hub(cmd);
 		if (builtin >= 0)
 		{
-		    info->status = ((t_builtins)(info->builtins[builtin]))(info, cmd->token);
+			info->status = ((t_builtins)(info->builtins[builtin]))(info, cmd->token);
 			exit(info->status);
 		}
 		else
@@ -91,7 +91,7 @@ void	execute(t_info *info)
 	
 	pipe_cnt = check_pipes(info->token);
 	cmd = init_cmd(info->token, pipe_cnt);
-	cmd = check_redir(cmd);
+	check_redir(&cmd);
 	if (!pipe_cnt)
 		exec_cmd(info, cmd);
 	else

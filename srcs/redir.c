@@ -63,6 +63,7 @@ static char	**update_token(char **token)
 	int		i;
 	int		j;
 
+
 	i = 0;
 	while (token[i])
 		i++;
@@ -72,7 +73,7 @@ static char	**update_token(char **token)
 	new_token[i - 2*redir_num(token)] = 0;
 	i = 0;
 	j = 0;
-	while (token[i] && new_token[j])
+	while (token[i])
 	{
 		//проверка на редирект и скип совпадений
 		if (ft_strcmp(token[i], ">", -1) == 0 ||\
@@ -86,12 +87,12 @@ static char	**update_token(char **token)
 	return (new_token);
 }
 
-t_cmd	*check_redir(t_cmd *cmd)
+void	check_redir(t_cmd **cmd)
 {
 	t_cmd	*tmp;
 	int		i;
 
-	tmp = cmd;
+	tmp = *cmd;
 	while (tmp)
 	{
 		i = -1;
@@ -106,5 +107,5 @@ t_cmd	*check_redir(t_cmd *cmd)
 		tmp->token = update_token(tmp->token);
 		tmp = tmp->next;
 	}
-	return (cmd);
+	/*return (cmd);*/
 }

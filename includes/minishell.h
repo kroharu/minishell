@@ -96,6 +96,6 @@ int		check_pipes(char **token);
 int		find_builtin(t_info *info, char *token);
 char	*find_bin(t_info *info, char **cmd);
 void	execute(t_info *info);
-t_cmd	*check_redir(t_cmd *cmd);
+void	check_redir(t_cmd **cmd);
 
 #endif
