@@ -9,7 +9,7 @@ FILES = main.c	init.c	executor.c\
 		pwd.c	echo.c	cd.c	unset.c\
 		env.c	ft_exit.c	export.c\
 		export_empty_args.c	export_utils.c\
-		redir.c
+		redir.c	get_next_line.c	get_next_line_utils.c
 
 VPATH = srcs/\
 		srcs/builtins\

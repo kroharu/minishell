@@ -37,28 +37,58 @@ void	free_all(t_info *info)
 	free(info->token);
 }
 
+static int	cnt_wrds(char **av)
+{
+	int	cnt;
+	int	i;
+
+	cnt = 0;
+	i = -1;
+	while (av[++i])
+		cnt++;
+	return (cnt);
+}
+
+static void	free_token(char **token)
+{
+	int	i;
+
+	if (token)
+	{
+		i = -1;
+		while (token[++i])
+			free(token[i]);
+		free(token);
+	}
+}
+
 int	main(int argc, char **argv, char **envp)
 {
 	t_info	info;
+	int		ac;
+	char	**av;
 
+	(void)argc;
+	(void)argv;
 	info.envp = envp;
 	info.exit_flag = 0;
-	/*while (envp[++i])*/
-		/*printf("%s\n", envp[i]);*/
-	info.token = init_args(argc, argv);
+	/*info.token = init_args(argc, argv);*/
+	info.token = 0;
 	info.env_list = init_env(envp);
 	init_builtins(info.builtins);
 	init_blt_names(info.blt_names);
-	execute(&info);
-	/*printf("\n----------------------------------------------------------\n\n");*/
-	/*empty_args(info.env_list);*/
-	/*cd(&info, info.token);*/
-	/*pwd(&info, info.token);*/
-	/*echo(&info, info.token);*/
-	/*unset(&info, info.token);*/
-	/*env(&info, info.token);*/
-	/*ft_exit(&info, info.token);*/
-	/*while (1) ;*/
+	/*execute(&info);*/
+	while (1)
+	{
+		write(1, PROMPT, ft_strlen(PROMPT));
+		av = ft_split(get_next_line(0), ' ');
+		ac = cnt_wrds(av) + 1;
+		if (info.token && *(info.token))
+			free_token(info.token);
+		info.token = init_args(ac, av);
+		free_token(av);
+		execute(&info);
+	}
 	free_all(&info);
 	return (0);
 }

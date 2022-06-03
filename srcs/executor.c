@@ -22,66 +22,67 @@ static void	exec_cmd(t_info *info, t_cmd *cmd)
 	pid_t	cpid;
 
 	builtin = find_builtin(info, cmd->token[0]);
-	cpid = fork();
-	if (cpid == 0)
+	if (builtin >= 0)
 	{
 		dup_hub(cmd);
-		if (builtin >= 0)
+		info->status = ((t_builtins)(info->builtins[builtin]))(info, cmd->token);
+		/*exit(info->status);*/
+	}
+	else
+	{
+		cpid = fork();
+		if (cpid == 0)
 		{
-			info->status = ((t_builtins)(info->builtins[builtin]))(info, cmd->token);
-			exit(info->status);
-		}
-		else
-		{
+			dup_hub(cmd);
 			if (execve(find_bin(info, cmd->token), cmd->token, info->envp))
 				error(ER_EXECVE);
 		}
+		waitpid(cpid, &info->status, 0);
 	}
-	waitpid(-1, &info->status, 0);
 }
 
 static void	multiple_pipe(t_info *info, t_cmd *cmd)
 {
 	pid_t   cpid;
 	int pipefd[2];
+	int	flag;
+	int old_out;
 
-	cpid = fork();
-	if (cpid < 0)
-		error(ER_FORK);
-	else if (cpid == 0)
+	cpid = 0;
+	flag = 0;
+	while (cmd->next && cpid == 0)
 	{
-		while (cmd->next && cpid == 0)
+		pipe(pipefd);
+		cpid = fork();
+		if (cpid == 0)
 		{
-			pipe(pipefd);
-			cpid = fork();
-			if (cpid == 0)
-			{
-				close(pipefd[1]);
-				dup2(pipefd[0], STDIN_FILENO);
-				close(pipefd[0]);
-				cmd = cmd->next;
-			}
-			else if (cpid > 0)
-			{
-				close(pipefd[0]);
-				dup2(pipefd[1], STDOUT_FILENO);
-				close(pipefd[1]);
-				exec_cmd(info, cmd);
-				/*waitpid(-1, &info->status, 0);*/
-				exit(info->status);
-			}
-			else
-				error(ER_FORK);
+			dup2(pipefd[0], STDIN_FILENO);
+			close(pipefd[1]);
+			close(pipefd[0]);
+			cmd = cmd->next;
+			flag = 1;
 		}
-		if (cpid == 0 && !cmd->next)
+		else if (cpid > 0)
 		{
+			old_out = dup(STDOUT_FILENO);
+			dup2(pipefd[1], STDOUT_FILENO);
+			close(pipefd[0]);
+			close(pipefd[1]);
 			exec_cmd(info, cmd);
-			waitpid(-1, &info->status, 0);
-			exit(info->status);
+			dup2(old_out, STDOUT_FILENO);
+			close(old_out);
+			waitpid(cpid, &info->status, 0);
+			if (flag)
+				exit(info->status);
 		}
-		waitpid(-1, &info->status, 0);
+		else if (cpid < 0)
+			error(ER_FORK);
 	}
-	waitpid(-1, &info->status, 0);
+	if (cpid == 0 && flag && !cmd->next)
+	{
+		exec_cmd(info, cmd);
+		exit(info->status);
+	}
 }
 
 void	execute(t_info *info)

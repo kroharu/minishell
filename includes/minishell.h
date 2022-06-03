@@ -9,7 +9,11 @@
 #include <sys/types.h>
 #include <fcntl.h>
 
-#define PROMPT "💩$"
+#include <limits.h>
+# define DEF =
+#define BUFFER_SIZE 100
+
+#define PROMPT "💩$ "
 
 #define ER_MALLOC 1
 #define ER_EXECVE 2
@@ -22,8 +26,9 @@
 #define ER_DUP 9
 
 #define REDIR_IN 128
-#define REDIR_OUT 256
-#define REDIR_OUT_APP 512
+#define REDIR_OUT 129
+#define REDIR_OUT_APP 130
+#define HERE_DOC 131
 
 #define FAIL 0
 #define SUCCESS 1
@@ -97,5 +102,11 @@ int		find_builtin(t_info *info, char *token);
 char	*find_bin(t_info *info, char **cmd);
 void	execute(t_info *info);
 void	check_redir(t_cmd **cmd);
+//gnl
+char	*get_next_line(int fd);
+int		find_n(char *s);
+void	free_cache(char **s1);
+void	cache_gen(char **buf, char **cache, int r);
+char	*free_gnl(char **s1, char **s2);
 
 #endif

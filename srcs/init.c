@@ -52,9 +52,11 @@ char	**init_args(int argc, char **argv)
 	if (!args)
 		error(ER_MALLOC);
 	args[argc - 1] = 0;
-	i = 0;
+	/*i = 0;*/
+	i = -1;
 	while (argv[++i])
-		args[i - 1] = ft_strdup(argv[i]);
+		/*args[i - 1] = ft_strdup(argv[i]);*/
+		args[i] = ft_strdup(argv[i]);
 	return(args);
 }
 

@@ -75,7 +75,7 @@ void	empty_args(t_env *env_list)
 	copy[len] = 0;
 	i = -1;
 	tmp = env_list;
-	while (copy[++i] && tmp)
+	while (++i < len && tmp)
 	{
 		if (!tmp->value)
 			copy[i] = malloc(sizeof(char *)*(ft_strlen(tmp->key)+1));

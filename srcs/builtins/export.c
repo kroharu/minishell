@@ -79,6 +79,12 @@ static void	parse_args(t_info *info, char **args)
 						ft_lstnew(ft_strdup(args[i]), 0));
 		}
 	}
+	t_env	*tmp = info->env_list;
+	while (tmp)
+	{
+		printf("%s=%s\n", tmp->key, tmp->value);
+		tmp = tmp->next;
+	}
 }
 
 int export(t_info *info, char **args)

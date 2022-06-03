@@ -11,6 +11,8 @@ static int	redir_type(char *token)
 		redir = REDIR_OUT_APP;
 	if (ft_strcmp(token, "<", -1) == 0)
 		redir = REDIR_IN;
+	if (ft_strcmp(token, "<<", -1) == 0)
+		redir = HERE_DOC;
 	return (redir);
 }
 
@@ -107,5 +109,4 @@ void	check_redir(t_cmd **cmd)
 		tmp->token = update_token(tmp->token);
 		tmp = tmp->next;
 	}
-	/*return (cmd);*/
 }
