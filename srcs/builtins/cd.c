@@ -57,10 +57,10 @@ int	cd(t_info *info, char **args)
 {
 	char	*path;
 
-	if (!args || !args[0])
+	if (!args[1])
 		path = move_to_root(info);
 	else
-		path = args[0];
+		path = args[1];
 	if (chdir(path) != -1)
 	{
 		update_oldpwd(info);

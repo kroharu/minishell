@@ -47,6 +47,7 @@ int	valid_args(char **args)
 		while (args[i][++j] && args[i][j] != '=')
 		{
 			if (!((args[i][j] >= 'A' && args[i][j] <= 'Z') || args[i][j] == '_' || \
+						(args[i][j] >= 'a' && args[i][j] <= 'z') ||\
 						(args[i][j] >= '0' && args[i][j] <= '9' && j != 0) || \
 						(args[i][j] == '+' && args[i][j+1] && args[i][j+1] == '=')))
 				return (0);

@@ -39,13 +39,13 @@ static void	open_file(t_cmd **cmd, char *file)
         if (tmp->redir == REDIR_IN)
 		    tmp->redir_fd_in = open(file, O_RDONLY);
         else
-            tmp->redir_fd_in = open("here_doc", O_RDWR | O_CREAT | O_TRUNC, 0644);
+            tmp->redir_fd_in = open("here_doc", O_WRONLY | O_CREAT | O_TRUNC, 0644);
 		if (tmp->redir_fd_in < 0)
 			error(ER_OPEN);
 	}
 }
 
-static int	redir_num(char **token, int *hd_flag)
+static int	redir_num(char **token)
 {
 	int	i;
 	int	cnt;
@@ -56,13 +56,9 @@ static int	redir_num(char **token, int *hd_flag)
 	{
 		if (ft_strcmp(token[i], ">", -1) == 0 ||\
 				ft_strcmp(token[i], ">>", -1) == 0 ||\
+				ft_strcmp(token[i], "<<", -1) == 0 ||\
 				ft_strcmp(token[i], "<", -1) == 0)
 			cnt++;
-        if (ft_strcmp(token[i], "<<", -1) == 0)
-        {
-            cnt++;
-            *hd_flag += 1;//проверить && если что убрать +
-        }
 	}
 	return (cnt);
 }
@@ -73,18 +69,15 @@ static char	**update_token(char **token)
 	int		i;
 	int		j;
     int     cnt;
-    int     hd_flag;
 
-
-    hd_flag = 0;
 	i = 0;
 	while (token[i])
 		i++;
-    cnt = redir_num(token, &hd_flag);
-	new_token = malloc(sizeof(char *)*(i + 1 - 2*cnt/* + hd_flag*/));
+    cnt = redir_num(token);
+	new_token = malloc(sizeof(char *)*(i + 1 - 2*cnt));
 	if (!new_token)
 		error(ER_MALLOC);
-	new_token[i - 2*cnt /*+ hd_flag*/] = 0;
+	new_token[i - 2*cnt] = 0;
 	i = 0;
 	j = 0;
 	while (token[i])
@@ -95,11 +88,6 @@ static char	**update_token(char **token)
 				ft_strcmp(token[i], "<<", -1) == 0 ||\
 				ft_strcmp(token[i], "<", -1) == 0)
 			i += 2;
-        /*else if (ft_strcmp(token[i], "<<", -1) == 0)*/
-        /*{*/
-            /*new_token[j++] = ft_strdup("here_doc");*/
-			/*i += 2;*/
-        /*}*/
 		else
 			new_token[j++] = ft_strdup(token[i++]);
 	}
@@ -113,16 +101,20 @@ static void    fill_heredoc(t_cmd *cmd, char *eof)
 
     if (cmd->redir_fd_in >= 0)
     {
-        write(1, "> ", 2);
+        write(STDOUT_FILENO, "> ", 2);
         tmp = get_next_line(STDIN_FILENO);
         while (ft_strcmp(tmp, eof, -1))
         {
             tmp = ft_strjoin(tmp, "\n", 1);
             write(cmd->redir_fd_in, tmp, ft_strlen(tmp));
             free(tmp);
-            write(1, "> ", 2);
+            write(STDOUT_FILENO, "> ", 2);
             tmp = get_next_line(STDIN_FILENO);
         }
+		close(cmd->redir_fd_in);
+		cmd->redir_fd_in = open("here_doc", O_RDONLY);
+		if (cmd->redir_fd_in < 0)
+			error(ER_OPEN);
     }
 }
 

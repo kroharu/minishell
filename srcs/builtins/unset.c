@@ -20,7 +20,7 @@ int	unset(t_info *info, char **args)
 	t_env	*tmp;
 	int		i;
 
-	i = -1;
+	i = 0;
 	while (args && args[++i])
 	{
 		tmp = info->env_list;

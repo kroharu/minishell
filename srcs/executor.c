@@ -34,19 +34,19 @@ static void dup_back(int old_in, int old_out)
         error(ER_UNLINK);
 }
 
-static void chbin_env(t_info *info, char *token)
-{
-    t_env   *tmp;
+/*static void chbin_env(t_info *info, char *token)*/
+/*{*/
+    /*t_env   *tmp;*/
 
-    tmp = info->env_list;
-    while (tmp && ft_strcmp(tmp->key, "_", -1))
-        tmp = tmp->next;
-    if (tmp && token)
-    {
-        free(tmp->value);
-        tmp->value = ft_strdup(token);
-    }
-}
+    /*tmp = info->env_list;*/
+    /*while (tmp && ft_strcmp(tmp->key, "_", -1))*/
+        /*tmp = tmp->next;*/
+    /*if (tmp && token)*/
+    /*{*/
+        /*free(tmp->value);*/
+        /*tmp->value = ft_strdup(token);*/
+    /*}*/
+/*}*/
 
 static void	exec_cmd(t_info *info, t_cmd *cmd)
 {
@@ -60,30 +60,28 @@ static void	exec_cmd(t_info *info, t_cmd *cmd)
     old_out = -1;
 	if (builtin >= 0)
 	{
-        if (cmd->redir_fd_in != STDIN_FILENO || cmd->redir_fd_out != STDOUT_FILENO)
-        {
+        if (cmd->redir_fd_in != STDIN_FILENO)
             old_in = dup(STDIN_FILENO);
+		if (cmd->redir_fd_out != STDOUT_FILENO)
             old_out= dup(STDOUT_FILENO);
-        }
 		dup_hub(cmd);
-        chbin_env(info, cmd->token[0]);
+        /*chbin_env(info, cmd->token[0]);*/
 		info->status = ((t_builtins)(info->builtins[builtin]))(info, cmd->token);
         if (old_in < 0 || old_out < 0)
             dup_back(old_in, old_out);
 	}
 	else
 	{
-        chbin_env(info, find_bin(info, cmd->token));
+        /*chbin_env(info, find_bin(info, cmd->token));*/
 		cpid = fork();
 		if (cpid == 0)
 		{
 			dup_hub(cmd);
-            /*int i = -1;*/
-            /*while (cmd->token[++i])*/
-                /*printf("%s\n", cmd->token[i]);*/
 			if (execve(find_bin(info, cmd->token), cmd->token, info->envp))
 				error(ER_EXECVE);
 		}
+		if (cmd->redir_fd_in != STDIN_FILENO)
+			close(cmd->redir_fd_in);
 		waitpid(cpid, &info->status, 0);
         if (access("here_doc", F_OK) == 0 && unlink("here_doc"))
             error(ER_UNLINK);
