@@ -7,6 +7,8 @@
 #include <sys/errno.h>
 #include <sys/dir.h>
 #include <sys/types.h>
+#include <sys/wait.h>
+#include <dirent.h>
 #include <fcntl.h>
 
 #include <limits.h>
@@ -24,6 +26,7 @@
 #define ER_DIR 7
 #define ER_OPEN 8
 #define ER_DUP 9
+#define ER_UNLINK 10
 
 #define REDIR_IN 128
 #define REDIR_OUT 129

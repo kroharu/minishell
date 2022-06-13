@@ -48,18 +48,18 @@ void	free_split(char **split)
 
 static int	dir_searcher(char *split, char *cmd)
 {
-	int	len;
+	/*int	len;*/
 	DIR	*dirp;
 	struct dirent	*dp;
 
 	dirp = opendir(split);
 	if (!dirp)
 		error(ER_DIR);
-	len = ft_strlen(cmd);
+	/*len = ft_strlen(cmd);*/
 	dp = readdir(dirp);
 	while (dp)
 	{
-		if (dp->d_namlen == len && ft_strcmp(dp->d_name, cmd, -1) == 0)
+		if (/*dp->d_namlen == len && */ft_strcmp(dp->d_name, cmd, -1) == 0)
 		{
 			closedir(dirp);
 			return (SUCCESS);

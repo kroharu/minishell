@@ -108,7 +108,7 @@ char	*get_next_line(int fd)
 	int			r;
 
 	line = NULL;
-	if (fd < 0 || BUFFER_SIZE <= 0 || fd > OPEN_MAX)
+	if (fd < 0 || BUFFER_SIZE <= 0 || fd > FOPEN_MAX)
 		return (NULL);
 	r = 0;
 	buf = malloc(sizeof(char) *(BUFFER_SIZE + 1));

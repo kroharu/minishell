@@ -81,7 +81,7 @@ int	main(int argc, char **argv, char **envp)
 	while (1)
 	{
 		write(1, PROMPT, ft_strlen(PROMPT));
-		av = ft_split(get_next_line(0), ' ');
+		av = ft_split(get_next_line(STDIN_FILENO), ' ');
 		ac = cnt_wrds(av) + 1;
 		if (info.token && *(info.token))
 			free_token(info.token);
