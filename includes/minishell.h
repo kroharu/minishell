@@ -15,7 +15,7 @@
 # define DEF =
 #define BUFFER_SIZE 100
 
-#define PROMPT "💩$ "
+#define PROMPT "💩$> "
 
 #define ER_MALLOC 1
 #define ER_EXECVE 2
@@ -82,6 +82,7 @@ void	error(int err_code);
 int		ft_strlen(const char *str);
 int		ft_strcmp(char *s1, char *s2, char ch);
 int		ft_atoi(char *nptr);
+char	*ft_itoa(int n);
 int		ft_isspace(char *nptr);
 char	**ft_split(char const *s, char c);
 char	*ft_strdup(const char *s1);
@@ -105,6 +106,11 @@ int		find_builtin(t_info *info, char *token);
 char	*find_bin(t_info *info, char **cmd);
 void	execute(t_info *info);
 void	check_redir(t_cmd **cmd);
+void	update_shlvl(t_info *info/*, char *cmd, int incr*/);
+void	chbin_env(t_info *info, char *token);
+void	update_envp(t_info *info);
+void	dup_hub(t_cmd *cmd);
+void	dup_back(int old_in, int old_out);
 //gnl
 char	*get_next_line(int fd);
 int		find_n(char *s);

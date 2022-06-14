@@ -49,19 +49,6 @@ static int	cnt_wrds(char **av)
 	return (cnt);
 }
 
-static void	free_token(char **token)
-{
-	int	i;
-
-	if (token)
-	{
-		i = -1;
-		while (token[++i])
-			free(token[i]);
-		free(token);
-	}
-}
-
 int	main(int argc, char **argv, char **envp)
 {
 	t_info	info;
@@ -70,23 +57,22 @@ int	main(int argc, char **argv, char **envp)
 
 	(void)argc;
 	(void)argv;
-	info.envp = envp;
 	info.exit_flag = 0;
-	/*info.token = init_args(argc, argv);*/
 	info.token = 0;
 	info.env_list = init_env(envp);
+	update_envp(&info);
+	update_shlvl(&info);
 	init_builtins(info.builtins);
 	init_blt_names(info.blt_names);
-	/*execute(&info);*/
 	while (1)
 	{
 		write(1, PROMPT, ft_strlen(PROMPT));
 		av = ft_split(get_next_line(STDIN_FILENO), ' ');
 		ac = cnt_wrds(av) + 1;
 		if (info.token && *(info.token))
-			free_token(info.token);
+			free_split(info.token);
 		info.token = init_args(ac, av);
-		free_token(av);
+		free_split(av);
 		execute(&info);
 	}
 	free_all(&info);

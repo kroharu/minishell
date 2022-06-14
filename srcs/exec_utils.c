@@ -20,10 +20,8 @@ int	find_builtin(t_info *info, char *token)
 	int	i;
 
 	i = -1;
-	/*printf("%s\n", token);*/
 	while (++i < 7)
 	{
-		/*printf("%d\n", i);*/
 		if (ft_strcmp(token, info->blt_names[i], -1) == 0)
 			return (i);
 	}
@@ -77,10 +75,13 @@ char	*find_bin(t_info *info, char **cmd)
 	char	**split;
 	int		i;
 
-	if (cmd[0] && cmd[0][0] == '/')
+	if (cmd[0] && (cmd[0][0] == '/' || cmd[0][0] =='.'))
 	{
 		if (access(cmd[0], F_OK) == 0)
+		{
+			/*update_shlvl(info, cmd[0], UP);*/
 			return (cmd[0]);
+		}
 		error(ER_ACCESS);
 	}
 	tmp = info->env_list;

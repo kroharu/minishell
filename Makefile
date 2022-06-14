@@ -4,11 +4,12 @@ CFLAGS = -Wall -Wextra -Werror -Iincludes -g -fsanitize=address
 
 FILES = main.c	init.c	executor.c\
 	   	lst_utils.c	cmd_lst_utils.c\
-	   	exec_utils.c	utils.c\
+	   	exec_utils.c	utils.c	ft_itoa.c\
 	   	ft_atoi.c	ft_split.c	errors.c\
 		pwd.c	echo.c	cd.c	unset.c\
 		env.c	ft_exit.c	export.c\
 		export_empty_args.c	export_utils.c\
+		env_vars_utils.c	dup_utils.c\
 		redir.c	get_next_line.c	get_next_line_utils.c
 
 VPATH = srcs/\
