@@ -10,7 +10,8 @@ FILES = main.c	init.c	executor.c\
 		env.c	ft_exit.c	export.c\
 		export_empty_args.c	export_utils.c\
 		env_vars_utils.c	dup_utils.c\
-		redir.c	get_next_line.c	get_next_line_utils.c
+		redir.c	get_next_line.c	get_next_line_utils.c\
+		find_cmd.c
 
 VPATH = srcs/\
 		srcs/builtins\

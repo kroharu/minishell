@@ -2,14 +2,15 @@
 
 static void	exec_cmd(t_info *info, t_cmd *cmd)
 {
-	int builtin;
+	int		builtin;
 	pid_t	cpid;
 
 	builtin = find_builtin(info, cmd->token[0]);
+	update_envbin(info, cmd->token, builtin);
+	update_envp(info);
 	cpid = fork();
 	if (cpid == 0)
 	{
-		update_envp(info);
 		dup_hub(cmd);
 		if (builtin >= 0)
 		{
@@ -20,6 +21,7 @@ static void	exec_cmd(t_info *info, t_cmd *cmd)
 		{
 			if (execve(find_bin(info, cmd->token), cmd->token, info->envp))
 				error(ER_EXECVE);
+			exit(ER_EXECVE);
 		}
 	}
 	if (cmd->redir_fd_in != STDIN_FILENO)
@@ -37,9 +39,11 @@ static void	exec_solocmd(t_info *info, t_cmd *cmd)
 	int old_in;
 	int old_out;
 
-	builtin = find_builtin(info, cmd->token[0]);
 	old_in = -1;
 	old_out = -1;
+	builtin = find_builtin(info, cmd->token[0]);
+	update_envbin(info, cmd->token, builtin);
+	update_envp(info);
 	if (builtin >= 0)
 	{
 		if (cmd->redir_fd_in != STDIN_FILENO)
@@ -47,18 +51,15 @@ static void	exec_solocmd(t_info *info, t_cmd *cmd)
 		if (cmd->redir_fd_out != STDOUT_FILENO)
 			old_out= dup(STDOUT_FILENO);
 		dup_hub(cmd);
-		/*chbin_env(info, cmd->token[0]);*/
 		info->status = ((t_builtins)(info->builtins[builtin]))(info, cmd->token);
 		if (old_in < 0 || old_out < 0)
 			dup_back(old_in, old_out);
 	}
 	else
 	{
-		/*chbin_env(info, find_bin(info, cmd->token));*/
 		cpid = fork();
 		if (cpid == 0)
 		{
-			update_envp(info);
 			dup_hub(cmd);
 			if (execve(find_bin(info, cmd->token), cmd->token, info->envp))
 				error(ER_EXECVE);

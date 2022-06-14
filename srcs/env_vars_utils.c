@@ -16,28 +16,23 @@ static int	envlist_len(t_env *env_list)
 	return (cnt);
 }
 
-void	update_shlvl(t_info *info/*, char *cmd, int	incr*/)
+void	update_shlvl(t_info *info)
 {
 	t_env	*tmp;
 	char	*ptr;
 
-	/*if (!cmd || (cmd && !ft_strnstr(cmd, "/minishell", INT_MAX)))*/
-		/*return ;*/
 	tmp = info->env_list;
 	while (tmp && ft_strcmp(tmp->key, "SHLVL", -1))
 		tmp = tmp->next;
 	if (tmp)
 	{
 		ptr = tmp->value;
-		/*if (incr)*/
 		tmp->value = ft_itoa(ft_atoi(tmp->value) + 1);
-		/*else*/
-			/*tmp->value = ft_itoa(ft_atoi(tmp->value) - 1);*/
 		free(ptr);
 	}
 }
 
-void	chbin_env(t_info *info, char *token)
+void	update_envbin(t_info *info, char **token, int builtin)
 {
 	t_env   *tmp;
 
@@ -47,7 +42,14 @@ void	chbin_env(t_info *info, char *token)
 	if (tmp && token)
 	{
 		free(tmp->value);
-		tmp->value = ft_strdup(token);
+		if (builtin >= 0)
+			tmp->value = ft_strdup(token[0]);
+		if (builtin < 0)
+		{
+			tmp->value = find_bin(info, token);
+			if (!*tmp->value)
+				tmp->value = ft_strdup(token[0]);
+		}
 	}
 }
 
