@@ -58,6 +58,7 @@ void	update_envp(t_info *info)
 	int		cnt;
 	int		i;
 	t_env	*tmp;
+	char	*value;
 
 	tmp = info->env_list;
 	cnt = envlist_len(info->env_list);
@@ -71,7 +72,9 @@ void	update_envp(t_info *info)
 	{
 		if (tmp->key && tmp->value)
 		{
-			info->envp[i] = ft_strjoin(tmp->key, ft_strjoin("=", tmp->value, 0), 0);
+			value = ft_strjoin("=", tmp->value, 0);
+			info->envp[i] = ft_strjoin(tmp->key, value, 0);
+			free(value);
 			if (!info->envp[i++])
 			{
 				free_split(info->envp);

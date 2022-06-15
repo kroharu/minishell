@@ -119,13 +119,15 @@ static void	multiple_pipe(t_info *info, t_cmd *cmd)
 void	execute(t_info *info)
 {
 	int pipe_cnt;
-	t_cmd   *cmd;
+	/*t_cmd   *cmd;*/
 	
 	pipe_cnt = check_pipes(info->token);
-	cmd = init_cmd(info->token, pipe_cnt);
-	check_redir(&cmd);
+	info->cmd = init_cmd(info->token, pipe_cnt);
+	check_redir(&info->cmd);
 	if (!pipe_cnt)
-		exec_solocmd(info, cmd);
+		exec_solocmd(info, info->cmd);
 	else
-		multiple_pipe(info, cmd);
+		multiple_pipe(info, info->cmd);
+	free_cmd(info->cmd);
+	info->cmd = 0;
 }

@@ -11,5 +11,6 @@ int	pwd(t_info *info, char **args)
 		error(ER_GETCWD);
 	write(1, path, ft_strlen(path));
 	write(1, "\n", 1);
+	free(path);
 	return (0);
 }

@@ -1,6 +1,6 @@
 NAME = minishell
 CC = gcc
-CFLAGS = -Wall -Wextra -Werror -Iincludes -g -fsanitize=address
+CFLAGS = -Wall -Wextra -Werror -Iincludes -g #-fsanitize=address
 
 FILES = main.c	init.c	executor.c\
 	   	lst_utils.c	cmd_lst_utils.c\
@@ -11,7 +11,7 @@ FILES = main.c	init.c	executor.c\
 		export_empty_args.c	export_utils.c\
 		env_vars_utils.c	dup_utils.c\
 		redir.c	get_next_line.c	get_next_line_utils.c\
-		find_cmd.c
+		find_cmd.c	free_utils.c
 
 VPATH = srcs/\
 		srcs/builtins\

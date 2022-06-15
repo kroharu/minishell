@@ -14,19 +14,3 @@ int	check_pipes(char **token)
 	}
 	return (pipe_cnt);
 }
-
-void	free_split(char **split)
-{
-	int	i;
-
-	i = -1;
-	if (split)
-	{
-		while (split[++i])
-		{
-			if (split[i])
-				free(split[i]);
-		}
-		free(split);
-	}
-}

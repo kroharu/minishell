@@ -55,6 +55,7 @@ typedef struct s_cmd
 typedef struct s_info
 {
 	t_env	*env_list;
+	t_cmd	*cmd;
 	char	**envp;
 	char	**token;
 	void	*builtins[7];
@@ -90,6 +91,7 @@ char	*ft_strjoin(char *s1, char *s2, int free_mode);
 char	*ft_strnstr(char *haystack, char *needle, size_t len);
 void	free_all(t_info *info);
 void	free_split(char **split);
+void	free_cmd(t_cmd *cmd);
 t_env	*ft_lstlast(t_env *lst);
 t_env	*ft_lstnew(char *key, char *value);
 t_env	*ft_lstadd_back(t_env *lst, t_env *new_lst);
