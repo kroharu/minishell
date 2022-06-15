@@ -11,6 +11,8 @@ static t_env	*del_node(t_env *root, t_env *node)
 		tmp->next = node->next;
 	else
 		root = node->next;
+	free(node->key);
+	free(node->value);
 	free(node);
 	return (root);
 }

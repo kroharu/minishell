@@ -21,5 +21,7 @@ void	error(int err_code)
 		perror(": open");
 	if (err_code == ER_DUP)
 		perror(": dup2");
+	if (err_code == ER_CDMINUS)
+		write(2, ": cd: OLDPWD not set\n", 21);
 	exit(0);
 }

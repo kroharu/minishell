@@ -27,6 +27,7 @@
 #define ER_OPEN 8
 #define ER_DUP 9
 #define ER_UNLINK 10
+#define ER_CDMINUS 11
 
 #define REDIR_IN 128
 #define REDIR_OUT 129
