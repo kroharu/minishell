@@ -26,7 +26,7 @@ static void	exec_cmd(t_info *info, t_cmd *cmd)
 	}
 	if (cmd->redir_fd_in != STDIN_FILENO)
 		close(cmd->redir_fd_in);
-	if (builtin < 0)
+	/*if (builtin < 0)*/
 		waitpid(cpid, &info->status, 0);
     if (access("here_doc", F_OK) == 0 && unlink("here_doc"))
         error(ER_UNLINK);
