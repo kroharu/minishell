@@ -5,13 +5,17 @@ static void	update_oldpwd(t_info *info)
 	t_env	*tmp;
 	char	*oldpwd;
 
+	oldpwd = 0;
 	tmp = info->env_list;
-	while (tmp && ft_strcmp(tmp->key, "PWD", -1))
-		tmp = tmp->next;
-	oldpwd = ft_strdup(tmp->value);
+	/*while (tmp && ft_strcmp(tmp->key, "PWD", -1))*/
+		/*tmp = tmp->next;*/
+	tmp = find_env(tmp, "PWD");
+	if (tmp)
+		oldpwd = ft_strdup(tmp->value);
 	tmp = info->env_list;
-	while (tmp && ft_strcmp(tmp->key, "OLDPWD", -1))
-		tmp = tmp->next;
+	/*while (tmp && ft_strcmp(tmp->key, "OLDPWD", -1))*/
+		/*tmp = tmp->next;*/
+	tmp = find_env(tmp, "OLDPWD");
 	if (!tmp)
 		info->env_list = ft_lstadd_back(info->env_list, \
 				ft_lstnew("OLDPWD", oldpwd));
@@ -28,14 +32,18 @@ static void	update_pwd(t_info *info)
 	char	*path;
 
 	tmp = info->env_list;
-	while (tmp && ft_strcmp(tmp->key, "PWD", -1))
-		tmp = tmp->next;
+	/*while (tmp && ft_strcmp(tmp->key, "PWD", -1))*/
+		/*tmp = tmp->next;*/
+	tmp = find_env(tmp, "PWD");
 	path = getcwd(0, 0);
 	if (!path)
 		error(ER_GETCWD);
-	if (tmp->value)
-		free(tmp->value);
-	tmp->value = path;
+	if (tmp)
+	{
+		if (tmp->value)
+			free(tmp->value);
+		tmp->value = path;
+	}
 }
 
 static char	*move_to_root(t_info *info)
@@ -44,8 +52,9 @@ static char	*move_to_root(t_info *info)
 	t_env	*tmp;
 
 	tmp = info->env_list;
-	while (tmp && ft_strcmp(tmp->key, "HOME", -1))
-		tmp = tmp->next;
+	/*while (tmp && ft_strcmp(tmp->key, "HOME", -1))*/
+		/*tmp = tmp->next;*/
+	tmp = find_env(tmp, "HOME");
 	if (!tmp)
 		root = "/Users/cgoth";
 	else
@@ -61,8 +70,9 @@ static void	minus(t_info *info)
 
 	pwd_node = info->env_list;
 	oldpwd_node = info->env_list;
-	while (oldpwd_node && ft_strcmp(oldpwd_node->key, "OLDPWD", -1))
-		oldpwd_node = oldpwd_node->next;
+	/*while (oldpwd_node && ft_strcmp(oldpwd_node->key, "OLDPWD", -1))*/
+		/*oldpwd_node = oldpwd_node->next;*/
+	oldpwd_node = find_env(oldpwd_node, "OLDPWD");
 	if (!oldpwd_node || !oldpwd_node->value || !*oldpwd_node->value)
 		error(ER_CDMINUS);
 	old_path = ft_strdup(oldpwd_node->value);
@@ -70,8 +80,9 @@ static void	minus(t_info *info)
 	if (chdir(old_path) == -1)
 		error(ER_CHDIR);
 	printf("%s\n", old_path);
-	while (pwd_node && ft_strcmp(pwd_node->key, "PWD", -1))
-		pwd_node = pwd_node->next;
+	/*while (pwd_node && ft_strcmp(pwd_node->key, "PWD", -1))*/
+		/*pwd_node = pwd_node->next;*/
+	pwd_node = find_env(pwd_node, "PWD");
 	if (pwd_node && pwd_node->value)
 	{
 		oldpwd_node->value = ft_strdup(pwd_node->value);

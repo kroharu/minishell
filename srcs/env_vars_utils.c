@@ -37,8 +37,9 @@ void	update_envbin(t_info *info, char **token, int builtin)
 	t_env   *tmp;
 
 	tmp = info->env_list;
-	while (tmp && ft_strcmp(tmp->key, "_", -1))
-		tmp = tmp->next;
+	/*while (tmp && ft_strcmp(tmp->key, "_", -1))*/
+		/*tmp = tmp->next;*/
+	tmp = find_env(tmp, "_");
 	if (tmp && token)
 	{
 		free(tmp->value);
@@ -47,7 +48,7 @@ void	update_envbin(t_info *info, char **token, int builtin)
 		if (builtin < 0)
 		{
 			tmp->value = find_bin(info, token);
-			if (!*tmp->value)
+			if (!tmp->value)
 				tmp->value = ft_strdup(token[0]);
 		}
 	}

@@ -79,7 +79,7 @@ void	free_copy(char **copy);
 int		node_cnt(t_env *env_list);
 int		find_eq(char *arg);
 int		valid_args(char **args);
-int		check_env(t_env *env_list, char *arg);
+t_env	*find_env(t_env *env_list, char *arg);
 void	error(int err_code);
 int		ft_strlen(const char *str);
 int		ft_strcmp(char *s1, char *s2, char ch);

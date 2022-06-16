@@ -56,7 +56,7 @@ int	valid_args(char **args)
 	return (1);
 }
 
-int	check_env(t_env *env_list, char *arg)
+t_env	*find_env(t_env *env_list, char *arg)
 {
 	t_env	*tmp;
 
@@ -64,7 +64,7 @@ int	check_env(t_env *env_list, char *arg)
 	while (tmp)
 	{
 		if (ft_strcmp(tmp->key, arg, -1) == 0)
-			return (1);
+			return (tmp);
 		tmp = tmp->next;
 	}
 	return (0);

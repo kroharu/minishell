@@ -1,27 +1,29 @@
 #include "minishell.h"
 
-static char	*check_add(char *arg, int *add_flag)
+static void	check_add(char **arg, int *add_flag)
 {
 	int		i;
 	char	*tmp;
 
 	i = -1;
-	while (arg[i + 1])
+	tmp = *arg;
+	while (tmp[i + 1])
 		i++;
-	if (arg[i] == '+')
+	if (tmp[i] == '+')
 	{
 		*add_flag = 1;
-		tmp = malloc(sizeof(char *)*(i + 1));
-		if (!tmp)
-			error(ER_MALLOC);
 		tmp[i] = 0;
-		i = -1;
-		while (tmp[++i])
-			tmp[i] = arg[i];
-		free(arg);
-		return (tmp);
+		/*tmp = malloc(sizeof(char *)*(i + 1));*/
+		/*if (!tmp)*/
+			/*error(ER_MALLOC);*/
+		/*tmp[i] = 0;*/
+		/*i = -1;*/
+		/*while (tmp[++i])*/
+			/*tmp[i] = arg[i];*/
+		/*free(arg);*/
+		/*return (tmp);*/
 	}
-	return(arg);
+	/*return(arg);*/
 }
 
 static void	new_var(t_info *info, char *arg)
@@ -32,8 +34,8 @@ static void	new_var(t_info *info, char *arg)
 
 	add_flag = 0;
 	split = ft_split(arg, '=');
-	split[0] = ft_strdup(check_add(split[0], &add_flag));
-	if (check_env(info->env_list, split[0]) == 0)
+	check_add(&(split[0]), &add_flag);
+	if (find_env(info->env_list, split[0]) == 0)
 	{
 		info->env_list = ft_lstadd_back(info->env_list, \
 				ft_lstnew(ft_strdup(split[0]), ft_strdup(split[1])));
@@ -49,12 +51,16 @@ static void	new_var(t_info *info, char *arg)
 		{
 			if (tmp->value)
 				free(tmp->value);
-			tmp->value = ft_strdup(split[1]);
+			if (split[1])
+				tmp->value = ft_strdup(split[1]);
+			else
+				tmp->value = ft_strdup("");
 		}
 	}
-	free(split[0]);
-	free(split[1]);
-	free(split);
+	/*free(split[0]);*/
+	/*free(split[1]);*/
+	/*free(split);*/
+	free_split(split);
 }
 
 static void	parse_args(t_info *info, char **args)
@@ -74,17 +80,11 @@ static void	parse_args(t_info *info, char **args)
 			new_var(info, args[i]);
 		else
 		{
-			if (check_env(info->env_list, args[i]) == 0)
+			if (find_env(info->env_list, args[i]) == 0)
 				info->env_list = ft_lstadd_back(info->env_list, \
 						ft_lstnew(ft_strdup(args[i]), 0));
 		}
 	}
-	/*t_env	*tmp = info->env_list;*/
-	/*while (tmp)*/
-	/*{*/
-		/*printf("%s=%s\n", tmp->key, tmp->value);*/
-		/*tmp = tmp->next;*/
-	/*}*/
 }
 
 int export(t_info *info, char **args)
