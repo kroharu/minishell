@@ -35,23 +35,18 @@ int	find_eq(char *arg)
 	return (0);
 }
 
-int	valid_args(char **args)
+int	valid_args(char *args)
 {
 	int	i;
-	int	j;
 
-	i = 0;
-	while (args[++i])
+	i = -1;
+	while (args[++i] && args[i] != '=')
 	{
-		j = -1;
-		while (args[i][++j] && args[i][j] != '=')
-		{
-			if (!((args[i][j] >= 'A' && args[i][j] <= 'Z') || args[i][j] == '_' || \
-						(args[i][j] >= 'a' && args[i][j] <= 'z') ||\
-						(args[i][j] >= '0' && args[i][j] <= '9' && j != 0) || \
-						(args[i][j] == '+' && args[i][j+1] && args[i][j+1] == '=')))
-				return (0);
-		}
+		if (!((args[i] >= 'A' && args[i] <= 'Z') || args[i] == '_' || \
+					(args[i] >= 'a' && args[i] <= 'z') ||\
+					(args[i] >= '0' && args[i] <= '9' && i != 0) || \
+					(args[i] == '+' && args[i+1] && args[i+1] == '=')))
+			return (0);
 	}
 	return (1);
 }

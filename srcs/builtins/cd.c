@@ -70,8 +70,6 @@ static void	minus(t_info *info)
 
 	pwd_node = info->env_list;
 	oldpwd_node = info->env_list;
-	/*while (oldpwd_node && ft_strcmp(oldpwd_node->key, "OLDPWD", -1))*/
-		/*oldpwd_node = oldpwd_node->next;*/
 	oldpwd_node = find_env(oldpwd_node, "OLDPWD");
 	if (!oldpwd_node || !oldpwd_node->value || !*oldpwd_node->value)
 		error(ER_CDMINUS);
@@ -80,8 +78,6 @@ static void	minus(t_info *info)
 	if (chdir(old_path) == -1)
 		error(ER_CHDIR);
 	printf("%s\n", old_path);
-	/*while (pwd_node && ft_strcmp(pwd_node->key, "PWD", -1))*/
-		/*pwd_node = pwd_node->next;*/
 	pwd_node = find_env(pwd_node, "PWD");
 	if (pwd_node && pwd_node->value)
 	{

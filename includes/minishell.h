@@ -78,7 +78,7 @@ void	empty_args(t_env *env_list);
 void	free_copy(char **copy);
 int		node_cnt(t_env *env_list);
 int		find_eq(char *arg);
-int		valid_args(char **args);
+int		valid_args(char *args);
 t_env	*find_env(t_env *env_list, char *arg);
 void	error(int err_code);
 int		ft_strlen(const char *str);

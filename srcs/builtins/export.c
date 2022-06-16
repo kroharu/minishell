@@ -67,22 +67,24 @@ static void	parse_args(t_info *info, char **args)
 {
 	int	i;
 
-	if (!valid_args(args))
-	{
-		write(2, "not a valid identifier\n", 23);
-		info->status = 22;//EINVAL
-		return ;
-	}
 	i = 0;
 	while (args[++i])
 	{
-		if (find_eq(args[i]))
-			new_var(info, args[i]);
+		if (!valid_args(args[i]))
+		{
+			write(2, "not a valid identifier\n", 23);
+			info->status = 22;//EINVAL
+		}
 		else
 		{
-			if (find_env(info->env_list, args[i]) == 0)
-				info->env_list = ft_lstadd_back(info->env_list, \
-						ft_lstnew(ft_strdup(args[i]), 0));
+			if (find_eq(args[i]))
+				new_var(info, args[i]);
+			else
+			{
+				if (find_env(info->env_list, args[i]) == 0)
+					info->env_list = ft_lstadd_back(info->env_list, \
+							ft_lstnew(ft_strdup(args[i]), 0));
+			}
 		}
 	}
 }
