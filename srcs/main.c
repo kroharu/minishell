@@ -16,17 +16,17 @@
 
 #include "minishell.h"
 
-static int	cnt_wrds(char **av)
-{
-	int	cnt;
-	int	i;
+// static int	cnt_wrds(char **av)
+// {
+// 	int	cnt;
+// 	int	i;
 
-	cnt = 0;
-	i = -1;
-	while (av && av[++i])
-		cnt++;
-	return (cnt);
-}
+// 	cnt = 0;
+// 	i = -1;
+// 	while (av && av[++i])
+// 		cnt++;
+// 	return (cnt);
+// }
 
 static void	init_info(t_info *info, char **envp)
 {
@@ -44,9 +44,7 @@ static void	init_info(t_info *info, char **envp)
 int	main(int argc, char **argv, char **envp)
 {
 	t_info	info;
-	int		ac;
-	char	**av;
-	char	*tmp;
+	char	*input;
 
 	(void)argc;
 	(void)argv;
@@ -56,16 +54,16 @@ int	main(int argc, char **argv, char **envp)
 	{
 		signal(SIGQUIT, SIG_IGN);
 		signal(SIGINT, sigint_handler);
-		write(1, PROMPT, ft_strlen(PROMPT));
-		tmp = get_next_line(STDIN_FILENO);
-		av = ft_split(tmp, ' ');
-		ac = cnt_wrds(av) + 1;
-		if (info.token && *(info.token))
-			free_split(info.token);
-		info.token = init_args(ac, av);
-		free(tmp);
-		free_split(av);
-		execute(&info);
+		input = readline(PROMPT);
+		if (input)
+		{
+			if (info.token && *(info.token))
+				free_split(info.token);
+			add_history(input);
+			info.token = parse_input(input, &info);
+			free(input);
+			execute(&info);
+		}
 	}
 	free_all(&info);
 	return (0);

@@ -12,6 +12,9 @@
 #include <fcntl.h>
 #include <signal.h>
 
+# include <readline/readline.h>
+# include <readline/history.h>
+
 #include <limits.h>
 # define DEF =
 #define BUFFER_SIZE 100
@@ -37,6 +40,18 @@
 
 #define FAIL 0
 #define SUCCESS 1
+
+typedef struct s_list
+{
+	void			*content;
+	struct s_list	*next;
+}	t_list;
+
+typedef struct s_parser
+{
+	char	**token;
+	char	**input;
+}	t_parser;
 
 typedef struct s_env
 {
@@ -123,5 +138,28 @@ int		find_n(char *s);
 void	free_cache(char **s1);
 void	cache_gen(char **buf, char **cache, int r);
 char	*free_gnl(char **s1, char **s2);
+
+char	**parse_input(char *input, t_info *info);
+void	find_envp(t_parser *parser, int envp, t_info *info);
+int		find_dollar(char *str);
+char	**special_split(char *line, char separator, int *size);
+void	none(void *ptr);
+t_list	*get_words(char *line, char separator);
+char	*special_strchr(char *line, char c, int *quote_flags);
+void	push_word(t_list **words, char *start, char *end);
+size_t	ft_strlcpy(char *dst, const char *src, size_t dstsize);
+t_list	*ft_mylstnew(void *content);
+void	**list_to_array(t_list *list, int *arr_size);
+int		ft_lstsize(t_list *lst);
+void	ft_lstclear(t_list **lst, void (*del)(void*));
+void	free_tokens(char **tokens);
+void	ft_lstdelone(t_list *lst, void (*del)(void*));
+void	*safe_malloc(size_t size);
+void	fatal_error(void);
+void	ft_mylstadd_back(t_list **lst, t_list *new);
+t_list	*ft_mylstlast(t_list *lst);
+void	pre_find_envp(t_parser *parser, t_info *info);
+void	ft_trim_qoutes(t_parser *parser, int i);
+char	*envp_with_symbols(char *str, char *value, char *key);
 
 #endif

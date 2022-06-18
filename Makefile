@@ -2,6 +2,10 @@ NAME = minishell
 CC = gcc
 CFLAGS = -Wall -Wextra -Werror -Iincludes -g -fsanitize=address
 
+USER = ladrian
+
+FLAGS = -lreadline -ltermcap -L/Users/$(USER)/.brew/Cellar/readline/8.1.2/lib -I/Users/$(USER)/.brew/Cellar/readline/8.1.2/include
+
 FILES = main.c	init.c	executor.c\
 	   	lst_utils.c	cmd_lst_utils.c\
 	   	exec_utils.c	utils.c	ft_itoa.c\
@@ -11,7 +15,9 @@ FILES = main.c	init.c	executor.c\
 		export_empty_args.c	export_utils.c\
 		env_vars_utils.c	dup_utils.c\
 		redir.c	get_next_line.c	get_next_line_utils.c\
-		find_cmd.c	free_utils.c	signals.c
+		find_cmd.c	free_utils.c	signals.c\
+		parser_1.c	parser_2.c	parser_3.c\
+		parser_4.c	parser_5.c
 
 VPATH = srcs/\
 		srcs/builtins\
@@ -39,7 +45,7 @@ $(OBJDIR):
 	@mkdir objs/
 
 $(NAME) : $(OBJS)
-	@$(CC) $(CFLAGS) -o $(NAME) $(OBJS)
+	@$(CC) $(CFLAGS) $(FLAGS) -o $(NAME) $(OBJS)
 	@printf "\r\033[38;5;82mMINISHELL DONE\033[0m\033[K\n"
 
 clean:
