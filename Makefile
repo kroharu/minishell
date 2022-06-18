@@ -1,6 +1,6 @@
 NAME = minishell
 CC = gcc
-CFLAGS = -Wall -Wextra -Werror -Iincludes -g #-fsanitize=address
+CFLAGS = -Wall -Wextra -Werror -Iincludes -g -fsanitize=address
 
 FLAGS = -lreadline -ltermcap -L ~/.brew/Cellar/readline/8.1.2/lib -I~/.brew/Cellar/readline/8.1.2/include
 

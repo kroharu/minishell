@@ -174,5 +174,6 @@ void	ft_putstr_fd(char *s, int fd);
 int		find_pipe(char *token);
 int		ft_isdigit(int c);
 int		ft_isalpha(int c);
+int		find_reverse_pipe(char *token);
 
 #endif

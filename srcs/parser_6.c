@@ -6,7 +6,7 @@
 /*   By: ladrian <ladrian@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/18 17:29:21 by ladrian           #+#    #+#             */
-/*   Updated: 2022/06/18 17:33:32 by ladrian          ###   ########.fr       */
+/*   Updated: 2022/06/18 18:00:31 by ladrian          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,12 +46,12 @@ int	pipe_checker(char **input, int num)
 	int	j;
 
 	i = -1;
-	if (find_pipe(input[0]) || find_pipe(input[num - 1]))
+	if (find_pipe(input[0]) || find_reverse_pipe(input[num - 1]))
 		return (1);
-	while (++i < num)
+	while (++i < num - 1)
 	{
 		j = -1;
-		if (find_pipe(input[i]) && find_pipe(input[i + 1]))
+		if (find_reverse_pipe(input[i]) && find_pipe(input[i + 1]))
 			return (1);
 		while (input[i][++j + 1])
 			if (input[i][j] == '|' && input[i][j + 1] == '|')
