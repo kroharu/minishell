@@ -2,9 +2,9 @@ NAME = minishell
 CC = gcc
 CFLAGS = -Wall -Wextra -Werror -Iincludes -g -fsanitize=address
 
-USER = ladrian
+USER = cgoth
 
-FLAGS = -lreadline -ltermcap -L/Users/$(USER)/.brew/Cellar/readline/8.1.2/lib -I/Users/$(USER)/.brew/Cellar/readline/8.1.2/include
+FLAGS = -lreadline -ltermcap -L/Users/$(USER)/.brew/opt/readline/8.1.2/lib -I/Users/$(USER)/.brew/opt/readline/8.1.2/include
 
 FILES = main.c	init.c	executor.c\
 	   	lst_utils.c	cmd_lst_utils.c\
@@ -45,7 +45,7 @@ $(OBJDIR):
 	@mkdir objs/
 
 $(NAME) : $(OBJS)
-	@$(CC) $(CFLAGS) $(FLAGS) -o $(NAME) $(OBJS)
+	@$(CC) $(CFLAGS) -o $(NAME) $(OBJS) $(FLAGS)
 	@printf "\r\033[38;5;82mMINISHELL DONE\033[0m\033[K\n"
 
 clean:

@@ -132,6 +132,7 @@ void	dup_hub(t_cmd *cmd);
 void	dup_back(int old_in, int old_out);
 void	sigint_handler(int signum);
 void	quit_handler_child(int signum);
+void	sigint_empty_handler(int signum);
 //gnl
 char	*get_next_line(int fd);
 int		find_n(char *s);

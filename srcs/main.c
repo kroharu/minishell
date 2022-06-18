@@ -16,17 +16,7 @@
 
 #include "minishell.h"
 
-// static int	cnt_wrds(char **av)
-// {
-// 	int	cnt;
-// 	int	i;
-
-// 	cnt = 0;
-// 	i = -1;
-// 	while (av && av[++i])
-// 		cnt++;
-// 	return (cnt);
-// }
+t_info	*g_info;
 
 static void	init_info(t_info *info, char **envp)
 {
@@ -49,11 +39,11 @@ int	main(int argc, char **argv, char **envp)
 	(void)argc;
 	(void)argv;
 	init_info(&info, envp);
-	/*signal(SIGABRT, catch_abrt);*/
+	g_info = &info;
 	while (1)
 	{
 		signal(SIGQUIT, SIG_IGN);
-		signal(SIGINT, sigint_handler);
+		signal(SIGINT, sigint_empty_handler);
 		input = readline(PROMPT);
 		if (input)
 		{
