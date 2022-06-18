@@ -6,7 +6,7 @@
 /*   By: ladrian <ladrian@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/18 17:32:24 by ladrian           #+#    #+#             */
-/*   Updated: 2022/06/18 17:53:11 by ladrian          ###   ########.fr       */
+/*   Updated: 2022/06/18 19:32:47 by ladrian          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,4 +41,44 @@ int	find_reverse_pipe(char *token)
 			return (1);
 	}
 	return (0);
+}
+
+int	pipe_count(char *input, int *i)
+{
+	int	pipe_num;
+	int	a;
+
+	a = -1;
+	pipe_num = 0;
+	while (input[++a])
+		if (input[a] == '|')
+			pipe_num++;
+	*i = a;
+	return (pipe_num);
+}
+
+char	*split_pipes(char *input)
+{
+	int		i;
+	int		pipe_num;
+	int		j;
+	char	*pre_input;
+
+	pipe_num = pipe_count(input, &i);
+	pre_input = malloc(sizeof(char) * (i + pipe_num * 2 + 1));
+	i = -1;
+	j = -1;
+	while (input[++i])
+	{
+		if (input[i] == '|')
+		{
+			pre_input[++j] = ' ';
+			pre_input[++j] = '|';
+			pre_input[++j] = ' ';
+		}
+		else
+			pre_input[++j] = input[i];
+	}
+	pre_input[++j] = '\0';
+	return (pre_input);
 }

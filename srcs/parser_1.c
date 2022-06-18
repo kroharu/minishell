@@ -6,7 +6,7 @@
 /*   By: ladrian <ladrian@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/16 16:33:59 by ladrian           #+#    #+#             */
-/*   Updated: 2022/06/18 17:31:58 by ladrian          ###   ########.fr       */
+/*   Updated: 2022/06/18 19:32:40 by ladrian          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,11 +106,12 @@ void	find_envp(t_parser *parser, int envp, t_info *info)
 char	**parse_input(char *input, t_info *info)
 {
 	t_parser	parser;
+	char		*pre_input;
 	int			i;
-	int			j;
 
-	j = 0;
-	parser.input = special_split(input, ' ', &i);
+	pre_input = split_pipes(input);
+	parser.input = special_split(pre_input, ' ', &i);
+	free(pre_input);
 	if (parser.input)
 		parser.input[i] = NULL;
 	g_info.exit_flag = error_handler(parser.input, i);

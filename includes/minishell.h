@@ -175,5 +175,7 @@ int		find_pipe(char *token);
 int		ft_isdigit(int c);
 int		ft_isalpha(int c);
 int		find_reverse_pipe(char *token);
+char	*split_pipes(char *input);
+int		pipe_count(char *input, int *i);
 
 #endif
