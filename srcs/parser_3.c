@@ -6,7 +6,7 @@
 /*   By: ladrian <ladrian@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/16 16:41:13 by ladrian           #+#    #+#             */
-/*   Updated: 2022/06/18 11:58:07 by ladrian          ###   ########.fr       */
+/*   Updated: 2022/06/18 15:03:28 by ladrian          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,17 +16,20 @@ void	pre_find_envp(t_parser *parser, t_info *info)
 {
 	int	i;
 	int	j;
+	int	flag;
 
 	i = -1;
-	while (parser->token[++i])
+	flag = 1;
+	while (parser->input[++i])
 	{
 		j = -1;
-		while (parser->token[i][++j])
+		while (parser->input[i][++j])
 		{
-			if (parser->token[i][j] == '$' && parser->token[i][j + 1])
-			{
+			if (parser->input[i][j] == '\'')
+				flag *= -1;
+			if (parser->input[i][j] == '$' && parser->input[i][j + 1]
+					&& flag == 1)
 				find_envp(parser, i, info);
-			}
 		}
 	}
 }

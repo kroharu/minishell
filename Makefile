@@ -2,9 +2,7 @@ NAME = minishell
 CC = gcc
 CFLAGS = -Wall -Wextra -Werror -Iincludes -g -fsanitize=address
 
-USER = ladrian
-
-FLAGS = -lreadline -ltermcap -L/Users/$(USER)/.brew/Cellar/readline/8.1.2/lib -I/Users/$(USER)/.brew/Cellar/readline/8.1.2/include
+FLAGS = -lreadline -ltermcap -L ~/.brew/Cellar/readline/8.1.2/lib -I~/.brew/Cellar/readline/8.1.2/include
 
 FILES = main.c	init.c	executor.c\
 	   	lst_utils.c	cmd_lst_utils.c\

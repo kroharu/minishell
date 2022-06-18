@@ -6,7 +6,7 @@
 /*   By: ladrian <ladrian@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/16 16:33:59 by ladrian           #+#    #+#             */
-/*   Updated: 2022/06/18 13:25:01 by ladrian          ###   ########.fr       */
+/*   Updated: 2022/06/18 15:11:20 by ladrian          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,7 +61,8 @@ static char	*loop(char *arr, t_env *lst)
 		k++;
 		j++;
 	}
-	if (lst->key[j] == '\0' && (str[k] == '\0' || str[k] == ' '))
+	if (lst->key[j] == '\0' && (str[k] == '\0' || str[k] == ' '
+			|| str[k] == '\"'))
 	{
 		tmp = str;
 		if (find_dollar(str) == 0)
@@ -81,7 +82,7 @@ void	find_envp(t_parser *parser, int envp, t_info *info)
 	t_env	*lst;
 
 	lst = info->env_list;
-	arr = parser->token;
+	arr = parser->input;
 	i = -1;
 	while (arr[++i])
 	{
@@ -112,6 +113,7 @@ char	**parse_input(char *input, t_info *info)
 	parser.input = special_split(input, ' ', &i);
 	if (parser.input)
 		parser.input[i] = NULL;
+	pre_find_envp(&parser, info);
 	parser.token = malloc(sizeof(char *) * (i + 1));
 	i = -1;
 	while (parser.input[++i])
@@ -119,6 +121,5 @@ char	**parse_input(char *input, t_info *info)
 	parser.token[i] = NULL;
 	free_split(parser.input);
 	parser.input = NULL;
-	pre_find_envp(&parser, info);
 	return (parser.token);
 }
