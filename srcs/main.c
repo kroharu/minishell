@@ -23,7 +23,7 @@ static int	cnt_wrds(char **av)
 
 	cnt = 0;
 	i = -1;
-	while (av[++i])
+	while (av && av[++i])
 		cnt++;
 	return (cnt);
 }
@@ -51,16 +51,11 @@ int	main(int argc, char **argv, char **envp)
 	(void)argc;
 	(void)argv;
 	init_info(&info, envp);
-	/*info.exit_flag = 0;*/
-	/*info.token = 0;*/
-	/*info.envp = 0;*/
-	/*info.env_list = init_env(envp);*/
-	/*update_envp(&info);*/
-	/*update_shlvl(&info);*/
-	/*init_builtins(info.builtins);*/
-	/*init_blt_names(info.blt_names);*/
+	/*signal(SIGABRT, catch_abrt);*/
 	while (1)
 	{
+		signal(SIGQUIT, SIG_IGN);
+		signal(SIGINT, sigint_handler);
 		write(1, PROMPT, ft_strlen(PROMPT));
 		tmp = get_next_line(STDIN_FILENO);
 		av = ft_split(tmp, ' ');

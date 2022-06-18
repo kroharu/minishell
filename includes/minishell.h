@@ -10,6 +10,7 @@
 #include <sys/wait.h>
 #include <dirent.h>
 #include <fcntl.h>
+#include <signal.h>
 
 #include <limits.h>
 # define DEF =
@@ -114,6 +115,8 @@ void	update_envbin(t_info *info, char **token, int builtin);
 void	update_envp(t_info *info);
 void	dup_hub(t_cmd *cmd);
 void	dup_back(int old_in, int old_out);
+void	sigint_handler(int signum);
+void	quit_handler_child(int signum);
 //gnl
 char	*get_next_line(int fd);
 int		find_n(char *s);
