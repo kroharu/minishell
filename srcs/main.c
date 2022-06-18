@@ -62,7 +62,10 @@ int	main(int argc, char **argv, char **envp)
 			add_history(input);
 			info.token = parse_input(input, &info);
 			free(input);
-			execute(&info);
+			if (!g_info.exit_flag)
+				execute(&info);
+			else
+				parse_error(g_info.exit_flag);
 		}
 	}
 	free_all(&info);

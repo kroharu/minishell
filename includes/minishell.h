@@ -21,6 +21,9 @@
 
 #define PROMPT "💩$> "
 
+# define QUOTE_ERR -1
+# define PIPE_ERR -2
+
 #define ER_MALLOC 1
 #define ER_EXECVE 2
 #define ER_GETCWD 3
@@ -80,6 +83,8 @@ typedef struct s_info
 	int		status;
 	int		exit_flag;
 }	t_info;
+
+t_info		g_info;
 
 typedef int (*t_builtins)(t_info *, char **);
 
@@ -161,5 +166,13 @@ t_list	*ft_mylstlast(t_list *lst);
 void	pre_find_envp(t_parser *parser, t_info *info);
 void	ft_trim_qoutes(t_parser *parser, int i);
 char	*envp_with_symbols(char *str, char *value, char *key);
+void	parse_error(int error);
+int		error_handler(char **input, int num);
+int		pipe_checker(char **input, int num);
+void	ft_putendl_fd(char *s, int fd);
+void	ft_putstr_fd(char *s, int fd);
+int		find_pipe(char *token);
+int		ft_isdigit(int c);
+int		ft_isalpha(int c);
 
 #endif

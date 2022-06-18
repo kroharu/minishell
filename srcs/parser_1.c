@@ -6,7 +6,7 @@
 /*   By: ladrian <ladrian@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/16 16:33:59 by ladrian           #+#    #+#             */
-/*   Updated: 2022/06/18 15:11:20 by ladrian          ###   ########.fr       */
+/*   Updated: 2022/06/18 17:31:58 by ladrian          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -113,6 +113,7 @@ char	**parse_input(char *input, t_info *info)
 	parser.input = special_split(input, ' ', &i);
 	if (parser.input)
 		parser.input[i] = NULL;
+	g_info.exit_flag = error_handler(parser.input, i);
 	pre_find_envp(&parser, info);
 	parser.token = malloc(sizeof(char *) * (i + 1));
 	i = -1;

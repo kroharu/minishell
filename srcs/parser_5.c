@@ -6,7 +6,7 @@
 /*   By: ladrian <ladrian@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/16 16:44:22 by ladrian           #+#    #+#             */
-/*   Updated: 2022/06/16 16:44:41 by ladrian          ###   ########.fr       */
+/*   Updated: 2022/06/18 17:33:16 by ladrian          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,4 +78,11 @@ size_t	ft_strlcpy(char *dst, const char *src, size_t dstsize)
 	}
 	*(dst + i) = '\0';
 	return (ft_strlen(src));
+}
+
+void	ft_putstr_fd(char *s, int fd)
+{
+	if (!s)
+		return ;
+	write(fd, s, ft_strlen(s));
 }
