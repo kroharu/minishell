@@ -30,9 +30,7 @@ static void	print_copy(char **copy)
 	i = -1;
 	copy = sort_copy(copy);
 	while (copy[++i])
-	{
 		printf("declare -x %s\n", copy[i]);
-	}
 	free_copy(copy);
 }
 
@@ -64,18 +62,18 @@ static char	*fill_copy(char *copy, t_env *tmp)
 void	empty_args(t_env *env_list)
 {
 	int		i;
-	int		len;
+	/*int		len;*/
 	char	**copy;
 	t_env	*tmp;
 
-	len = node_cnt(env_list);
-	copy = malloc(sizeof(char *)*(len + 1));
+	i = node_cnt(env_list);
+	copy = malloc(sizeof(char *)*(i + 1));
 	if (!copy)
 		error(ER_MALLOC);
-	copy[len] = 0;
+	copy[i] = 0;
 	i = -1;
 	tmp = env_list;
-	while (++i < len && tmp)
+	while (copy[++i]/* < len*/ && tmp)
 	{
 		if (!tmp->value)
 			copy[i] = malloc(sizeof(char *)*(ft_strlen(tmp->key)+1));

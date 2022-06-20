@@ -41,6 +41,8 @@
 #define FAIL 0
 #define SUCCESS 1
 
+extern void		rl_replace_line(const char *a, int b);
+
 typedef struct s_list
 {
 	void			*content;
@@ -77,9 +79,15 @@ typedef struct s_info
 	char	**token;
 	void	*builtins[7];
 	char	*blt_names[7];
+	//int		flag;
+	int		last_flag;
+	pid_t	cpid;
 	int		status;
 	int		exit_flag;
 }	t_info;
+
+t_info	*g_info;
+//pid_t	g_cpid;
 
 typedef int (*t_builtins)(t_info *, char **);
 
@@ -116,7 +124,7 @@ t_cmd	*ft_cmdlast(t_cmd *lst);
 t_cmd	*ft_cmdnew(char **token);
 t_cmd	*ft_cmdadd_back(t_cmd *lst, t_cmd *new_lst);
 t_env	*init_env(char	**envp);
-char	**init_args(int argc, char **argv);
+//char	**init_args(int argc, char **argv);
 t_cmd	*init_cmd(char **token, int pipe_cnt);
 void	init_blt_names(char *blt_names[]);
 void	init_builtins(void *builtins[]);
@@ -130,9 +138,10 @@ void	update_envbin(t_info *info, char **token, int builtin);
 void	update_envp(t_info *info);
 void	dup_hub(t_cmd *cmd);
 void	dup_back(int old_in, int old_out);
-void	sigint_handler(int signum);
-void	quit_handler_child(int signum);
+void	sigquit_handler_child(int signum);
 void	sigint_empty_handler(int signum);
+void	sigint_handler_parent(int signum);
+void	sigquit_handler_parent(int signum);
 //gnl
 char	*get_next_line(int fd);
 int		find_n(char *s);

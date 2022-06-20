@@ -57,9 +57,6 @@ static void	new_var(t_info *info, char *arg)
 				tmp->value = ft_strdup("");
 		}
 	}
-	/*free(split[0]);*/
-	/*free(split[1]);*/
-	/*free(split);*/
 	free_split(split);
 }
 

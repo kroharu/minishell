@@ -35,6 +35,16 @@ static int	dir_searcher(char *split, char *cmd)
 	return (FAIL);
 }
 
+/*char	*check_abspath(cmd)*/
+/*{*/
+	/*if (cmd[0] && (cmd[0][0] == '/' || cmd[0][0] =='.'))*/
+	/*{*/
+		/*if (access(cmd[0], F_OK) == 0)*/
+			/*return (cmd[0]);*/
+		/*error(ER_ACCESS);*/
+	/*}*/
+/*}*/
+
 char	*find_bin(t_info *info, char **cmd)
 {
 	t_env	*tmp;
@@ -50,6 +60,7 @@ char	*find_bin(t_info *info, char **cmd)
 			return (cmd[0]);
 		error(ER_ACCESS);
 	}
+	/*check_absapth(cmd);*/
 	tmp = info->env_list;
 	while (tmp && ft_strcmp(tmp->key, "PATH", -1) != 0)
 		tmp = tmp->next;

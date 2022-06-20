@@ -1,6 +1,6 @@
 #include "minishell.h"
 
-void	quit_handler_child(int signum)
+void	sigquit_handler_child(int signum)
 {
 	if (signum == SIGQUIT)
 		exit(131);
@@ -17,9 +17,25 @@ void	sigint_empty_handler(int signum)
 	}
 }
 
-void	sigint_handler(int signum)
+void	sigint_handler_parent(int signum)
 {
-	(void)signum;
-	printf("SIGINT\n");//сделать глобальную структуру и тестить с ней
-	exit(0);
+	if (signum == SIGINT)
+	{
+		signal(SIGINT, SIG_IGN);
+		kill(0, SIGINT);
+		if (g_info->last_flag)
+			write(1, "\n", 1);
+	}
+}
+
+void	sigquit_handler_parent(int signum)
+{
+	if (signum == SIGQUIT)
+	{
+		signal(SIGQUIT, SIG_IGN);
+		kill(0, SIGQUIT);
+		if (g_info->last_flag)
+			write(1, "Quit: 3\n", 9);
+		g_info->last_flag = 0;
+	}
 }

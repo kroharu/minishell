@@ -17,7 +17,6 @@ void	free_cmd(t_cmd *cmd)
 void	free_all(t_info *info)
 {
 	t_env	*tmp;
-	/*int		i;*/
 
 	while (info->env_list)
 	{
@@ -29,10 +28,6 @@ void	free_all(t_info *info)
 		info->env_list = info->env_list->next;
 		free(tmp);
 	}
-	/*i = -1;*/
-	/*while (info->token && info->token[++i])*/
-		/*free(info->token[i]);*/
-	/*free(info->token);*/
 	free_split(info->token);
 	free_split(info->envp);
 }

@@ -4,7 +4,10 @@ CFLAGS = -Wall -Wextra -Werror -Iincludes -g -fsanitize=address
 
 USER = cgoth
 
-FLAGS = -lreadline -ltermcap -L/Users/$(USER)/.brew/opt/readline/8.1.2/lib -I/Users/$(USER)/.brew/opt/readline/8.1.2/include
+READCLUDE	= -I~/.brew/Cellar/readline/8.1.2/include
+
+READLINE	= -lreadline -L ~/.brew/Cellar/readline/8.1.2/lib $(READCLUDE)
+#FLAGS = -lreadline -ltermcap -L ~/.brew/opt/readline/lib -I ~/.brew/opt/readline/include
 
 FILES = main.c	init.c	executor.c\
 	   	lst_utils.c	cmd_lst_utils.c\
@@ -33,7 +36,7 @@ NB = $(words $(FILES))
 INDEX = 0
 
 objs/%.o : %.c Makefile $(HEADERS)
-	@$(CC) $(CFLAGS) -c $< -o $@
+	@$(CC) $(CFLAGS) -c  $(READCLUDE) $< -o $@ 
 	@$(eval PERCENT=$(shell expr $(INDEX) '*' 100 / $(NB)))
 	@$(eval PROGRESS=$(shell expr $(INDEX) '*' 30 / $(NB)))
 	@printf "\r\033[38;5;87mMAKE MINISHELL %2d%%\033[0m \033[48;5;32m%*s\033[0m %s\033[K" $(PERCENT) $(PROGRESS) "" $(notdir $@)
@@ -45,7 +48,7 @@ $(OBJDIR):
 	@mkdir objs/
 
 $(NAME) : $(OBJS)
-	@$(CC) $(CFLAGS) -o $(NAME) $(OBJS) $(FLAGS)
+	@$(CC) $(CFLAGS) -o $(NAME) $(OBJS) $(READLINE)
 	@printf "\r\033[38;5;82mMINISHELL DONE\033[0m\033[K\n"
 
 clean:

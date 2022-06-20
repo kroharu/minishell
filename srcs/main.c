@@ -16,7 +16,6 @@
 
 #include "minishell.h"
 
-t_info	*g_info;
 
 static void	init_info(t_info *info, char **envp)
 {
@@ -24,6 +23,8 @@ static void	init_info(t_info *info, char **envp)
 	info->token = 0;
 	info->envp = 0;
 	info->cmd = 0;
+	info->cpid = 0;
+	info->last_flag = 0;
 	info->env_list = init_env(envp);
 	update_envp(info);
 	update_shlvl(info);
@@ -40,11 +41,13 @@ int	main(int argc, char **argv, char **envp)
 	(void)argv;
 	init_info(&info, envp);
 	g_info = &info;
-	while (1)
+	while (info.exit_flag == 0)
 	{
 		signal(SIGQUIT, SIG_IGN);
+		signal(SIGPIPE, SIG_IGN);
 		signal(SIGINT, sigint_empty_handler);
 		input = readline(PROMPT);
+		signal(SIGINT, sigint_handler_parent);
 		if (input)
 		{
 			if (info.token && *(info.token))
