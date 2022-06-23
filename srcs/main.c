@@ -44,7 +44,7 @@ int	main(int argc, char **argv, char **envp)
 	while (info.exit_flag == 0)
 	{
 		signal(SIGQUIT, SIG_IGN);
-		signal(SIGPIPE, SIG_IGN);
+		/*signal(SIGPIPE, SIG_IGN);*/
 		signal(SIGINT, sigint_empty_handler);
 		input = readline(PROMPT);
 		signal(SIGINT, sigint_handler_parent);

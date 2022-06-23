@@ -68,6 +68,7 @@ typedef struct s_cmd
 	int		redir;
 	int		redir_fd_in;
 	int		redir_fd_out;
+	int		pipefd[2];
 	struct s_cmd	*next;
 }	t_cmd;
 
@@ -79,7 +80,6 @@ typedef struct s_info
 	char	**token;
 	void	*builtins[7];
 	char	*blt_names[7];
-	//int		flag;
 	int		last_flag;
 	pid_t	cpid;
 	int		status;
@@ -87,7 +87,6 @@ typedef struct s_info
 }	t_info;
 
 t_info	*g_info;
-//pid_t	g_cpid;
 
 typedef int (*t_builtins)(t_info *, char **);
 
@@ -132,6 +131,7 @@ int		check_pipes(char **token);
 int		find_builtin(t_info *info, char *token);
 char	*find_bin(t_info *info, char **cmd);
 void	execute(t_info *info);
+void	multiple_pipe(t_info *info, t_cmd *cmd);//try 2 fix signals
 void	check_redir(t_cmd **cmd);
 void	update_shlvl(t_info *info);
 void	update_envbin(t_info *info, char **token, int builtin);
