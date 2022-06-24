@@ -10,7 +10,7 @@ void	sigint_empty_handler(int signum)
 {
 	if (signum == SIGINT)
 	{
-		printf("\n"); // Move to a new line
+		printf("%s \b\b    \n", PROMPT); // Move to a new line
 		rl_on_new_line(); // Regenerate the prompt on a newline
 		rl_replace_line("", 0); // Clear the previous text
 		rl_redisplay();

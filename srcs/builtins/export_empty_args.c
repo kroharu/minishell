@@ -59,32 +59,41 @@ static char	*fill_copy(char *copy, t_env *tmp)
 	return (copy);
 }
 
-void	empty_args(t_env *env_list)
+static void	malloc_copies(t_env *env_list, char **copy, int len)
 {
-	int		i;
-	/*int		len;*/
-	char	**copy;
 	t_env	*tmp;
+	int		i;
 
-	i = node_cnt(env_list);
-	copy = malloc(sizeof(char *)*(i + 1));
-	if (!copy)
-		error(ER_MALLOC);
-	copy[i] = 0;
-	i = -1;
 	tmp = env_list;
-	while (copy[++i]/* < len*/ && tmp)
+	i = -1;
+	while (++i < len && tmp)
 	{
 		if (!tmp->value)
 			copy[i] = malloc(sizeof(char *)*(ft_strlen(tmp->key)+1));
 		else if (tmp->value && !*tmp->value)
 			copy[i] = malloc(sizeof(char *)*(ft_strlen(tmp->key)+4));
 		else
-			copy[i] = malloc(sizeof(char *)*(ft_strlen(tmp->key)+ft_strlen(tmp->value)+4));
+		{
+			copy[i] = malloc(sizeof(char *)*(ft_strlen(tmp->key) + \
+						ft_strlen(tmp->value) + 4));
+		}
 		if (!copy)
-			error(ER_MALLOC);
+			error_exit(ER_MALLOC);
 		copy[i] = fill_copy(copy[i], tmp);
 		tmp = tmp->next;
 	}
+}
+
+void	empty_args(t_env *env_list)
+{
+	int		len;
+	char	**copy;
+
+	len = node_cnt(env_list);
+	copy = malloc(sizeof(char *)*(len + 1));
+	if (!copy)
+		error_exit(ER_MALLOC);
+	copy[len] = 0;
+	malloc_copies(env_list, copy, len);
 	print_copy(copy);
 }

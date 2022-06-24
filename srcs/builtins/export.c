@@ -1,6 +1,6 @@
 #include "minishell.h"
 
-static void	check_add(char **arg, int *add_flag)
+static int	check_add(char **arg)
 {
 	int		i;
 	char	*tmp;
@@ -11,51 +11,43 @@ static void	check_add(char **arg, int *add_flag)
 		i++;
 	if (tmp[i] == '+')
 	{
-		*add_flag = 1;
 		tmp[i] = 0;
-		/*tmp = malloc(sizeof(char *)*(i + 1));*/
-		/*if (!tmp)*/
-			/*error(ER_MALLOC);*/
-		/*tmp[i] = 0;*/
-		/*i = -1;*/
-		/*while (tmp[++i])*/
-			/*tmp[i] = arg[i];*/
-		/*free(arg);*/
-		/*return (tmp);*/
+		return (1);
 	}
-	/*return(arg);*/
+	return (0);
+}
+
+static void	var_exists(t_info *info, char **split, int add_flag)
+{
+	t_env	*tmp;
+
+	tmp = find_env(info->env_list, split[0]); 
+	if (add_flag)
+		tmp->value = ft_strjoin(tmp->value, split[1], 1);
+	else
+	{
+		if (tmp->value)
+			free(tmp->value);
+		if (split[1])
+			tmp->value = ft_strdup(split[1]);
+		else
+			tmp->value = ft_strdup("");
+	}
 }
 
 static void	new_var(t_info *info, char *arg)
 {
 	char	**split;
 	int		add_flag;
-	t_env	*tmp;
 
-	add_flag = 0;
 	split = ft_split(arg, '=');
-	check_add(&(split[0]), &add_flag);
-	if (find_env(info->env_list, split[0]) == 0)
+	add_flag = check_add(&(split[0]));
+	if (find_env(info->env_list, split[0]))
+		var_exists(info, split, add_flag);
+	else
 	{
 		info->env_list = ft_lstadd_back(info->env_list, \
 				ft_lstnew(ft_strdup(split[0]), ft_strdup(split[1])));
-	}
-	else
-	{
-		tmp = info->env_list;
-		while (ft_strcmp(split[0], tmp->key, -1))
-			tmp = tmp->next;
-		if (add_flag)
-			tmp->value = ft_strjoin(tmp->value, split[1], 1);
-		else
-		{
-			if (tmp->value)
-				free(tmp->value);
-			if (split[1])
-				tmp->value = ft_strdup(split[1]);
-			else
-				tmp->value = ft_strdup("");
-		}
 	}
 	free_split(split);
 }

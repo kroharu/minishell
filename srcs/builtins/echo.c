@@ -24,5 +24,7 @@ int	echo(t_info *info, char **args)
 		if (!n_flag)
 			write(1, "\n", 1);
 	}
+	else
+		write(1, "\n", 1);
 	return (0);
 }

@@ -104,6 +104,7 @@ int		find_eq(char *arg);
 int		valid_args(char *args);
 t_env	*find_env(t_env *env_list, char *arg);
 void	error(int err_code);
+void	error_exit(int cmd);
 int		ft_strlen(const char *str);
 int		ft_strcmp(char *s1, char *s2, char ch);
 int		ft_atoi(char *nptr);
@@ -132,6 +133,7 @@ int		find_builtin(t_info *info, char *token);
 char	*find_bin(t_info *info, char **cmd);
 void	execute(t_info *info);
 void	multiple_pipe(t_info *info, t_cmd *cmd);//try 2 fix signals
+void	exec_cmd(t_info *info, t_cmd *cmd);
 void	check_redir(t_cmd **cmd);
 void	update_shlvl(t_info *info);
 void	update_envbin(t_info *info, char **token, int builtin);

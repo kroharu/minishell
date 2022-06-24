@@ -6,7 +6,7 @@
 /*   By: cgoth <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/08 13:49:00 by cgoth             #+#    #+#             */
-/*   Updated: 2022/06/13 20:16:58 by cgoth            ###   ########.fr       */
+/*   Updated: 2022/06/24 16:15:09 by cgoth            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,7 +51,8 @@ char	*ft_itoa(int n)
 		i++;
 	str = malloc(sizeof(char) * (i + 1));
 	if (!str)
-		return (NULL);
+		/*return (NULL);*/
+		error_exit(ER_MALLOC);
 	if (n < 0)
 	{
 		recurs_otr((unsigned int)(n * (-1)), str, i - 1);

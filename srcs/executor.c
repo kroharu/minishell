@@ -53,7 +53,9 @@ static void	exec_solocmd(t_info *info, t_cmd *cmd)
 	else
 	{
 		info->cpid = fork();
-		if (info->cpid == 0)
+		if (info->cpid == -1)
+			error_exit(ER_FORK);
+		else if (info->cpid == 0)
 		{
 			signal(SIGINT, SIG_DFL);
 			signal(SIGQUIT, sigquit_handler_child);
@@ -64,8 +66,9 @@ static void	exec_solocmd(t_info *info, t_cmd *cmd)
 		if (cmd->redir_fd_in != STDIN_FILENO)
 			close(cmd->redir_fd_in);
 		waitpid(info->cpid, &info->status, 0);
+		info->status = WEXITSTATUS(info->status);
         if (access("here_doc", F_OK) == 0 && unlink("here_doc"))
-            error(ER_UNLINK);
+            error_exit(ER_UNLINK);
 	}
 }
 
@@ -73,6 +76,8 @@ void	execute(t_info *info)
 {
 	int pipe_cnt;
 	
+	if (info->token && ft_strcmp(info->token[0], "\0", -1) == 0)
+		return ;
 	pipe_cnt = check_pipes(info->token);
 	info->cmd = init_cmd(info->token, pipe_cnt);
 	check_redir(&info->cmd);

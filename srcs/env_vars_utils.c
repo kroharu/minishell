@@ -37,12 +37,11 @@ void	update_envbin(t_info *info, char **token, int builtin)
 	t_env   *tmp;
 
 	tmp = info->env_list;
-	/*while (tmp && ft_strcmp(tmp->key, "_", -1))*/
-		/*tmp = tmp->next;*/
 	tmp = find_env(tmp, "_");
 	if (tmp && token)
 	{
-		free(tmp->value);
+		if (tmp->value /*&& *tmp->value*/)
+			free(tmp->value);
 		if (builtin >= 0)
 			tmp->value = ft_strdup(token[0]);
 		if (builtin < 0)
@@ -66,7 +65,7 @@ void	update_envp(t_info *info)
 	free_split(info->envp);
 	info->envp = malloc(sizeof(char *) * (cnt + 1));
 	if (!info->envp)
-		error(ER_MALLOC);
+		error_exit(ER_MALLOC);
 	info->envp[cnt] = 0;
 	i = 0;
 	while (tmp && i < cnt)
@@ -79,7 +78,7 @@ void	update_envp(t_info *info)
 			if (!info->envp[i++])
 			{
 				free_split(info->envp);
-				error(ER_MALLOC);
+				error_exit(ER_MALLOC);
 			}
 		}
 		tmp = tmp->next;

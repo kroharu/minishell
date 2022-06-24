@@ -6,7 +6,7 @@ void	init_builtins(void *builtins[])
 	builtins[1] = &cd;
 	builtins[2] = &env;
 	builtins[3] = &export;
-	builtins[4] = &exit;
+	builtins[4] = &ft_exit;
 	builtins[5] = &pwd;
 	builtins[6] = &unset;
 }
@@ -35,9 +35,10 @@ t_env	*init_env(char	**envp)
 		split = ft_split(envp[i], '=');
 		env_list = ft_lstadd_back(env_list, \
 				ft_lstnew(ft_strdup(split[0]), ft_strdup(split[1])));
-		free(split[0]);
-		free(split[1]);
-		free(split);
+		/*free(split[0]);*/
+		/*free(split[1]);*/
+		/*free(split);*/
+		free_split(split);
 		split = 0;
 	}
 	return (env_list);
@@ -76,7 +77,7 @@ t_cmd	*init_cmd(char **token, int pipe_cnt)
 		    end++;
 		tmp = malloc(sizeof(char *)*(end - start));
 		if (!tmp)
-		    error(ER_MALLOC);
+		    error_exit(ER_MALLOC);
 		i = -1;
 		while (++start < end)
 		    tmp[++i] = ft_strdup(token[start]);

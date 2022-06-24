@@ -32,6 +32,18 @@ static void	init_info(t_info *info, char **envp)
 	init_blt_names(info->blt_names);
 }
 
+int	eof_detect(char *input)
+{
+	if (!input)
+	{
+		write(STDOUT_FILENO, "exit\n", 5);
+		return (1);
+	}
+	return (0);
+}
+
+//обработать < и >
+
 int	main(int argc, char **argv, char **envp)
 {
 	t_info	info;
@@ -44,9 +56,10 @@ int	main(int argc, char **argv, char **envp)
 	while (info.exit_flag == 0)
 	{
 		signal(SIGQUIT, SIG_IGN);
-		/*signal(SIGPIPE, SIG_IGN);*/
 		signal(SIGINT, sigint_empty_handler);
 		input = readline(PROMPT);
+		if (eof_detect(input))
+			break ;
 		signal(SIGINT, sigint_handler_parent);
 		if (input)
 		{
@@ -59,5 +72,5 @@ int	main(int argc, char **argv, char **envp)
 		}
 	}
 	free_all(&info);
-	return (0);
+	return (info.status);
 }

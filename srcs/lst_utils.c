@@ -16,7 +16,7 @@ t_env	*ft_lstnew(char *key, char *value)
 
 	new_elem = (t_env *)malloc(sizeof(t_env));
 	if (!new_elem)
-		error(ER_MALLOC);
+		error_exit(ER_MALLOC);
 	new_elem->key = key;
 	new_elem->value = value;
 	new_elem->next = NULL;
