@@ -6,7 +6,7 @@ static void	exec_cmd(t_info *info, t_cmd *cmd)
 	pid_t	cpid;
 
 	builtin = find_builtin(info, cmd->token[0]);
-	update_envbin(info, cmd->token, builtin);
+	//update_envbin(info, cmd->token, builtin);
 	update_envp(info);
 	cpid = fork();
 	if (cpid == 0)
@@ -42,7 +42,7 @@ static void	exec_solocmd(t_info *info, t_cmd *cmd)
 	old_in = -1;
 	old_out = -1;
 	builtin = find_builtin(info, cmd->token[0]);
-	update_envbin(info, cmd->token, builtin);
+	//update_envbin(info, cmd->token, builtin);
 	update_envp(info);
 	if (builtin >= 0)
 	{

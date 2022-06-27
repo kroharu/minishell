@@ -6,7 +6,7 @@
 /*   By: ladrian <ladrian@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/16 16:33:59 by ladrian           #+#    #+#             */
-/*   Updated: 2022/06/18 19:32:40 by ladrian          ###   ########.fr       */
+/*   Updated: 2022/06/27 14:45:10 by ladrian          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,22 +16,25 @@ void	ft_trim_qoutes(t_parser *parser, int i)
 {
 	int	j;
 	int	k;
+	int	flag;
 
+	flag = 1;
 	parser->token[i] = malloc(sizeof(char)
 			* (ft_strlen(parser->input[i]) + 1));
-	k = 0;
-	j = 0;
-	while (parser->input[i][j])
-	{		
-		if (parser->input[i][j] == '\"' || parser->input[i][j] == '\'')
-			j++;
-		else
-		{
-			parser->token[i][k] = parser->input[i][j];
-			j++;
-			k++;
-		}
+	k = -1;
+	j = -1;
+	if (parser->input[i][0] == '\"' || parser->input[i][0] == '\'')
+	{
+		flag = -1;
+		j++;
 	}
+	if (flag == 1)
+		while (parser->input[i][++j])
+			parser->token[i][++k] = parser->input[i][j];
+	else
+		while (parser->input[i][++j + 1])
+			parser->token[i][++k] = parser->input[i][j];
+	k++;
 	parser->token[i][k] = '\0';
 }
 
@@ -62,7 +65,7 @@ static char	*loop(char *arr, t_env *lst)
 		j++;
 	}
 	if (lst->key[j] == '\0' && (str[k] == '\0' || str[k] == ' '
-			|| str[k] == '\"'))
+			|| str[k] == '\"' || str[k] == '\''))
 	{
 		tmp = str;
 		if (find_dollar(str) == 0)
