@@ -136,7 +136,7 @@ void	multiple_pipe(t_info *info, t_cmd *cmd);//try 2 fix signals
 void	exec_cmd(t_info *info, t_cmd *cmd);
 void	check_redir(t_cmd **cmd);
 void	update_shlvl(t_info *info);
-void	update_envbin(t_info *info, char **token, int builtin);
+void	update_envbin(t_info *info, char **token);
 void	update_envp(t_info *info);
 void	dup_hub(t_cmd *cmd);
 void	dup_back(int old_in, int old_out);

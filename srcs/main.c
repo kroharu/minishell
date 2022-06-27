@@ -42,7 +42,7 @@ int	eof_detect(char *input)
 	return (0);
 }
 
-//обработать < и >
+//обработать < и > и ctrl+c в дочке минишелл
 
 int	main(int argc, char **argv, char **envp)
 {

@@ -36,7 +36,7 @@ static void	exec_solocmd(t_info *info, t_cmd *cmd)
 	old_out = -1;
 	info->last_flag = 1;
 	builtin = find_builtin(info, cmd->token[0]);
-	update_envbin(info, cmd->token, builtin);
+	update_envbin(info, cmd->token);
 	update_envp(info);
 	signal(SIGQUIT, sigquit_handler_parent);
 	if (builtin >= 0)

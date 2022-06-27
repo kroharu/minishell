@@ -24,7 +24,7 @@ void	exec_cmd(t_info *info, t_cmd *cmd)
 	pid_t	cpid;
 
 	builtin = find_builtin(info, cmd->token[0]);
-	update_envbin(info, cmd->token, builtin);
+	update_envbin(info, cmd->token);
 	update_envp(info);
 	cpid = fork();
 	if (cpid == -1)

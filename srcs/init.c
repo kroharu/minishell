@@ -35,9 +35,6 @@ t_env	*init_env(char	**envp)
 		split = ft_split(envp[i], '=');
 		env_list = ft_lstadd_back(env_list, \
 				ft_lstnew(ft_strdup(split[0]), ft_strdup(split[1])));
-		/*free(split[0]);*/
-		/*free(split[1]);*/
-		/*free(split);*/
 		free_split(split);
 		split = 0;
 	}

@@ -32,24 +32,19 @@ void	update_shlvl(t_info *info)
 	}
 }
 
-void	update_envbin(t_info *info, char **token, int builtin)
+void	update_envbin(t_info *info, char **token)
 {
 	t_env   *tmp;
+	char	*path;
 
+	path = 0;
 	tmp = info->env_list;
 	tmp = find_env(tmp, "_");
 	if (tmp && token)
 	{
 		if (tmp->value /*&& *tmp->value*/)
 			free(tmp->value);
-		if (builtin >= 0)
-			tmp->value = ft_strdup(token[0]);
-		if (builtin < 0)
-		{
-			tmp->value = find_bin(info, token);
-			if (!tmp->value)
-				tmp->value = ft_strdup(token[0]);
-		}
+		tmp->value = ft_strdup(token[0]);
 	}
 }
 
