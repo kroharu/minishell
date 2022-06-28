@@ -78,7 +78,7 @@ static void	malloc_copies(t_env *env_list, char **copy, int len)
 						ft_strlen(tmp->value) + 4));
 		}
 		if (!copy)
-			error_exit(ER_MALLOC);
+			error_exit(ER_MALLOC, 0);
 		copy[i] = fill_copy(copy[i], tmp);
 		tmp = tmp->next;
 	}
@@ -92,7 +92,7 @@ void	empty_args(t_env *env_list)
 	len = node_cnt(env_list);
 	copy = malloc(sizeof(char *)*(len + 1));
 	if (!copy)
-		error_exit(ER_MALLOC);
+		error_exit(ER_MALLOC, 0);
 	copy[len] = 0;
 	malloc_copies(env_list, copy, len);
 	print_copy(copy);

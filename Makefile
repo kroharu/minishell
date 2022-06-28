@@ -21,7 +21,7 @@ FILES = main.c	init.c	executor.c\
 		find_cmd.c	free_utils.c	signals.c\
 		parser_1.c	parser_2.c	parser_3.c\
 		parser_4.c	parser_5.c\
-		multiple_pipe.c	exec_cmd.c\
+		multiple_pipe.c	exec_cmd.c solocmd.c\
 
 VPATH = srcs/\
 		srcs/builtins\

@@ -23,8 +23,6 @@ static void	init_info(t_info *info, char **envp)
 	info->token = 0;
 	info->envp = 0;
 	info->cmd = 0;
-	info->cpid = 0;
-	info->last_flag = 0;
 	info->env_list = init_env(envp);
 	update_envp(info);
 	update_shlvl(info);
@@ -69,6 +67,7 @@ int	main(int argc, char **argv, char **envp)
 			info.token = parse_input(input, &info);
 			free(input);
 			execute(&info);
+			/*printf("$? == %d\n", info.status);*/
 		}
 	}
 	free_all(&info);

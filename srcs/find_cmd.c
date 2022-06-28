@@ -1,5 +1,18 @@
 #include "minishell.h"
 
+int	is_dir(char *path)
+{
+	DIR	*dir;
+	
+	dir = opendir(path);
+	if (dir)
+	{
+		closedir(dir);
+		return (SUCCESS);
+	}
+	return (FAIL);
+}
+
 int	find_builtin(t_info *info, char *token)
 {
 	int	i;
@@ -20,7 +33,13 @@ static int	dir_searcher(char *split, char *cmd)
 
 	dirp = opendir(split);
 	if (!dirp)
-		error(ER_DIR);
+	{
+		/*write(2, "💩: ", ft_strlen("💩: "));*/
+		/*write(2, cmd, ft_strlen(cmd));*/
+		/*write(2, ": command not found\n", 20);*/
+		/*error(ER_DIR, 0);*/
+		return (FAIL);
+	}
 	dp = readdir(dirp);
 	while (dp)
 	{
@@ -42,17 +61,13 @@ char	*find_bin(t_info *info, char **cmd)
 	char	**split;
 	int		i;
 
-	if (!cmd || !cmd[0])
-		return (0);
 	if (cmd[0][0] == '/' || cmd[0][0] =='.')
 	{
-		if (access(cmd[0], F_OK) == 0)
+		if (access(cmd[0], F_OK) == 0 && access(cmd[0], X_OK) == 0)
 			return (cmd[0]);
-		error(ER_ACCESS);
+		error(ER_ACCESS, "access", 0);
 	}
-	tmp = info->env_list;
-	while (tmp && ft_strcmp(tmp->key, "PATH", -1) != 0)
-		tmp = tmp->next;
+	tmp = find_env(info->env_list, "PATH");
 	split = ft_split(tmp->value, ':');
 	i = -1;
 	while (split[++i])
@@ -62,9 +77,10 @@ char	*find_bin(t_info *info, char **cmd)
 			path = ft_strjoin(split[i], "/", 0);
 			path = ft_strjoin(path, cmd[0], 1);
 			free_split(split);
-			return (path);
+			return(path);
 		}
 	}
 	free_split(split);
+	error(ER_CMDNOTFND, cmd[0], 0);
 	return (0);
 }

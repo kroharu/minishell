@@ -32,6 +32,8 @@
 #define ER_DUP 9
 #define ER_UNLINK 10
 #define ER_CDMINUS 11
+#define ER_CMDNOTFND 12
+#define ER_CMDDIR 13
 
 #define REDIR_IN 128
 #define REDIR_OUT 129
@@ -80,8 +82,8 @@ typedef struct s_info
 	char	**token;
 	void	*builtins[7];
 	char	*blt_names[7];
-	int		last_flag;
-	pid_t	cpid;
+	//int		last_flag;
+	//pid_t	cpid;
 	int		status;
 	int		exit_flag;
 }	t_info;
@@ -103,8 +105,8 @@ int		node_cnt(t_env *env_list);
 int		find_eq(char *arg);
 int		valid_args(char *args);
 t_env	*find_env(t_env *env_list, char *arg);
-void	error(int err_code);
-void	error_exit(int cmd);
+void	error(int err_code, char *cmd, char *input);
+void	error_exit(int code, char *cmd);
 int		ft_strlen(const char *str);
 int		ft_strcmp(char *s1, char *s2, char ch);
 int		ft_atoi(char *nptr);
@@ -129,9 +131,13 @@ t_cmd	*init_cmd(char **token, int pipe_cnt);
 void	init_blt_names(char *blt_names[]);
 void	init_builtins(void *builtins[]);
 int		check_pipes(char **token);
+int		ft_arrlen(char	**arr);
+int		is_dir(char *path);
+int		redir_num(char **token);
 int		find_builtin(t_info *info, char *token);
 char	*find_bin(t_info *info, char **cmd);
 void	execute(t_info *info);
+void	exec_solocmd(t_info *info, t_cmd *cmd);
 void	multiple_pipe(t_info *info, t_cmd *cmd);//try 2 fix signals
 void	exec_cmd(t_info *info, t_cmd *cmd);
 void	check_redir(t_cmd **cmd);

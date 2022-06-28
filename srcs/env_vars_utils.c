@@ -21,9 +21,7 @@ void	update_shlvl(t_info *info)
 	t_env	*tmp;
 	char	*ptr;
 
-	tmp = info->env_list;
-	while (tmp && ft_strcmp(tmp->key, "SHLVL", -1))
-		tmp = tmp->next;
+	tmp = find_env(info->env_list, "SHLVL");
 	if (tmp)
 	{
 		ptr = tmp->value;
@@ -60,7 +58,7 @@ void	update_envp(t_info *info)
 	free_split(info->envp);
 	info->envp = malloc(sizeof(char *) * (cnt + 1));
 	if (!info->envp)
-		error_exit(ER_MALLOC);
+		error_exit(ER_MALLOC, 0);
 	info->envp[cnt] = 0;
 	i = 0;
 	while (tmp && i < cnt)
@@ -73,7 +71,7 @@ void	update_envp(t_info *info)
 			if (!info->envp[i++])
 			{
 				free_split(info->envp);
-				error_exit(ER_MALLOC);
+				error_exit(ER_MALLOC, 0);
 			}
 		}
 		tmp = tmp->next;

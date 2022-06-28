@@ -6,7 +6,7 @@
 /*   By: cgoth <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/08 16:27:45 by cgoth             #+#    #+#             */
-/*   Updated: 2022/06/24 16:16:11 by cgoth            ###   ########.fr       */
+/*   Updated: 2022/06/28 18:21:21 by cgoth            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,10 +94,10 @@ char	**ft_split(char const *s, char c)
 	str = (char **)malloc(sizeof(char *) * (n_words(s, c) + 1));
 	if (!str)
 		/*return (NULL);*/
-		error_exit(ER_MALLOC);
+		error_exit(ER_MALLOC, 0);
 	k = wr_words(str, s, c);
 	if (k == -1)
 		/*return (NULL);*/
-		error_exit(ER_MALLOC);
+		error_exit(ER_MALLOC, 0);
 	return (str);
 }

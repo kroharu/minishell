@@ -23,7 +23,7 @@ void	sigint_handler_parent(int signum)
 	{
 		signal(SIGINT, SIG_IGN);
 		kill(0, SIGINT);
-		if (g_info->last_flag)
+		/*if (g_info->last_flag)*/
 			write(1, "\n", 1);
 	}
 }
@@ -34,8 +34,8 @@ void	sigquit_handler_parent(int signum)
 	{
 		signal(SIGQUIT, SIG_IGN);
 		kill(0, SIGQUIT);
-		if (g_info->last_flag)
+		/*if (g_info->last_flag)*/
 			write(1, "Quit: 3\n", 9);
-		g_info->last_flag = 0;
+		/*g_info->last_flag = 0;*/
 	}
 }

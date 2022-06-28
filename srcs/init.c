@@ -74,7 +74,7 @@ t_cmd	*init_cmd(char **token, int pipe_cnt)
 		    end++;
 		tmp = malloc(sizeof(char *)*(end - start));
 		if (!tmp)
-		    error_exit(ER_MALLOC);
+		    error_exit(ER_MALLOC, 0);
 		i = -1;
 		while (++start < end)
 		    tmp[++i] = ft_strdup(token[start]);

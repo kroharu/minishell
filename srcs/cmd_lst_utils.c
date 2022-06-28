@@ -16,7 +16,7 @@ t_cmd	*ft_cmdnew(char **token)
 
 	new_elem = (t_cmd *)malloc(sizeof(t_cmd));
 	if (!new_elem)
-		error_exit(ER_MALLOC);
+		error_exit(ER_MALLOC, 0);
 	new_elem->token = token;
 	new_elem->next = NULL;
 	return (new_elem);

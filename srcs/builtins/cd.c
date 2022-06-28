@@ -37,7 +37,7 @@ static void	update_pwd(t_info *info)
 	tmp = find_env(tmp, "PWD");
 	path = getcwd(0, 0);
 	if (!path)
-		error(ER_GETCWD);
+		error(ER_GETCWD, "getcwd", 0);
 	if (tmp)
 	{
 		if (tmp->value)
@@ -72,11 +72,11 @@ static void	minus(t_info *info)
 	oldpwd_node = info->env_list;
 	oldpwd_node = find_env(oldpwd_node, "OLDPWD");
 	if (!oldpwd_node || !oldpwd_node->value || !*oldpwd_node->value)
-		error(ER_CDMINUS);
+		error(ER_CDMINUS, 0, 0);
 	old_path = ft_strdup(oldpwd_node->value);
 	free(oldpwd_node->value);
 	if (chdir(old_path) == -1)
-		error(ER_CHDIR);
+		error(ER_CHDIR, "cd", old_path);
 	printf("%s\n", old_path);
 	pwd_node = find_env(pwd_node, "PWD");
 	if (pwd_node && pwd_node->value)
@@ -107,6 +107,6 @@ int	cd(t_info *info, char **args)
 		update_pwd(info);
 	}
 	else
-		error(ER_CHDIR);
+		error(ER_CHDIR, "cd", path);
 	return (0);
 }

@@ -30,7 +30,7 @@ static void	open_file(t_cmd **cmd, char *file)
 		else
 			tmp->redir_fd_out = open(file, O_WRONLY | O_CREAT | O_APPEND, 0644);
 		if (tmp->redir_fd_out < 0)
-			error(ER_OPEN);
+			error(ER_OPEN, "open", 0);
 	}
 	if (tmp->redir == REDIR_IN || tmp->redir == HERE_DOC)
 	{
@@ -41,26 +41,8 @@ static void	open_file(t_cmd **cmd, char *file)
         else
             tmp->redir_fd_in = open("here_doc", O_WRONLY | O_CREAT | O_TRUNC, 0644);
 		if (tmp->redir_fd_in < 0)
-			error(ER_OPEN);
+			error(ER_OPEN, "open", 0);
 	}
-}
-
-static int	redir_num(char **token)
-{
-	int	i;
-	int	cnt;
-
-	i = -1;
-	cnt = 0;
-	while (token[++i])
-	{
-		if (ft_strcmp(token[i], ">", -1) == 0 ||\
-				ft_strcmp(token[i], ">>", -1) == 0 ||\
-				ft_strcmp(token[i], "<<", -1) == 0 ||\
-				ft_strcmp(token[i], "<", -1) == 0)
-			cnt++;
-	}
-	return (cnt);
 }
 
 static char	**update_token(char **token)
@@ -70,19 +52,16 @@ static char	**update_token(char **token)
 	int		j;
     int     cnt;
 
-	i = 0;
-	while (token[i])
-		i++;
+	i = ft_arrlen(token);
     cnt = redir_num(token);
 	new_token = malloc(sizeof(char *)*(i + 1 - 2*cnt));
 	if (!new_token)
-		error(ER_MALLOC);
+		error_exit(ER_MALLOC, 0);
 	new_token[i - 2*cnt] = 0;
 	i = 0;
 	j = 0;
 	while (token[i])
 	{
-		//проверка на редирект и скип совпадений
 		if (ft_strcmp(token[i], ">", -1) == 0 ||\
 				ft_strcmp(token[i], ">>", -1) == 0 ||\
 				ft_strcmp(token[i], "<<", -1) == 0 ||\
@@ -114,7 +93,7 @@ static void    fill_heredoc(t_cmd *cmd, char *eof)
 		close(cmd->redir_fd_in);
 		cmd->redir_fd_in = open("here_doc", O_RDONLY);
 		if (cmd->redir_fd_in < 0)
-			error(ER_OPEN);
+			error(ER_OPEN, "open", 0);
     }
 }
 

@@ -20,7 +20,7 @@ static int	one_arg(t_info *info, char **args)
 	{
 		write(STDOUT_FILENO, "exit\n", 5);
 		write(STDERR_FILENO, PROMPT, ft_strlen(PROMPT));
-		write(STDERR_FILENO, ": exit:", 7);
+		write(STDERR_FILENO, ": exit: ", 8);
 		write(STDERR_FILENO, args[1], ft_strlen(args[1]));
 		write(STDERR_FILENO, ": numeric argument required\n", 28);
 		info->status = 255;
