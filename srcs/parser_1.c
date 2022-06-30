@@ -6,7 +6,7 @@
 /*   By: ladrian <ladrian@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/16 16:33:59 by ladrian           #+#    #+#             */
-/*   Updated: 2022/06/27 14:45:10 by ladrian          ###   ########.fr       */
+/*   Updated: 2022/06/30 16:14:11 by ladrian          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,7 @@ int	find_dollar(char *str)
 	while (str[++i])
 		if (str[i] == '$' && str[i + 1] != ' ' && str[i + 1] != '$')
 			return (i);
-	return (0);
+	return (-1);
 }
 
 static char	*loop(char *arr, t_env *lst)
@@ -64,16 +64,15 @@ static char	*loop(char *arr, t_env *lst)
 		k++;
 		j++;
 	}
+	tmp = str;
 	if (lst->key[j] == '\0' && (str[k] == '\0' || str[k] == ' '
 			|| str[k] == '\"' || str[k] == '\''))
-	{
-		tmp = str;
-		if (find_dollar(str) == 0)
-			str = ft_strdup(lst->value);
-		else
-			str = envp_with_symbols(str, lst->value, lst->key);
-		free(tmp);
-	}
+		str = envp_with_symbols(str, lst->value, lst->key);
+	else if (lst->next == NULL && find_dollar(str) != -1)
+		str = empty_envp(str, " ", empty_envp_key(str));
+	else
+		str = ft_strdup(str);
+	free(tmp);
 	return (str);
 }
 

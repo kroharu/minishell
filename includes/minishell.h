@@ -177,5 +177,7 @@ int		ft_isalpha(int c);
 int		find_reverse_pipe(char *token);
 char	*split_pipes(char *input);
 int		pipe_count(char *input, int *i);
+char	*empty_envp_key(char *str);
+char	*empty_envp(char *str, char *value, char *key);
 
 #endif
