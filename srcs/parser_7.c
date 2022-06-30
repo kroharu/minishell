@@ -6,7 +6,7 @@
 /*   By: ladrian <ladrian@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/18 17:32:24 by ladrian           #+#    #+#             */
-/*   Updated: 2022/06/30 17:34:25 by ladrian          ###   ########.fr       */
+/*   Updated: 2022/06/30 18:35:48 by ladrian          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,6 @@ void	parse_error(int error)
 		ft_putendl_fd("error: bad pipes", STDERR_FILENO);
 	else if (error == REDIR_ERR)
 		ft_putendl_fd("error: empty redirection args", STDERR_FILENO);
-	g_info->exit_flag = 0;
 }
 
 int	find_reverse_pipe(char *token)

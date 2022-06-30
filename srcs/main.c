@@ -40,7 +40,8 @@ int	eof_detect(char *input)
 	return (0);
 }
 
-//обработать < и > и ctrl+c в дочке минишелл
+//обработать < и > и !!!! && ctrl+c в дочке минишелл
+
 
 int	main(int argc, char **argv, char **envp)
 {
@@ -58,7 +59,7 @@ int	main(int argc, char **argv, char **envp)
 		input = readline(PROMPT);
 		if (eof_detect(input))
 			break ;
-		signal(SIGINT, sigint_handler_parent);
+		// signal(SIGINT, sigint_handler_parent);
 		if (input)
 		{
 			if (info.token && *(info.token))
@@ -66,10 +67,10 @@ int	main(int argc, char **argv, char **envp)
 			add_history(input);
 			info.token = parse_input(input, &info);
 			free(input);
-			if (!g_info->exit_flag)
+			if (!g_info->status)
 				execute(&info);
 			else
-				parse_error(g_info->exit_flag);
+				parse_error(g_info->status);
 			/*printf("$? == %d\n", info.status);*/
 		}
 	}

@@ -6,7 +6,7 @@
 /*   By: ladrian <ladrian@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/18 17:29:21 by ladrian           #+#    #+#             */
-/*   Updated: 2022/06/30 17:33:12 by ladrian          ###   ########.fr       */
+/*   Updated: 2022/06/30 19:11:27 by ladrian          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,8 @@
 
 int	error_handler(char **input, int num)
 {
+	if ((!input && !*input) || num == 0)
+		return (0);
 	if (pipe_checker(input, num))
 		return (PIPE_ERR);
 	if (quote_checker(input))
@@ -81,7 +83,7 @@ int	find_pipe(char *token)
 	int	i;
 
 	i = -1;
-	while (token[++i])
+	while (token && token[++i])
 	{
 		if (ft_isalpha(token[i]) || ft_isdigit(token[i]))
 			break ;
