@@ -20,7 +20,8 @@ FILES = main.c	init.c	executor.c\
 		redir.c	get_next_line.c	get_next_line_utils.c\
 		find_cmd.c	free_utils.c	signals.c\
 		parser_1.c	parser_2.c	parser_3.c\
-		parser_4.c	parser_5.c\
+		parser_4.c	parser_5.c	parser_6.c\
+		parser_7.c	parser_8.c\
 		multiple_pipe.c	exec_cmd.c solocmd.c\
 
 VPATH = srcs/\
