@@ -6,7 +6,7 @@
 /*   By: ladrian <ladrian@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/30 17:38:56 by ladrian           #+#    #+#             */
-/*   Updated: 2022/06/30 17:40:12 by ladrian          ###   ########.fr       */
+/*   Updated: 2022/06/30 19:41:37 by ladrian          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,7 @@
 # define QUOTE_ERR -1
 # define PIPE_ERR -2
 # define REDIR_ERR -3
+# define HERDOC_ERR -4
 
 # define ER_MALLOC 1
 # define ER_EXECVE 2
@@ -210,5 +211,6 @@ char			*empty_envp(char *str, char *value, char *key);
 int				cmp_key(char *str, char *key);
 int				quote_checker(char **input);
 int				redir_checker(char **input);
+int				herdoc_checker(char **input);
 
 #endif

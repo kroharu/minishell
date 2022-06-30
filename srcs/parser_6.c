@@ -6,7 +6,7 @@
 /*   By: ladrian <ladrian@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/18 17:29:21 by ladrian           #+#    #+#             */
-/*   Updated: 2022/06/30 19:11:27 by ladrian          ###   ########.fr       */
+/*   Updated: 2022/06/30 19:41:25 by ladrian          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,13 +22,32 @@ int	error_handler(char **input, int num)
 		return (QUOTE_ERR);
 	if (redir_checker(input))
 		return (REDIR_ERR);
+	if (herdoc_checker(input))
+		return (HERDOC_ERR);
+	return (0);
+}
+
+int	herdoc_checker(char **input)
+{
+	int	i;
+
+	i = -1;
+	while (input[++i])
+		if ((ft_strcmp(input[i], "<<", -1) == 0
+			|| ft_strcmp(input[i], ">>", -1) == 0) && !input[i + 1])
+			return (1);
 	return (0);
 }
 
 int	redir_checker(char **input)
 {
-	if (!input[1] && (input[0][0] == '<' || input[0][0] == '>'))
-		return (1);
+	int	i;
+
+	i = -1;
+	while (input[++i])
+		if ((ft_strcmp(input[i], "<", -1) == 0
+			|| ft_strcmp(input[i], ">", -1) == 0) && !input[i + 1])
+			return (1);
 	return (0);
 }
 
