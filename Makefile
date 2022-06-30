@@ -1,6 +1,6 @@
 NAME = minishell
 CC = gcc
-CFLAGS = -Wall -Wextra -Werror -Iincludes -g #-fsanitize=address
+CFLAGS = -Wall -Wextra -Werror -Iincludes -g -fsanitize=address
 
 FLAGS = -lreadline -ltermcap -L ~/.brew/Cellar/readline/8.1.2/lib -I~/.brew/Cellar/readline/8.1.2/include
 
@@ -16,7 +16,7 @@ FILES = main.c	init.c	executor.c\
 		find_cmd.c	free_utils.c	signals.c\
 		parser_1.c	parser_2.c	parser_3.c\
 		parser_4.c	parser_5.c	parser_6.c\
-		parser_7.c
+		parser_7.c	parser_8.c
 
 VPATH = srcs/\
 		srcs/builtins\

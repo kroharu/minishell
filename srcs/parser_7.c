@@ -6,7 +6,7 @@
 /*   By: ladrian <ladrian@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/18 17:32:24 by ladrian           #+#    #+#             */
-/*   Updated: 2022/06/18 19:32:47 by ladrian          ###   ########.fr       */
+/*   Updated: 2022/06/30 17:18:31 by ladrian          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,8 @@ void	parse_error(int error)
 		ft_putendl_fd("error: unclosed qoutes", STDERR_FILENO);
 	else if (error == PIPE_ERR)
 		ft_putendl_fd("error: bad pipes", STDERR_FILENO);
+	else if (error == REDIR_ERR)
+		ft_putendl_fd("error: empty redirection args", STDERR_FILENO);
 }
 
 int	find_reverse_pipe(char *token)

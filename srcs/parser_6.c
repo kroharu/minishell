@@ -6,13 +6,31 @@
 /*   By: ladrian <ladrian@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/18 17:29:21 by ladrian           #+#    #+#             */
-/*   Updated: 2022/06/18 18:00:31 by ladrian          ###   ########.fr       */
+/*   Updated: 2022/06/30 17:19:11 by ladrian          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
 int	error_handler(char **input, int num)
+{
+	if (pipe_checker(input, num))
+		return (PIPE_ERR);
+	if (quote_checker(input))
+		return (QUOTE_ERR);
+	if (redir_checker(input))
+		return (REDIR_ERR);
+	return (0);
+}
+
+int	redir_checker(char **input)
+{
+	if (!input[1] && (input[0][0] == '<' || input[0][0] == '>'))
+		return (1);
+	return (0);
+}
+
+int	quote_checker(char **input)
 {
 	int	flag_1;
 	int	flag_2;
@@ -22,8 +40,6 @@ int	error_handler(char **input, int num)
 	i = -1;
 	flag_1 = 1;
 	flag_2 = 1;
-	if (pipe_checker(input, num))
-		return (PIPE_ERR);
 	while (input[++i])
 	{
 		j = -1;
@@ -35,7 +51,7 @@ int	error_handler(char **input, int num)
 				flag_1 *= -1;
 		}
 		if (flag_1 != 1 || flag_2 != 1)
-			return (QUOTE_ERR);
+			return (1);
 	}
 	return (0);
 }
@@ -73,20 +89,4 @@ int	find_pipe(char *token)
 			return (1);
 	}
 	return (0);
-}
-
-int	ft_isdigit(int c)
-{
-	if ((c >= '0') && (c <= '9'))
-		return (1);
-	else
-		return (0);
-}
-
-int	ft_isalpha(int c)
-{
-	if (((c >= 'A') && (c <= 'Z')) || ((c >= 'a') && (c <= 'z')))
-		return (1);
-	else
-		return (0);
 }

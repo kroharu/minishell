@@ -23,6 +23,7 @@
 
 # define QUOTE_ERR -1
 # define PIPE_ERR -2
+# define REDIR_ERR -3
 
 #define ER_MALLOC 1
 #define ER_EXECVE 2
@@ -179,5 +180,8 @@ char	*split_pipes(char *input);
 int		pipe_count(char *input, int *i);
 char	*empty_envp_key(char *str);
 char	*empty_envp(char *str, char *value, char *key);
+int		cmp_key(char *str, char *key);
+int		quote_checker(char **input);
+int		redir_checker(char **input);
 
 #endif

@@ -6,7 +6,7 @@
 /*   By: ladrian <ladrian@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/16 16:33:59 by ladrian           #+#    #+#             */
-/*   Updated: 2022/06/30 16:14:11 by ladrian          ###   ########.fr       */
+/*   Updated: 2022/06/30 17:04:53 by ladrian          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,18 +38,20 @@ void	ft_trim_qoutes(t_parser *parser, int i)
 	parser->token[i][k] = '\0';
 }
 
-int	find_dollar(char *str)
+char	*rewrite_token(char *str, t_env *lst, t_info *info)
 {
-	int	i;
-
-	i = -1;
-	while (str[++i])
-		if (str[i] == '$' && str[i + 1] != ' ' && str[i + 1] != '$')
-			return (i);
-	return (-1);
+	if (lst->next == NULL && find_dollar(str) != -1
+		&& str[find_dollar(str) + 1] != '?')
+		str = empty_envp(str, " ", empty_envp_key(str));
+	else if (lst->next == NULL && find_dollar(str) != -1
+		&& str[find_dollar(str) + 1] == '?')
+		str = empty_envp(str, ft_itoa(info->status), empty_envp_key(str));
+	else
+		str = ft_strdup(str);
+	return (str);
 }
 
-static char	*loop(char *arr, t_env *lst)
+static char	*loop(char *arr, t_env *lst, t_info *info)
 {
 	char	*tmp;
 	char	*str;
@@ -68,10 +70,8 @@ static char	*loop(char *arr, t_env *lst)
 	if (lst->key[j] == '\0' && (str[k] == '\0' || str[k] == ' '
 			|| str[k] == '\"' || str[k] == '\''))
 		str = envp_with_symbols(str, lst->value, lst->key);
-	else if (lst->next == NULL && find_dollar(str) != -1)
-		str = empty_envp(str, " ", empty_envp_key(str));
 	else
-		str = ft_strdup(str);
+		str = rewrite_token(str, lst, info);
 	free(tmp);
 	return (str);
 }
@@ -92,7 +92,7 @@ void	find_envp(t_parser *parser, int envp, t_info *info)
 		{
 			while (lst)
 			{
-				arr[i] = loop(arr[i], lst);
+				arr[i] = loop(arr[i], lst, info);
 				lst = lst->next;
 			}
 		}
