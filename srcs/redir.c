@@ -30,7 +30,7 @@ static void	open_file(t_cmd **cmd, char *file)
 		else
 			tmp->redir_fd_out = open(file, O_WRONLY | O_CREAT | O_APPEND, 0644);
 		if (tmp->redir_fd_out < 0)
-			error(ER_OPEN, "open", 0);
+			error(ER_OPEN, "open", 0, 0);
 	}
 	if (tmp->redir == REDIR_IN || tmp->redir == HERE_DOC)
 	{
@@ -41,7 +41,7 @@ static void	open_file(t_cmd **cmd, char *file)
         else
             tmp->redir_fd_in = open("here_doc", O_WRONLY | O_CREAT | O_TRUNC, 0644);
 		if (tmp->redir_fd_in < 0)
-			error(ER_OPEN, "open", 0);
+			error(ER_OPEN, "open", 0, 0);
 	}
 }
 
@@ -93,7 +93,7 @@ static void    fill_heredoc(t_cmd *cmd, char *eof)
 		close(cmd->redir_fd_in);
 		cmd->redir_fd_in = open("here_doc", O_RDONLY);
 		if (cmd->redir_fd_in < 0)
-			error(ER_OPEN, "open", 0);
+			error(ER_OPEN, "open", 0, 0);
     }
 }
 

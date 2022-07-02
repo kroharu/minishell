@@ -41,7 +41,9 @@ int	eof_detect(char *input)
 }
 
 //обработать < и > и !!!! && ctrl+c в дочке минишелл
-
+//переделать update_envp()
+//подумать что делать с ER_CMDDIR
+//обработать ошибки в multiple_pipe()
 
 int	main(int argc, char **argv, char **envp)
 {
@@ -57,9 +59,9 @@ int	main(int argc, char **argv, char **envp)
 		signal(SIGQUIT, SIG_IGN);
 		signal(SIGINT, sigint_empty_handler);
 		input = readline(PROMPT);
+		signal(SIGINT, sigint_handler_parent);
 		if (eof_detect(input))
 			break ;
-		// signal(SIGINT, sigint_handler_parent);
 		if (input)
 		{
 			if (info.token && *(info.token))
@@ -71,7 +73,7 @@ int	main(int argc, char **argv, char **envp)
 				execute(&info);
 			else
 				parse_error(g_info->status);
-			/*printf("$? == %d\n", info.status);*/
+			printf("$? == %d\n", info.status);
 		}
 	}
 	free_all(&info);

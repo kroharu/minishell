@@ -41,21 +41,6 @@ t_env	*init_env(char	**envp)
 	return (env_list);
 }
 
-/*char	**init_args(int argc, char **argv)*/
-/*{*/
-	/*int	i;*/
-	/*char	**args;*/
-
-	/*args = malloc(sizeof(char *)*(argc));*/
-	/*if (!args)*/
-		/*error(ER_MALLOC);*/
-	/*args[argc - 1] = 0;*/
-	/*i = -1;*/
-	/*while (argv[++i])*/
-		/*args[i] = ft_strdup(argv[i]);*/
-	/*return(args);*/
-/*}*/
-
 t_cmd	*init_cmd(char **token, int pipe_cnt)
 {
 	t_cmd   *cmd;

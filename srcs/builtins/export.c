@@ -61,8 +61,9 @@ static void	parse_args(t_info *info, char **args)
 	{
 		if (!valid_args(args[i]))
 		{
-			write(2, "not a valid identifier\n", 23);
-			info->status = 22;//EINVAL
+			error(ER_EXPORT, "export", args[i], ": not a valid identifier\n");
+			/*write(2, "not a valid identifier\n", 23);*/
+			info->status = 1;//EINVAL
 		}
 		else
 		{

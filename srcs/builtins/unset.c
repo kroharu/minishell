@@ -25,11 +25,17 @@ int	unset(t_info *info, char **args)
 	i = 0;
 	while (args && args[++i])
 	{
-		tmp = info->env_list;
-		while (tmp && ft_strcmp(tmp->key, args[i], -1))
-			tmp = tmp->next;
-		if (tmp)
-			info->env_list = del_node(info->env_list, tmp);
+		if (!valid_args(args[i]))
+		{
+			error(ER_UNSET, "unset", args[i], ": not a valid identifier\n");
+			info->status = 1;
+		}
+		else
+		{
+			tmp = find_env(info->env_list, args[i]);
+			if (tmp)
+				info->env_list = del_node(info->env_list, tmp);
+		}
 	}
 	return (0);
 }

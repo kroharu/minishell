@@ -6,7 +6,7 @@
 /*   By: ladrian <ladrian@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/30 17:38:56 by ladrian           #+#    #+#             */
-/*   Updated: 2022/06/30 19:41:37 by ladrian          ###   ########.fr       */
+/*   Updated: 2022/07/02 19:48:21 by cgoth            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,7 @@
 # define BUFFER_SIZE 100
 
 # define PROMPT "💩$> "
+# define PROMPT_ERR "💩: "
 
 # define QUOTE_ERR -1
 # define PIPE_ERR -2
@@ -51,6 +52,9 @@
 # define ER_CDMINUS 11
 # define ER_CMDNOTFND 12
 # define ER_CMDDIR 13
+# define ER_EXPORT 14
+# define ER_EXIT 15
+# define ER_UNSET 16
 
 # define REDIR_IN 128
 # define REDIR_OUT 129
@@ -121,7 +125,7 @@ int				node_cnt(t_env *env_list);
 int				find_eq(char *arg);
 int				valid_args(char *args);
 t_env			*find_env(t_env *env_list, char *arg);
-void			error(int err_code, char *cmd, char *input);
+void			error(int err_code, char *cmd, char *input, char *text);
 void			error_exit(int code, char *cmd);
 int				ft_strlen(const char *str);
 int				ft_strcmp(char *s1, char *s2, char ch);
@@ -156,6 +160,7 @@ void			execute(t_info *info);
 void			exec_solocmd(t_info *info, t_cmd *cmd);
 void			multiple_pipe(t_info *info, t_cmd *cmd);//try 2 fix signals
 void			exec_cmd(t_info *info, t_cmd *cmd);
+void			get_status(t_info *info);
 void			check_redir(t_cmd **cmd);
 void			update_shlvl(t_info *info);
 void			update_envbin(t_info *info, char **token);

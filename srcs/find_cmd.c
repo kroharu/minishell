@@ -33,13 +33,7 @@ static int	dir_searcher(char *split, char *cmd)
 
 	dirp = opendir(split);
 	if (!dirp)
-	{
-		/*write(2, "💩: ", ft_strlen("💩: "));*/
-		/*write(2, cmd, ft_strlen(cmd));*/
-		/*write(2, ": command not found\n", 20);*/
-		/*error(ER_DIR, 0);*/
 		return (FAIL);
-	}
 	dp = readdir(dirp);
 	while (dp)
 	{
@@ -65,7 +59,9 @@ char	*find_bin(t_info *info, char **cmd)
 	{
 		if (access(cmd[0], F_OK) == 0 && access(cmd[0], X_OK) == 0)
 			return (cmd[0]);
-		error(ER_ACCESS, "access", 0);
+		error(ER_ACCESS, cmd[0], 0, "Permission denied\n");
+		info->status = 126;
+		return (0);
 	}
 	tmp = find_env(info->env_list, "PATH");
 	split = ft_split(tmp->value, ':');
@@ -81,6 +77,6 @@ char	*find_bin(t_info *info, char **cmd)
 		}
 	}
 	free_split(split);
-	error(ER_CMDNOTFND, cmd[0], 0);
+	error(ER_CMDNOTFND, cmd[0], 0, ": command not found\n");
 	return (0);
 }

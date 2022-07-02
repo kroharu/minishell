@@ -31,5 +31,6 @@ void	dup_back(int old_in, int old_out)
 		close(old_in);
 	}
     if (access("here_doc", F_OK) == 0 && unlink("here_doc"))
-        error_exit(ER_UNLINK, 0);
+        error(ER_UNLINK, 0, 0, 0);
+        /*error_exit(ER_UNLINK, 0);*/
 }

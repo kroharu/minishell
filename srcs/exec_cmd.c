@@ -19,9 +19,17 @@ static void	child_routine(t_info *info, t_cmd *cmd, int builtin)
 		if (is_dir(path))
 			error_exit(ER_CMDDIR, 0);
 		if (path && execve(path, cmd->token, info->envp))
-			error_exit(ER_EXECVE, 0);
-		/*exit(ER_EXECVE);*/
+			error(ER_EXECVE, "execve", 0, 0);
+		exit(info->status);
 	}
+}
+
+void	get_status(t_info *info)
+{
+	if (WIFEXITED(info->status))
+		info->status = WEXITSTATUS(info->status);
+	else if (WIFSIGNALED(info->status))
+		info->status = WTERMSIG(info->status) + 128;
 }
 
 void	exec_cmd(t_info *info, t_cmd *cmd)
@@ -43,7 +51,7 @@ void	exec_cmd(t_info *info, t_cmd *cmd)
 	if (cmd->redir_fd_in != STDIN_FILENO)
 		close(cmd->redir_fd_in);
 	waitpid(cpid, &info->status, 0);
-	info->status = WEXITSTATUS(info->status);
+	get_status(info);
 	if (access("here_doc", F_OK) == 0 && unlink("here_doc"))
-		error_exit(ER_UNLINK, 0);
+        error(ER_UNLINK, 0, 0, 0);
 }

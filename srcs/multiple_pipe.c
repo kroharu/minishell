@@ -8,7 +8,8 @@ static void	wait_all_proc(t_info *info, t_cmd *cmd)
 	while (tmp)
 	{
 		waitpid(0, &info->status, 0);
-		info->status = WEXITSTATUS(info->status);
+		/*info->status = WEXITSTATUS(info->status);*/
+		get_status(info);
 		tmp = tmp->next;
 	}
 }

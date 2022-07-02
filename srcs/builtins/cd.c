@@ -6,16 +6,10 @@ static void	update_oldpwd(t_info *info)
 	char	*oldpwd;
 
 	oldpwd = 0;
-	tmp = info->env_list;
-	/*while (tmp && ft_strcmp(tmp->key, "PWD", -1))*/
-		/*tmp = tmp->next;*/
-	tmp = find_env(tmp, "PWD");
+	tmp = find_env(info->env_list, "PWD");
 	if (tmp)
 		oldpwd = ft_strdup(tmp->value);
-	tmp = info->env_list;
-	/*while (tmp && ft_strcmp(tmp->key, "OLDPWD", -1))*/
-		/*tmp = tmp->next;*/
-	tmp = find_env(tmp, "OLDPWD");
+	tmp = find_env(info->env_list, "OLDPWD");
 	if (!tmp)
 		info->env_list = ft_lstadd_back(info->env_list, \
 				ft_lstnew("OLDPWD", oldpwd));
@@ -31,13 +25,10 @@ static void	update_pwd(t_info *info)
 	t_env	*tmp;
 	char	*path;
 
-	tmp = info->env_list;
-	/*while (tmp && ft_strcmp(tmp->key, "PWD", -1))*/
-		/*tmp = tmp->next;*/
-	tmp = find_env(tmp, "PWD");
+	tmp = find_env(info->env_list, "PWD");
 	path = getcwd(0, 0);
 	if (!path)
-		error(ER_GETCWD, "getcwd", 0);
+		return(error(ER_GETCWD, "getcwd", 0, 0));
 	if (tmp)
 	{
 		if (tmp->value)
@@ -51,10 +42,7 @@ static char	*move_to_root(t_info *info)
 	char	*root;
 	t_env	*tmp;
 
-	tmp = info->env_list;
-	/*while (tmp && ft_strcmp(tmp->key, "HOME", -1))*/
-		/*tmp = tmp->next;*/
-	tmp = find_env(tmp, "HOME");
+	tmp = find_env(info->env_list, "HOME");
 	if (!tmp)
 		root = "/Users/cgoth";
 	else
@@ -68,17 +56,15 @@ static void	minus(t_info *info)
 	t_env	*pwd_node;
 	t_env	*oldpwd_node;
 
-	pwd_node = info->env_list;
-	oldpwd_node = info->env_list;
-	oldpwd_node = find_env(oldpwd_node, "OLDPWD");
+	oldpwd_node = find_env(info->env_list, "OLDPWD");
 	if (!oldpwd_node || !oldpwd_node->value || !*oldpwd_node->value)
-		error(ER_CDMINUS, 0, 0);
+		return (error(ER_CDMINUS, "cd", 0, "OLDPWD not set\n"));
 	old_path = ft_strdup(oldpwd_node->value);
 	free(oldpwd_node->value);
 	if (chdir(old_path) == -1)
-		error(ER_CHDIR, "cd", old_path);
+		return (error(ER_CHDIR, "cd", old_path, 0));
 	printf("%s\n", old_path);
-	pwd_node = find_env(pwd_node, "PWD");
+	pwd_node = find_env(info->env_list, "PWD");
 	if (pwd_node && pwd_node->value)
 	{
 		oldpwd_node->value = ft_strdup(pwd_node->value);
@@ -107,6 +93,6 @@ int	cd(t_info *info, char **args)
 		update_pwd(info);
 	}
 	else
-		error(ER_CHDIR, "cd", path);
-	return (0);
+		error(ER_CHDIR, "cd", path, 0);
+	return (info->status);
 }

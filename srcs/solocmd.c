@@ -17,15 +17,16 @@ static void	non_builtin_loop(t_info *info, t_cmd *cmd)
 			error_exit(ER_CMDDIR, 0);
 		dup_hub(cmd);
 		if (path && execve(path, cmd->token, info->envp))
-			error(ER_EXECVE, "execve", 0);
+			error(ER_EXECVE, "execve", 0, 0);
 		exit(info->status);
 	}
 	if (cmd->redir_fd_in != STDIN_FILENO)
 		close(cmd->redir_fd_in);
 	waitpid(cpid, &info->status, 0);
-	info->status = WEXITSTATUS(info->status);
+	/*info->status = WEXITSTATUS(info->status);*/
+	get_status(info);
     if (access("here_doc", F_OK) == 0 && unlink("here_doc"))
-        error_exit(ER_UNLINK, 0);
+        error(ER_UNLINK, 0, 0, 0);
 }
 
 void	exec_solocmd(t_info *info, t_cmd *cmd)
@@ -36,7 +37,6 @@ void	exec_solocmd(t_info *info, t_cmd *cmd)
 
 	old_in = -1;
 	old_out = -1;
-	/*info->last_flag = 1;*/
 	builtin = find_builtin(info, cmd->token[0]);
 	update_envbin(info, cmd->token);
 	update_envp(info);
