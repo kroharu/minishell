@@ -69,7 +69,7 @@ int	main(int argc, char **argv, char **envp)
 			add_history(input);
 			info.token = parse_input(input, &info);
 			free(input);
-			if (!g_info->status)
+			if (g_info->status >= 0)
 				execute(&info);
 			else
 				parse_error(g_info->status);

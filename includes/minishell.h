@@ -6,7 +6,7 @@
 /*   By: ladrian <ladrian@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/30 17:38:56 by ladrian           #+#    #+#             */
-/*   Updated: 2022/07/02 19:48:21 by cgoth            ###   ########.fr       */
+/*   Updated: 2022/07/03 13:57:10 by ladrian          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -105,6 +105,7 @@ typedef struct s_info
 	//pid_t	cpid;
 	int		status;
 	int		exit_flag;
+	int		parse_status;
 }	t_info;
 
 t_info			*g_info;

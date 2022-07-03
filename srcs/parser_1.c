@@ -6,7 +6,7 @@
 /*   By: ladrian <ladrian@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/16 16:33:59 by ladrian           #+#    #+#             */
-/*   Updated: 2022/06/30 19:27:43 by ladrian          ###   ########.fr       */
+/*   Updated: 2022/07/03 14:53:25 by ladrian          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,19 +60,24 @@ static char	*loop(char *arr, t_env *lst, t_info *info)
 
 	j = 0;
 	str = arr;
-	k = find_dollar(str) + 1;
-	while (str[k] == lst->key[j] && str[k] && lst->key[j])
+	while (lst)
 	{
-		k++;
-		j++;
+		j = -1;
+		k = find_dollar(str);
+		while (str[++k] == lst->key[++j] && str[k] && lst->key[j])
+			;
+		tmp = str;
+		if (lst->key[j] == '\0' && (str[k] == '\0' || str[k] == ' '
+				|| str[k] == '\"' || str[k] == '\'' || str[k] == '$'))
+		{
+			str = envp_with_symbols(str, lst->value, lst->key);
+			lst = info->env_list;
+		}
+		else
+			str = rewrite_token(str, lst, info);
+		free(tmp);
+		lst = lst->next;
 	}
-	tmp = str;
-	if (lst->key[j] == '\0' && (str[k] == '\0' || str[k] == ' '
-			|| str[k] == '\"' || str[k] == '\''))
-		str = envp_with_symbols(str, lst->value, lst->key);
-	else
-		str = rewrite_token(str, lst, info);
-	free(tmp);
 	return (str);
 }
 
@@ -90,11 +95,11 @@ void	find_envp(t_parser *parser, int envp, t_info *info)
 	{
 		if (i == envp)
 		{
-			while (lst)
-			{
+			// while (lst)
+			// {
 				arr[i] = loop(arr[i], lst, info);
-				lst = lst->next;
-			}
+			// 	lst = lst->next;
+			// }
 		}
 		else
 		{
@@ -116,7 +121,7 @@ char	**parse_input(char *input, t_info *info)
 	free(pre_input);
 	if (parser.input)
 		parser.input[i] = NULL;
-	g_info->status = error_handler(parser.input, i);
+	g_info->parse_status = error_handler(parser.input, i);
 	pre_find_envp(&parser, info);
 	parser.token = malloc(sizeof(char *) * (i + 1));
 	i = -1;
