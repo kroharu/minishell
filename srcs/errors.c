@@ -4,6 +4,7 @@ void	error_exit(int code, char *cmd)
 {
 	int	err_code;
 
+	(void) cmd;
 	err_code = errno;
 	write(STDERR_FILENO, PROMPT_ERR, ft_strlen(PROMPT_ERR));
 	if (code == ER_MALLOC)

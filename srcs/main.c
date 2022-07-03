@@ -73,7 +73,6 @@ int	main(int argc, char **argv, char **envp)
 				execute(&info);
 			else
 				parse_error(g_info->parse_status);
-			printf("$? == %d\n", info.status);
 		}
 	}
 	free_all(&info);

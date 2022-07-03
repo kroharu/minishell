@@ -6,7 +6,7 @@
 /*   By: ladrian <ladrian@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/30 17:38:56 by ladrian           #+#    #+#             */
-/*   Updated: 2022/07/03 15:34:45 by cgoth            ###   ########.fr       */
+/*   Updated: 2022/07/03 17:21:16 by ladrian          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -216,5 +216,6 @@ char			*empty_envp(char *str, char *value, char *key);
 int				cmp_key(char *str, char *key);
 int				quote_checker(char **input);
 int				redir_checker(char **input);
+int				find_start_of_envp(int *j, int k, char *str);
 
 #endif

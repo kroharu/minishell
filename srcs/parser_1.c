@@ -6,7 +6,7 @@
 /*   By: ladrian <ladrian@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/16 16:33:59 by ladrian           #+#    #+#             */
-/*   Updated: 2022/07/03 14:53:25 by ladrian          ###   ########.fr       */
+/*   Updated: 2022/07/03 17:20:24 by ladrian          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,12 +58,10 @@ static char	*loop(char *arr, t_env *lst, t_info *info)
 	int		j;
 	int		k;
 
-	j = 0;
 	str = arr;
 	while (lst)
 	{
-		j = -1;
-		k = find_dollar(str);
+		k = find_start_of_envp(&j, k, str);
 		while (str[++k] == lst->key[++j] && str[k] && lst->key[j])
 			;
 		tmp = str;
@@ -94,13 +92,7 @@ void	find_envp(t_parser *parser, int envp, t_info *info)
 	while (arr[++i])
 	{
 		if (i == envp)
-		{
-			// while (lst)
-			// {
-				arr[i] = loop(arr[i], lst, info);
-			// 	lst = lst->next;
-			// }
-		}
+			arr[i] = loop(arr[i], lst, info);
 		else
 		{
 			tmp = arr[i];
