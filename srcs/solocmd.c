@@ -13,8 +13,6 @@ static void	non_builtin_loop(t_info *info, t_cmd *cmd)
 		signal(SIGINT, SIG_DFL);
 		signal(SIGQUIT, sigquit_handler_child);
 		path = find_bin(info, cmd->token);
-		/*if (is_dir(path))*/
-			/*error_exit(ER_CMDDIR, 0);*/
 		dup_hub(cmd);
 		if (path && execve(path, cmd->token, info->envp))
 			error(ER_EXECVE, "execve", 0, 0);
@@ -23,7 +21,6 @@ static void	non_builtin_loop(t_info *info, t_cmd *cmd)
 	if (cmd->redir_fd_in != STDIN_FILENO)
 		close(cmd->redir_fd_in);
 	waitpid(cpid, &info->status, 0);
-	/*info->status = WEXITSTATUS(info->status);*/
 	get_status(info);
     if (access("here_doc", F_OK) == 0 && unlink("here_doc"))
         error(ER_UNLINK, 0, 0, 0);

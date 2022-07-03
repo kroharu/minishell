@@ -48,6 +48,25 @@ static int	dir_searcher(char *split, char *cmd)
 	return (FAIL);
 }
 
+static int	check_path(t_info *info, char **cmd)
+{
+	if (access(cmd[0], F_OK) == 0 && access(cmd[0], X_OK) == 0)
+		return (1);
+	error(ER_ACCESS, cmd[0], 0, "Permission denied\n");
+	info->status = 126;
+	return (0);
+}
+
+static char	*gen_path(char **split, char *cmd, int i)
+{
+	char	*path;
+
+	path = ft_strjoin(split[i], "/", 0);
+	path = ft_strjoin(path, cmd, 1);
+	free_split(split);
+	return (path);
+}
+
 char	*find_bin(t_info *info, char **cmd)
 {
 	t_env	*tmp;
@@ -57,10 +76,8 @@ char	*find_bin(t_info *info, char **cmd)
 
 	if (cmd[0][0] == '/' || cmd[0][0] =='.')
 	{
-		if (access(cmd[0], F_OK) == 0 && access(cmd[0], X_OK) == 0)
+		if (check_path(info, cmd))
 			return (cmd[0]);
-		error(ER_ACCESS, cmd[0], 0, "Permission denied\n");
-		info->status = 126;
 		return (0);
 	}
 	tmp = find_env(info->env_list, "PATH");
@@ -70,9 +87,7 @@ char	*find_bin(t_info *info, char **cmd)
 	{
 		if (dir_searcher(split[i], cmd[0]))
 		{
-			path = ft_strjoin(split[i], "/", 0);
-			path = ft_strjoin(path, cmd[0], 1);
-			free_split(split);
+			path = gen_path(split, cmd[0], i);
 			return(path);
 		}
 	}

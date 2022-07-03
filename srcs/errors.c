@@ -13,11 +13,6 @@ void	error_exit(int code, char *cmd)
 		perror("fork");
 	if (code == ER_DUP)
 		perror("dup2");
-	/*if (code == ER_CMDDIR)*/
-	/*{*/
-		/*write(STDERR_FILENO, cmd, ft_strlen(cmd));*/
-		/*write(STDERR_FILENO, ": is a directory\n", 17);*/
-	/*}*/
 	free_all(g_info);
 	exit(err_code);
 }

@@ -46,12 +46,25 @@ void	update_envbin(t_info *info, char **token)
 	}
 }
 
+static void	loop(t_info *info, t_env *tmp, int i)
+{
+	char	*value;
+
+	value = ft_strjoin("=", tmp->value, 0);
+	info->envp[i] = ft_strjoin(tmp->key, value, 0);
+	free(value);
+	if (!info->envp[i])
+	{
+		free_split(info->envp);
+		error_exit(ER_MALLOC, 0);
+	}
+}
+
 void	update_envp(t_info *info)
 {
 	int		cnt;
 	int		i;
 	t_env	*tmp;
-	char	*value;
 
 	tmp = info->env_list;
 	cnt = envlist_len(info->env_list);
@@ -65,14 +78,8 @@ void	update_envp(t_info *info)
 	{
 		if (tmp->key && tmp->value)
 		{
-			value = ft_strjoin("=", tmp->value, 0);
-			info->envp[i] = ft_strjoin(tmp->key, value, 0);
-			free(value);
-			if (!info->envp[i++])
-			{
-				free_split(info->envp);
-				error_exit(ER_MALLOC, 0);
-			}
+			loop(info, tmp, i);
+			i++;
 		}
 		tmp = tmp->next;
 	}

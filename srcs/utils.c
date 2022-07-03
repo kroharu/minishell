@@ -64,7 +64,6 @@ char	*ft_strjoin(char *s1, char *s2, int	free_mode)
 	j = 0;
 	str = malloc(sizeof(char) * (ft_strlen(s1) + ft_strlen(s2) + 1));
 	if (!str)
-		/*return (NULL);*/
 		error_exit(ER_MALLOC, 0);
 	while (s1 && s1[i])
 	{
@@ -92,7 +91,6 @@ char	*ft_strdup(const char *s1)
 	i = 0;
 	copy = malloc(sizeof(char) *(ft_strlen(s1) + 1));
 	if (!copy)
-		/*return (NULL);*/
 		error_exit(ER_MALLOC, 0);
 	while (s1[i])
 	{

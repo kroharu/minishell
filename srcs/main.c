@@ -40,10 +40,20 @@ int	eof_detect(char *input)
 	return (0);
 }
 
-//обработать < и > и !!!! && ctrl+c в дочке минишелл
-//переделать update_envp()
+static void	start_work(t_info *info, char *input)
+{
+	if (info->token && *(info->token))
+		free_split(info->token);
+	add_history(input);
+	info->token = parse_input(input, info);
+	free(input);
+	if (info->parse_status >= 0)
+		execute(info);
+	else
+		parse_error(info->parse_status);
+}
+
 //подумать что делать с ER_CMDDIR
-//обработать ошибки в multiple_pipe()
 
 int	main(int argc, char **argv, char **envp)
 {
@@ -63,17 +73,7 @@ int	main(int argc, char **argv, char **envp)
 		if (eof_detect(input))
 			break ;
 		if (input)
-		{
-			if (info.token && *(info.token))
-				free_split(info.token);
-			add_history(input);
-			info.token = parse_input(input, &info);
-			free(input);
-			if (g_info->parse_status >= 0)
-				execute(&info);
-			else
-				parse_error(g_info->parse_status);
-		}
+			start_work(&info, input);
 	}
 	free_all(&info);
 	return (info.status);

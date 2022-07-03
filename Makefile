@@ -1,6 +1,6 @@
 NAME = minishell
 CC = gcc
-CFLAGS = -Wall -Wextra -Werror -Iincludes -g -fsanitize=address
+CFLAGS = -Wall -Wextra -Werror -Iincludes -g #-fsanitize=address
 
 USER = cgoth
 
