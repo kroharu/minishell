@@ -16,8 +16,9 @@ static void	child_routine(t_info *info, t_cmd *cmd, int builtin)
 	else
 	{
 		path = find_bin(info, cmd->token);
-		if (is_dir(path))
-			error_exit(ER_CMDDIR, 0);
+		/*if (is_dir(path))*/
+			/*error_exit(ER_CMDDIR, 0);*/
+			/*error(ER_CMDDIR, 0);*/
 		if (path && execve(path, cmd->token, info->envp))
 			error(ER_EXECVE, "execve", 0, 0);
 		exit(info->status);

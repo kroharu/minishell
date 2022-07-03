@@ -32,8 +32,6 @@ void	multiple_pipe(t_info *info, t_cmd *cmd)
 			close(tmp->pipefd[0]);
 			close(tmp->pipefd[1]);
 			error_exit(ER_FORK, 0);
-			/*perror(": fork");*/
-			/*exit(info->status);*/
 		}
 		else if (cpid == 0)
 		{

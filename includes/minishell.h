@@ -6,7 +6,7 @@
 /*   By: ladrian <ladrian@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/30 17:38:56 by ladrian           #+#    #+#             */
-/*   Updated: 2022/07/03 13:57:10 by ladrian          ###   ########.fr       */
+/*   Updated: 2022/07/03 15:34:45 by cgoth            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,6 @@
 # define QUOTE_ERR -1
 # define PIPE_ERR -2
 # define REDIR_ERR -3
-# define HERDOC_ERR -4
 
 # define ER_MALLOC 1
 # define ER_EXECVE 2
@@ -173,11 +172,11 @@ void			sigint_empty_handler(int signum);
 void			sigint_handler_parent(int signum);
 void			sigquit_handler_parent(int signum);
 //gnl		
-char			*get_next_line(int fd);
-int				find_n(char *s);
-void			free_cache(char **s1);
-void			cache_gen(char **buf, char **cache, int r);
-char			*free_gnl(char **s1, char **s2);
+//char			*get_next_line(int fd);
+//int				find_n(char *s);
+//void			free_cache(char **s1);
+//void			cache_gen(char **buf, char **cache, int r);
+//char			*free_gnl(char **s1, char **s2);
 
 char			**parse_input(char *input, t_info *info);
 void			find_envp(t_parser *parser, int envp, t_info *info);
@@ -217,6 +216,5 @@ char			*empty_envp(char *str, char *value, char *key);
 int				cmp_key(char *str, char *key);
 int				quote_checker(char **input);
 int				redir_checker(char **input);
-int				herdoc_checker(char **input);
 
 #endif

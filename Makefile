@@ -17,7 +17,7 @@ FILES = main.c	init.c	executor.c\
 		env.c	ft_exit.c	export.c\
 		export_empty_args.c	export_utils.c\
 		env_vars_utils.c	dup_utils.c\
-		redir.c	get_next_line.c	get_next_line_utils.c\
+		redir.c\
 		find_cmd.c	free_utils.c	signals.c\
 		parser_1.c	parser_2.c	parser_3.c\
 		parser_4.c	parser_5.c	parser_6.c\

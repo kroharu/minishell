@@ -6,7 +6,7 @@
 /*   By: ladrian <ladrian@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/18 17:32:24 by ladrian           #+#    #+#             */
-/*   Updated: 2022/07/03 13:46:43 by ladrian          ###   ########.fr       */
+/*   Updated: 2022/07/03 15:23:49 by cgoth            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,16 +18,10 @@ void	ft_putendl_fd(char *s, int fd)
 	write(fd, "\n", sizeof(char));
 }
 
-void	parse_error(int error)
+void	parse_error(int err_code)
 {
-	if (error == QUOTE_ERR)
-		ft_putendl_fd("error: unclosed qoutes", STDERR_FILENO);
-	else if (error == PIPE_ERR)
-		ft_putendl_fd("error: bad pipes", STDERR_FILENO);
-	else if (error == REDIR_ERR)
-		ft_putendl_fd("error: empty redirection args", STDERR_FILENO);
-	else if (error == HERDOC_ERR)
-		ft_putendl_fd("error: empty heredoc args", STDERR_FILENO);
+	if (err_code < 0)
+		error(err_code, 0, 0, "syntax error\n");
 }
 
 int	find_reverse_pipe(char *token)

@@ -80,15 +80,16 @@ static void    fill_heredoc(t_cmd *cmd, char *eof)
 
     if (cmd->redir_fd_in >= 0)
     {
-        write(STDOUT_FILENO, "> ", 2);
-        tmp = get_next_line(STDIN_FILENO);
+		tmp = readline("> ");
         while (ft_strcmp(tmp, eof, -1))
         {
-            tmp = ft_strjoin(tmp, "\n", 1);
+			if (tmp)
+            	tmp = ft_strjoin(tmp, "\n", 1);
+			else
+				break ;
             write(cmd->redir_fd_in, tmp, ft_strlen(tmp));
             free(tmp);
-            write(STDOUT_FILENO, "> ", 2);
-            tmp = get_next_line(STDIN_FILENO);
+			tmp = readline("> ");
         }
 		close(cmd->redir_fd_in);
 		cmd->redir_fd_in = open("here_doc", O_RDONLY);

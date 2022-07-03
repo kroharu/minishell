@@ -19,7 +19,8 @@ static int	one_arg(t_info *info, char **args)
 	if (!is_num(args[1]))
 	{
 		write(STDOUT_FILENO, "exit\n", 5);
-		error(ER_EXIT, "exit", args[1], ": numeric argument required\n");
+		error(ER_EXIT, "exit", args[1],\
+				": numeric argument required\n");
 		info->status = 255;
 		info->exit_flag = 1;
 		return (info->status);

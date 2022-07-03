@@ -27,7 +27,8 @@ int	unset(t_info *info, char **args)
 	{
 		if (!valid_args(args[i]))
 		{
-			error(ER_UNSET, "unset", args[i], ": not a valid identifier\n");
+			error(ER_UNSET, "unset", args[i],\
+				   ": not a valid identifier\n");
 			info->status = 1;
 		}
 		else
