@@ -1,16 +1,66 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   parser_3.c                                         :+:      :+:    :+:   */
+/*   envp_handler.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ladrian <ladrian@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/16 16:41:13 by ladrian           #+#    #+#             */
-/*   Updated: 2022/07/03 14:19:59 by ladrian          ###   ########.fr       */
+/*   Updated: 2022/07/03 19:01:07 by ladrian          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+char	*envp_with_symbols(char *str, char *value, char *key)
+{
+	int		i;
+	int		j;
+	int		k;
+	char	*copy;
+
+	i = find_dollar(str);
+	copy = malloc(sizeof(char) * (ft_strlen(value)
+				+ ft_strlen(str) - cmp_key(str, key) + 2));
+	if (!copy)
+		return (NULL);
+	j = -1;
+	while (++j < i)
+		copy[j] = str[j];
+	k = -1;
+	while (value[++k])
+		copy[i++] = value[k];
+	while (str[j + cmp_key(str, key)])
+	{
+		copy[i++] = str[j + cmp_key(str, key) + 1];
+		j++;
+	}
+	copy[i] = '\0';
+	return (copy);
+}
+
+void	find_envp(t_parser *parser, int envp, t_info *info)
+{
+	int		i;
+	char	*tmp;
+	char	**arr;
+	t_env	*lst;
+
+	lst = info->env_list;
+	arr = parser->input;
+	i = -1;
+	while (arr[++i])
+	{
+		if (i == envp)
+			arr[i] = loop(arr[i], lst, info);
+		else
+		{
+			tmp = arr[i];
+			arr[i] = ft_strdup(arr[i]);
+			free(tmp);
+		}
+	}
+}
 
 void	pre_find_envp(t_parser *parser, t_info *info)
 {
@@ -38,41 +88,7 @@ void	pre_find_envp(t_parser *parser, t_info *info)
 	}
 }
 
-t_list	*ft_mylstlast(t_list *lst)
-{
-	if (!lst)
-		return (NULL);
-	while (lst->next)
-		lst = lst->next;
-	return (lst);
-}
-
-void	free_tokens(char **tokens)
-{
-	int	i;
-
-	i = 0;
-	while (tokens[i])
-	{
-		free(tokens[i]);
-		i++;
-	}
-	free(tokens);
-}
-
-int	cmp_key(char *str, char *key)
-{
-	int	begin;
-	int	end;
-
-	begin = find_dollar(str) + 1;
-	end = -1;
-	while (str[begin] == key[++end] && str[begin] && key [end])
-		begin++;
-	return (end);
-}
-
-char	*envp_with_symbols(char *str, char *value, char *key)
+char	*empty_envp(char *str, char *value, char *key)
 {
 	int		i;
 	int		j;
@@ -95,6 +111,29 @@ char	*envp_with_symbols(char *str, char *value, char *key)
 		copy[i++] = str[j + cmp_key(str, key) + 1];
 		j++;
 	}
+	free(key);
 	copy[i] = '\0';
+	return (copy);
+}
+
+char	*empty_envp_key(char *str)
+{
+	int		i;
+	int		j;
+	int		k;
+	char	*copy;
+
+	i = find_dollar(str);
+	j = i;
+	k = -1;
+	while (str[++i])
+		if (str[i] == ' ' || str[i] == '\'' || str[i] == '\"')
+			break ;
+	copy = malloc(sizeof(char) * (i - j + 1));
+	if (!copy)
+		return (NULL);
+	while (j < i - 1)
+		copy[++k] = str[++j];
+	copy[++k] = '\0';
 	return (copy);
 }

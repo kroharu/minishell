@@ -1,65 +1,37 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   parser_5.c                                         :+:      :+:    :+:   */
+/*   parser_utils.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ladrian <ladrian@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/06/16 16:44:22 by ladrian           #+#    #+#             */
-/*   Updated: 2022/06/18 19:31:20 by ladrian          ###   ########.fr       */
+/*   Created: 2022/06/30 16:44:07 by ladrian           #+#    #+#             */
+/*   Updated: 2022/07/03 18:51:13 by ladrian          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	ft_lstsize(t_list *lst)
+int	ft_isdigit(int c)
 {
-	int		size;
-
-	if (!lst)
+	if ((c >= '0') && (c <= '9'))
+		return (1);
+	else
 		return (0);
-	size = 1;
-	while (lst->next)
-	{
-		lst = lst->next;
-		size++;
-	}
-	return (size);
 }
 
-void	**list_to_array(t_list *list, int *arr_size)
+int	ft_isalpha(int c)
 {
-	t_list	*tmp;
-	void	**arr;
-	int		size;
-	int		i;
-
-	size = ft_lstsize(list);
-	arr = safe_malloc((size + 1) * sizeof(void *));
-	tmp = list;
-	i = 0;
-	while (tmp)
-	{
-		arr[i] = tmp->content;
-		tmp = tmp->next;
-		i++;
-	}
-	arr[size] = NULL;
-	if (arr_size)
-		*arr_size = size;
-	return (arr);
+	if (((c >= 'A') && (c <= 'Z')) || ((c >= 'a') && (c <= 'z')))
+		return (1);
+	else
+		return (0);
 }
 
-t_list	*ft_mylstnew(void *content)
+void	ft_putendl_fd(char *s, int fd)
 {
-	t_list	*new;
-
-	new = malloc(sizeof(t_list));
-	if (new == NULL)
-		return (NULL);
-	new->content = content;
-	new->next = NULL;
-	return (new);
+	ft_putstr_fd(s, fd);
+	write(fd, "\n", sizeof(char));
 }
 
 size_t	ft_strlcpy(char *dst, const char *src, size_t dstsize)

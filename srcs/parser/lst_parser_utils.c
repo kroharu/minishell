@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   parser_4.c                                         :+:      :+:    :+:   */
+/*   lst_parser_utils.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ladrian <ladrian@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/16 16:42:43 by ladrian           #+#    #+#             */
-/*   Updated: 2022/06/16 16:45:05 by ladrian          ###   ########.fr       */
+/*   Updated: 2022/07/03 18:57:13 by ladrian          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,22 +18,6 @@ void	ft_mylstadd_back(t_list **lst, t_list *new)
 		ft_mylstlast(*lst)->next = new;
 	else
 		(*lst) = new;
-}
-
-void	fatal_error(void)
-{
-	perror("fatal error: ");
-	exit(EXIT_FAILURE);
-}
-
-void	*safe_malloc(size_t size)
-{
-	void	*p;
-
-	p = malloc(size);
-	if (!p)
-		fatal_error();
-	return (p);
 }
 
 void	ft_lstdelone(t_list *lst, void (*del)(void*))
@@ -59,4 +43,31 @@ void	ft_lstclear(t_list **lst, void (*del)(void*))
 		ft_lstdelone(current, del);
 	}
 	*lst = NULL;
+}
+
+t_list	*ft_mylstnew(void *content)
+{
+	t_list	*new;
+
+	new = malloc(sizeof(t_list));
+	if (new == NULL)
+		return (NULL);
+	new->content = content;
+	new->next = NULL;
+	return (new);
+}
+
+int	ft_lstsize(t_list *lst)
+{
+	int		size;
+
+	if (!lst)
+		return (0);
+	size = 1;
+	while (lst->next)
+	{
+		lst = lst->next;
+		size++;
+	}
+	return (size);
 }

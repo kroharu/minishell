@@ -16,7 +16,6 @@
 
 #include "minishell.h"
 
-
 static void	init_info(t_info *info, char **envp)
 {
 	info->exit_flag = 0;
@@ -39,11 +38,6 @@ int	eof_detect(char *input)
 	}
 	return (0);
 }
-
-//обработать < и > и !!!! && ctrl+c в дочке минишелл
-//переделать update_envp()
-//подумать что делать с ER_CMDDIR
-//обработать ошибки в multiple_pipe()
 
 int	main(int argc, char **argv, char **envp)
 {

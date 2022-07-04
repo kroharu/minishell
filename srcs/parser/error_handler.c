@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   parser_6.c                                         :+:      :+:    :+:   */
+/*   error_handler.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ladrian <ladrian@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/18 17:29:21 by ladrian           #+#    #+#             */
-/*   Updated: 2022/07/03 17:20:28 by ladrian          ###   ########.fr       */
+/*   Updated: 2022/07/03 18:53:56 by ladrian          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,37 +66,14 @@ int	quote_checker(char **input)
 	return (0);
 }
 
-int	pipe_checker(char **input, int num)
+void	parse_error(int err_code)
 {
-	int	i;
-	int	j;
-
-	i = -1;
-	if (find_pipe(input[0]) || find_reverse_pipe(input[num - 1]))
-		return (1);
-	while (++i < num - 1)
-	{
-		j = -1;
-		if (find_reverse_pipe(input[i]) && find_pipe(input[i + 1]))
-			return (1);
-		while (input[i][++j + 1])
-			if (input[i][j] == '|' && input[i][j + 1] == '|')
-				return (1);
-	}
-	return (0);
+	if (err_code < 0)
+		error(err_code, 0, 0, "syntax error\n");
 }
 
-int	find_pipe(char *token)
+void	fatal_error(void)
 {
-	int	i;
-
-	i = -1;
-	while (token && token[++i])
-	{
-		if (ft_isalpha(token[i]) || ft_isdigit(token[i]))
-			break ;
-		else if (token[i] == '|')
-			return (1);
-	}
-	return (0);
+	perror("fatal error: ");
+	exit(EXIT_FAILURE);
 }

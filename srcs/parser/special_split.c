@@ -1,27 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   parser_2.c                                         :+:      :+:    :+:   */
+/*   special_split.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ladrian <ladrian@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/16 16:39:17 by ladrian           #+#    #+#             */
-/*   Updated: 2022/06/18 19:31:08 by ladrian          ###   ########.fr       */
+/*   Updated: 2022/07/03 18:57:09 by ladrian          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-char	**special_split(char *line, char separator, int *size)
-{
-	t_list	*words;
-	char	**arr;
-
-	words = get_words(line, separator);
-	arr = (char **)list_to_array(words, size);
-	ft_lstclear(&words, &none);
-	return (arr);
-}
 
 t_list	*get_words(char *line, char separator)
 {
@@ -88,4 +77,27 @@ void	none(void *ptr)
 {
 	ptr = NULL;
 	return ;
+}
+
+void	**list_to_array(t_list *list, int *arr_size)
+{
+	t_list	*tmp;
+	void	**arr;
+	int		size;
+	int		i;
+
+	size = ft_lstsize(list);
+	arr = safe_malloc((size + 1) * sizeof(void *));
+	tmp = list;
+	i = 0;
+	while (tmp)
+	{
+		arr[i] = tmp->content;
+		tmp = tmp->next;
+		i++;
+	}
+	arr[size] = NULL;
+	if (arr_size)
+		*arr_size = size;
+	return (arr);
 }

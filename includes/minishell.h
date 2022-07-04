@@ -6,7 +6,7 @@
 /*   By: ladrian <ladrian@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/30 17:38:56 by ladrian           #+#    #+#             */
-/*   Updated: 2022/07/03 17:21:16 by ladrian          ###   ########.fr       */
+/*   Updated: 2022/07/03 19:11:20 by ladrian          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,8 +100,6 @@ typedef struct s_info
 	char	**token;
 	void	*builtins[7];
 	char	*blt_names[7];
-	//int		last_flag;
-	//pid_t	cpid;
 	int		status;
 	int		exit_flag;
 	int		parse_status;
@@ -118,7 +116,7 @@ int				cd(t_info *info, char **args);
 int				unset(t_info *info, char **args);
 int				env(t_info *info, char **args);
 int				ft_exit(t_info *info, char **args);
-int 			export(t_info *info, char **args);
+int				export(t_info *info, char **args);
 void			empty_args(t_env *env_list);
 void			free_copy(char **copy);
 int				node_cnt(t_env *env_list);
@@ -146,7 +144,6 @@ t_cmd			*ft_cmdlast(t_cmd *lst);
 t_cmd			*ft_cmdnew(char **token);
 t_cmd			*ft_cmdadd_back(t_cmd *lst, t_cmd *new_lst);
 t_env			*init_env(char	**envp);
-//char			**init_args(int argc, char **argv);
 t_cmd			*init_cmd(char **token, int pipe_cnt);
 void			init_blt_names(char *blt_names[]);
 void			init_builtins(void *builtins[]);
@@ -158,7 +155,7 @@ int				find_builtin(t_info *info, char *token);
 char			*find_bin(t_info *info, char **cmd);
 void			execute(t_info *info);
 void			exec_solocmd(t_info *info, t_cmd *cmd);
-void			multiple_pipe(t_info *info, t_cmd *cmd);//try 2 fix signals
+void			multiple_pipe(t_info *info, t_cmd *cmd);
 void			exec_cmd(t_info *info, t_cmd *cmd);
 void			get_status(t_info *info);
 void			check_redir(t_cmd **cmd);
@@ -171,13 +168,8 @@ void			sigquit_handler_child(int signum);
 void			sigint_empty_handler(int signum);
 void			sigint_handler_parent(int signum);
 void			sigquit_handler_parent(int signum);
-//gnl		
-//char			*get_next_line(int fd);
-//int				find_n(char *s);
-//void			free_cache(char **s1);
-//void			cache_gen(char **buf, char **cache, int r);
-//char			*free_gnl(char **s1, char **s2);
 
+char			*loop(char *arr, t_env *lst, t_info *info);
 char			**parse_input(char *input, t_info *info);
 void			find_envp(t_parser *parser, int envp, t_info *info);
 int				find_dollar(char *str);
@@ -217,5 +209,6 @@ int				cmp_key(char *str, char *key);
 int				quote_checker(char **input);
 int				redir_checker(char **input);
 int				find_start_of_envp(int *j, int k, char *str);
+char			*rewrite_token(char *str, t_env *lst, t_info *info);
 
 #endif

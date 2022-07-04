@@ -1,28 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   parser_7.c                                         :+:      :+:    :+:   */
+/*   pipe_handler.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ladrian <ladrian@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/18 17:32:24 by ladrian           #+#    #+#             */
-/*   Updated: 2022/07/03 15:23:49 by cgoth            ###   ########.fr       */
+/*   Updated: 2022/07/03 18:53:04 by ladrian          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-void	ft_putendl_fd(char *s, int fd)
-{
-	ft_putstr_fd(s, fd);
-	write(fd, "\n", sizeof(char));
-}
-
-void	parse_error(int err_code)
-{
-	if (err_code < 0)
-		error(err_code, 0, 0, "syntax error\n");
-}
 
 int	find_reverse_pipe(char *token)
 {
@@ -53,6 +41,41 @@ int	pipe_count(char *input, int *i)
 			pipe_num++;
 	*i = a;
 	return (pipe_num);
+}
+
+int	pipe_checker(char **input, int num)
+{
+	int	i;
+	int	j;
+
+	i = -1;
+	if (find_pipe(input[0]) || find_reverse_pipe(input[num - 1]))
+		return (1);
+	while (++i < num - 1)
+	{
+		j = -1;
+		if (find_reverse_pipe(input[i]) && find_pipe(input[i + 1]))
+			return (1);
+		while (input[i][++j + 1])
+			if (input[i][j] == '|' && input[i][j + 1] == '|')
+				return (1);
+	}
+	return (0);
+}
+
+int	find_pipe(char *token)
+{
+	int	i;
+
+	i = -1;
+	while (token && token[++i])
+	{
+		if (ft_isalpha(token[i]) || ft_isdigit(token[i]))
+			break ;
+		else if (token[i] == '|')
+			return (1);
+	}
+	return (0);
 }
 
 char	*split_pipes(char *input)
