@@ -7,7 +7,6 @@ USER = cgoth
 READCLUDE	= -I~/.brew/Cellar/readline/8.1.2/include
 
 READLINE	= -lreadline -L ~/.brew/Cellar/readline/8.1.2/lib $(READCLUDE)
-#FLAGS = -lreadline -ltermcap -L ~/.brew/opt/readline/lib -I ~/.brew/opt/readline/include
 
 FILES = main.c	init.c	executor.c\
 	   	lst_utils.c	cmd_lst_utils.c\
@@ -27,6 +26,8 @@ FILES = main.c	init.c	executor.c\
 VPATH = srcs/\
 		srcs/builtins\
 		srcs/parser\
+		srcs/exec\
+		srcs/utils\
 
 HEADERS = includes/minishell.h\
 
