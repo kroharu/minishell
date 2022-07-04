@@ -1,17 +1,29 @@
-#include "minishell.h"
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   find_cmd.c                                         :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: cgoth <marvin@42.fr>                       +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2022/07/04 17:31:19 by cgoth             #+#    #+#             */
+/*   Updated: 2022/07/04 17:31:29 by cgoth            ###   ########.fr       */
+/*—————————————————————————————————No norme?——————————————————————————————————*/
+/*						⠀⣞⢽⢪⢣⢣⢣⢫⡺⡵⣝⡮⣗⢷⢽⢽⢽⣮⡷⡽⣜⣜⢮⢺⣜⢷⢽⢝⡽⣝                        */
+/*						⠸⡸⠜⠕⠕⠁⢁⢇⢏⢽⢺⣪⡳⡝⣎⣏⢯⢞⡿⣟⣷⣳⢯⡷⣽⢽⢯⣳⣫⠇                        */
+/*						⠀⠀⢀⢀⢄⢬⢪⡪⡎⣆⡈⠚⠜⠕⠇⠗⠝⢕⢯⢫⣞⣯⣿⣻⡽⣏⢗⣗⠏⠀                        */
+/*						⠀⠪⡪⡪⣪⢪⢺⢸⢢⢓⢆⢤⢀⠀⠀⠀⠀⠈⢊⢞⡾⣿⡯⣏⢮⠷⠁⠀⠀                         */
+/*						⠀⠀⠀⠈⠊⠆⡃⠕⢕⢇⢇⢇⢇⢇⢏⢎⢎⢆⢄⠀⢑⣽⣿⢝⠲⠉⠀⠀⠀⠀                        */
+/*						⠀⠀⠀⠀⠀⡿⠂⠠⠀⡇⢇⠕⢈⣀⠀⠁⠡⠣⡣⡫⣂⣿⠯⢪⠰⠂⠀⠀⠀⠀                        */
+/*						⠀⠀⠀⠀⡦⡙⡂⢀⢤⢣⠣⡈⣾⡃⠠⠄⠀⡄⢱⣌⣶⢏⢊⠂⠀⠀⠀⠀⠀⠀                        */
+/*						⠀⠀⠀⠀⢝⡲⣜⡮⡏⢎⢌⢂⠙⠢⠐⢀⢘⢵⣽⣿⡿⠁⠁⠀⠀⠀⠀⠀⠀⠀                        */
+/*						⠀⠀⠀⠀⠨⣺⡺⡕⡕⡱⡑⡆⡕⡅⡕⡜⡼⢽⡻⠏⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀                        */
+/*						⠀⠀⠀⠀⣼⣳⣫⣾⣵⣗⡵⡱⡡⢣⢑⢕⢜⢕⡝⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀                        */
+/*						⠀⠀⠀⣴⣿⣾⣿⣿⣿⡿⡽⡑⢌⠪⡢⡣⣣⡟⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀                        */
+/*						⠀⠀⠀⡟⡾⣿⢿⢿⢵⣽⣾⣼⣘⢸⢸⣞⡟⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀                        */
+/*						⠀⠀⠀⠀⠁⠇⠡⠩⡫⢿⣝⡻⡮⣒⢽⠋⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀                        */
+/* ************************************************************************** */
 
-int	is_dir(char *path)
-{
-	DIR	*dir;
-	
-	dir = opendir(path);
-	if (dir)
-	{
-		closedir(dir);
-		return (SUCCESS);
-	}
-	return (FAIL);
-}
+#include "minishell.h"
 
 int	find_builtin(t_info *info, char *token)
 {
@@ -28,7 +40,7 @@ int	find_builtin(t_info *info, char *token)
 
 static int	dir_searcher(char *split, char *cmd)
 {
-	DIR	*dirp;
+	DIR				*dirp;
 	struct dirent	*dp;
 
 	dirp = opendir(split);
@@ -74,7 +86,7 @@ char	*find_bin(t_info *info, char **cmd)
 	char	**split;
 	int		i;
 
-	if (cmd[0][0] == '/' || cmd[0][0] =='.')
+	if (cmd[0][0] == '/' || cmd[0][0] == '.')
 	{
 		if (check_path(info, cmd))
 			return (cmd[0]);
@@ -88,7 +100,7 @@ char	*find_bin(t_info *info, char **cmd)
 		if (dir_searcher(split[i], cmd[0]))
 		{
 			path = gen_path(split, cmd[0], i);
-			return(path);
+			return (path);
 		}
 	}
 	free_split(split);

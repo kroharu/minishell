@@ -1,13 +1,26 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   minishell.h                                        :+:      :+:    :+:   */
+/*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ladrian <ladrian@student.42.fr>            +#+  +:+       +#+        */
+/*   By: cgoth <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/06/30 17:38:56 by ladrian           #+#    #+#             */
-/*   Updated: 2022/07/03 17:21:16 by ladrian          ###   ########.fr       */
-/*                                                                            */
+/*   Created: 2022/07/04 17:19:38 by cgoth             #+#    #+#             */
+/*   Updated: 2022/07/04 17:24:42 by cgoth            ###   ########.fr       */
+/*—————————————————————————————————No norme?——————————————————————————————————*/
+/*						⠀⣞⢽⢪⢣⢣⢣⢫⡺⡵⣝⡮⣗⢷⢽⢽⢽⣮⡷⡽⣜⣜⢮⢺⣜⢷⢽⢝⡽⣝                        */
+/*						⠸⡸⠜⠕⠕⠁⢁⢇⢏⢽⢺⣪⡳⡝⣎⣏⢯⢞⡿⣟⣷⣳⢯⡷⣽⢽⢯⣳⣫⠇                        */
+/*						⠀⠀⢀⢀⢄⢬⢪⡪⡎⣆⡈⠚⠜⠕⠇⠗⠝⢕⢯⢫⣞⣯⣿⣻⡽⣏⢗⣗⠏⠀                        */
+/*						⠀⠪⡪⡪⣪⢪⢺⢸⢢⢓⢆⢤⢀⠀⠀⠀⠀⠈⢊⢞⡾⣿⡯⣏⢮⠷⠁⠀⠀                         */
+/*						⠀⠀⠀⠈⠊⠆⡃⠕⢕⢇⢇⢇⢇⢇⢏⢎⢎⢆⢄⠀⢑⣽⣿⢝⠲⠉⠀⠀⠀⠀                        */
+/*						⠀⠀⠀⠀⠀⡿⠂⠠⠀⡇⢇⠕⢈⣀⠀⠁⠡⠣⡣⡫⣂⣿⠯⢪⠰⠂⠀⠀⠀⠀                        */
+/*						⠀⠀⠀⠀⡦⡙⡂⢀⢤⢣⠣⡈⣾⡃⠠⠄⠀⡄⢱⣌⣶⢏⢊⠂⠀⠀⠀⠀⠀⠀                        */
+/*						⠀⠀⠀⠀⢝⡲⣜⡮⡏⢎⢌⢂⠙⠢⠐⢀⢘⢵⣽⣿⡿⠁⠁⠀⠀⠀⠀⠀⠀⠀                        */
+/*						⠀⠀⠀⠀⠨⣺⡺⡕⡕⡱⡑⡆⡕⡅⡕⡜⡼⢽⡻⠏⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀                        */
+/*						⠀⠀⠀⠀⣼⣳⣫⣾⣵⣗⡵⡱⡡⢣⢑⢕⢜⢕⡝⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀                        */
+/*						⠀⠀⠀⣴⣿⣾⣿⣿⣿⡿⡽⡑⢌⠪⡢⡣⣣⡟⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀                        */
+/*						⠀⠀⠀⡟⡾⣿⢿⢿⢵⣽⣾⣼⣘⢸⢸⣞⡟⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀                        */
+/*						⠀⠀⠀⠀⠁⠇⠡⠩⡫⢿⣝⡻⡮⣒⢽⠋⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀                        */
 /* ************************************************************************** */
 
 #ifndef MINISHELL_H
@@ -33,6 +46,7 @@
 
 # define PROMPT "💩$> "
 # define PROMPT_ERR "💩: "
+# define HD "here_doc"
 
 # define QUOTE_ERR -1
 # define PIPE_ERR -2
@@ -100,8 +114,6 @@ typedef struct s_info
 	char	**token;
 	void	*builtins[7];
 	char	*blt_names[7];
-	//int		last_flag;
-	//pid_t	cpid;
 	int		status;
 	int		exit_flag;
 	int		parse_status;
@@ -118,7 +130,7 @@ int				cd(t_info *info, char **args);
 int				unset(t_info *info, char **args);
 int				env(t_info *info, char **args);
 int				ft_exit(t_info *info, char **args);
-int 			export(t_info *info, char **args);
+int				export(t_info *info, char **args);
 void			empty_args(t_env *env_list);
 void			free_copy(char **copy);
 int				node_cnt(t_env *env_list);
@@ -126,7 +138,7 @@ int				find_eq(char *arg);
 int				valid_args(char *args);
 t_env			*find_env(t_env *env_list, char *arg);
 void			error(int err_code, char *cmd, char *input, char *text);
-void			error_exit(int code, char *cmd);
+void			error_exit(int code);
 int				ft_strlen(const char *str);
 int				ft_strcmp(char *s1, char *s2, char ch);
 int				ft_atoi(char *nptr);
@@ -146,19 +158,17 @@ t_cmd			*ft_cmdlast(t_cmd *lst);
 t_cmd			*ft_cmdnew(char **token);
 t_cmd			*ft_cmdadd_back(t_cmd *lst, t_cmd *new_lst);
 t_env			*init_env(char	**envp);
-//char			**init_args(int argc, char **argv);
 t_cmd			*init_cmd(char **token, int pipe_cnt);
 void			init_blt_names(char *blt_names[]);
 void			init_builtins(void *builtins[]);
 int				check_pipes(char **token);
 int				ft_arrlen(char	**arr);
-int				is_dir(char *path);
 int				redir_num(char **token);
 int				find_builtin(t_info *info, char *token);
 char			*find_bin(t_info *info, char **cmd);
 void			execute(t_info *info);
 void			exec_solocmd(t_info *info, t_cmd *cmd);
-void			multiple_pipe(t_info *info, t_cmd *cmd);//try 2 fix signals
+void			multiple_pipe(t_info *info, t_cmd *cmd);
 void			exec_cmd(t_info *info, t_cmd *cmd);
 void			get_status(t_info *info);
 void			check_redir(t_cmd **cmd);
@@ -171,12 +181,6 @@ void			sigquit_handler_child(int signum);
 void			sigint_empty_handler(int signum);
 void			sigint_handler_parent(int signum);
 void			sigquit_handler_parent(int signum);
-//gnl		
-//char			*get_next_line(int fd);
-//int				find_n(char *s);
-//void			free_cache(char **s1);
-//void			cache_gen(char **buf, char **cache, int r);
-//char			*free_gnl(char **s1, char **s2);
 
 char			**parse_input(char *input, t_info *info);
 void			find_envp(t_parser *parser, int envp, t_info *info);

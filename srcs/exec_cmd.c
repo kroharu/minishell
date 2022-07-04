@@ -1,3 +1,28 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   exec_cmd.c                                         :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: cgoth <marvin@42.fr>                       +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2022/07/04 17:30:40 by cgoth             #+#    #+#             */
+/*   Updated: 2022/07/04 17:30:52 by cgoth            ###   ########.fr       */
+/*—————————————————————————————————No norme?——————————————————————————————————*/
+/*						⠀⣞⢽⢪⢣⢣⢣⢫⡺⡵⣝⡮⣗⢷⢽⢽⢽⣮⡷⡽⣜⣜⢮⢺⣜⢷⢽⢝⡽⣝                        */
+/*						⠸⡸⠜⠕⠕⠁⢁⢇⢏⢽⢺⣪⡳⡝⣎⣏⢯⢞⡿⣟⣷⣳⢯⡷⣽⢽⢯⣳⣫⠇                        */
+/*						⠀⠀⢀⢀⢄⢬⢪⡪⡎⣆⡈⠚⠜⠕⠇⠗⠝⢕⢯⢫⣞⣯⣿⣻⡽⣏⢗⣗⠏⠀                        */
+/*						⠀⠪⡪⡪⣪⢪⢺⢸⢢⢓⢆⢤⢀⠀⠀⠀⠀⠈⢊⢞⡾⣿⡯⣏⢮⠷⠁⠀⠀                         */
+/*						⠀⠀⠀⠈⠊⠆⡃⠕⢕⢇⢇⢇⢇⢇⢏⢎⢎⢆⢄⠀⢑⣽⣿⢝⠲⠉⠀⠀⠀⠀                        */
+/*						⠀⠀⠀⠀⠀⡿⠂⠠⠀⡇⢇⠕⢈⣀⠀⠁⠡⠣⡣⡫⣂⣿⠯⢪⠰⠂⠀⠀⠀⠀                        */
+/*						⠀⠀⠀⠀⡦⡙⡂⢀⢤⢣⠣⡈⣾⡃⠠⠄⠀⡄⢱⣌⣶⢏⢊⠂⠀⠀⠀⠀⠀⠀                        */
+/*						⠀⠀⠀⠀⢝⡲⣜⡮⡏⢎⢌⢂⠙⠢⠐⢀⢘⢵⣽⣿⡿⠁⠁⠀⠀⠀⠀⠀⠀⠀                        */
+/*						⠀⠀⠀⠀⠨⣺⡺⡕⡕⡱⡑⡆⡕⡅⡕⡜⡼⢽⡻⠏⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀                        */
+/*						⠀⠀⠀⠀⣼⣳⣫⣾⣵⣗⡵⡱⡡⢣⢑⢕⢜⢕⡝⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀                        */
+/*						⠀⠀⠀⣴⣿⣾⣿⣿⣿⡿⡽⡑⢌⠪⡢⡣⣣⡟⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀                        */
+/*						⠀⠀⠀⡟⡾⣿⢿⢿⢵⣽⣾⣼⣘⢸⢸⣞⡟⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀                        */
+/*						⠀⠀⠀⠀⠁⠇⠡⠩⡫⢿⣝⡻⡮⣒⢽⠋⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀                        */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
 static void	child_routine(t_info *info, t_cmd *cmd, int builtin)
@@ -9,7 +34,7 @@ static void	child_routine(t_info *info, t_cmd *cmd, int builtin)
 	dup_hub(cmd);
 	if (builtin >= 0)
 	{
-		info->status = ((t_builtins)(info->builtins[builtin]))(info,\
+		info->status = ((t_builtins)(info->builtins[builtin]))(info, \
 				cmd->token);
 		exit(info->status);
 	}
@@ -40,7 +65,7 @@ void	exec_cmd(t_info *info, t_cmd *cmd)
 	update_envp(info);
 	cpid = fork();
 	if (cpid == -1)
-		error_exit(ER_FORK, 0);
+		error_exit(ER_FORK);
 	else if (cpid == 0)
 	{
 		child_routine(info, cmd, builtin);
@@ -51,5 +76,5 @@ void	exec_cmd(t_info *info, t_cmd *cmd)
 	waitpid(cpid, &info->status, 0);
 	get_status(info);
 	if (access("here_doc", F_OK) == 0 && unlink("here_doc"))
-        error(ER_UNLINK, 0, 0, 0);
+		error(ER_UNLINK, 0, 0, 0);
 }

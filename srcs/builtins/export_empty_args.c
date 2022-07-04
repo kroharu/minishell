@@ -1,9 +1,34 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   export_empty_args.c                                :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: cgoth <marvin@42.fr>                       +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2022/07/04 17:26:07 by cgoth             #+#    #+#             */
+/*   Updated: 2022/07/04 17:34:13 by cgoth            ###   ########.fr       */
+/*—————————————————————————————————No norme?——————————————————————————————————*/
+/*						⠀⣞⢽⢪⢣⢣⢣⢫⡺⡵⣝⡮⣗⢷⢽⢽⢽⣮⡷⡽⣜⣜⢮⢺⣜⢷⢽⢝⡽⣝                        */
+/*						⠸⡸⠜⠕⠕⠁⢁⢇⢏⢽⢺⣪⡳⡝⣎⣏⢯⢞⡿⣟⣷⣳⢯⡷⣽⢽⢯⣳⣫⠇                        */
+/*						⠀⠀⢀⢀⢄⢬⢪⡪⡎⣆⡈⠚⠜⠕⠇⠗⠝⢕⢯⢫⣞⣯⣿⣻⡽⣏⢗⣗⠏⠀                        */
+/*						⠀⠪⡪⡪⣪⢪⢺⢸⢢⢓⢆⢤⢀⠀⠀⠀⠀⠈⢊⢞⡾⣿⡯⣏⢮⠷⠁⠀⠀                         */
+/*						⠀⠀⠀⠈⠊⠆⡃⠕⢕⢇⢇⢇⢇⢇⢏⢎⢎⢆⢄⠀⢑⣽⣿⢝⠲⠉⠀⠀⠀⠀                        */
+/*						⠀⠀⠀⠀⠀⡿⠂⠠⠀⡇⢇⠕⢈⣀⠀⠁⠡⠣⡣⡫⣂⣿⠯⢪⠰⠂⠀⠀⠀⠀                        */
+/*						⠀⠀⠀⠀⡦⡙⡂⢀⢤⢣⠣⡈⣾⡃⠠⠄⠀⡄⢱⣌⣶⢏⢊⠂⠀⠀⠀⠀⠀⠀                        */
+/*						⠀⠀⠀⠀⢝⡲⣜⡮⡏⢎⢌⢂⠙⠢⠐⢀⢘⢵⣽⣿⡿⠁⠁⠀⠀⠀⠀⠀⠀⠀                        */
+/*						⠀⠀⠀⠀⠨⣺⡺⡕⡕⡱⡑⡆⡕⡅⡕⡜⡼⢽⡻⠏⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀                        */
+/*						⠀⠀⠀⠀⣼⣳⣫⣾⣵⣗⡵⡱⡡⢣⢑⢕⢜⢕⡝⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀                        */
+/*						⠀⠀⠀⣴⣿⣾⣿⣿⣿⡿⡽⡑⢌⠪⡢⡣⣣⡟⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀                        */
+/*						⠀⠀⠀⡟⡾⣿⢿⢿⢵⣽⣾⣼⣘⢸⢸⣞⡟⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀                        */
+/*						⠀⠀⠀⠀⠁⠇⠡⠩⡫⢿⣝⡻⡮⣒⢽⠋⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀                        */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
 static char	**sort_copy(char **copy)
 {
-	int	i;
-	int	j;
+	int		i;
+	int		j;
 	char	*tmp;
 
 	i = -1;
@@ -69,16 +94,16 @@ static void	malloc_copies(t_env *env_list, char **copy, int len)
 	while (++i < len && tmp)
 	{
 		if (!tmp->value)
-			copy[i] = malloc(sizeof(char *)*(ft_strlen(tmp->key)+1));
+			copy[i] = malloc(sizeof(char *) *(ft_strlen(tmp->key) + 1));
 		else if (tmp->value && !*tmp->value)
-			copy[i] = malloc(sizeof(char *)*(ft_strlen(tmp->key)+4));
+			copy[i] = malloc(sizeof(char *) *(ft_strlen(tmp->key) + 4));
 		else
 		{
-			copy[i] = malloc(sizeof(char *)*(ft_strlen(tmp->key) + \
+			copy[i] = malloc(sizeof(char *) *(ft_strlen(tmp->key) + \
 						ft_strlen(tmp->value) + 4));
 		}
 		if (!copy)
-			error_exit(ER_MALLOC, 0);
+			error_exit(ER_MALLOC);
 		copy[i] = fill_copy(copy[i], tmp);
 		tmp = tmp->next;
 	}
@@ -90,9 +115,9 @@ void	empty_args(t_env *env_list)
 	char	**copy;
 
 	len = node_cnt(env_list);
-	copy = malloc(sizeof(char *)*(len + 1));
+	copy = malloc(sizeof(char *) *(len + 1));
 	if (!copy)
-		error_exit(ER_MALLOC, 0);
+		error_exit(ER_MALLOC);
 	copy[len] = 0;
 	malloc_copies(env_list, copy, len);
 	print_copy(copy);
