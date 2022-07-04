@@ -6,7 +6,7 @@
 /*   By: cgoth <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/04 17:30:40 by cgoth             #+#    #+#             */
-/*   Updated: 2022/07/04 17:42:49 by cgoth            ###   ########.fr       */
+/*   Updated: 2022/07/04 19:15:50 by cgoth            ###   ########.fr       */
 /*—————————————————————————————————No norme?——————————————————————————————————*/
 /*                      ⠀⣞⢽⢪⢣⢣⢣⢫⡺⡵⣝⡮⣗⢷⢽⢽⢽⣮⡷⡽⣜⣜⢮⢺⣜⢷⢽⢝⡽⣝                    */
 /*                      ⠸⡸⠜⠕⠕⠁⢁⢇⢏⢽⢺⣪⡳⡝⣎⣏⢯⢞⡿⣟⣷⣳⢯⡷⣽⢽⢯⣳⣫⠇                    */
@@ -25,6 +25,19 @@
 
 #include "minishell.h"
 
+int	find_builtin(t_info *info, char *token)
+{
+	int	i;
+
+	i = -1;
+	while (++i < 7)
+	{
+		if (ft_strcmp(token, info->blt_names[i], -1) == 0)
+			return (i);
+	}
+	return (-1);
+}
+
 static void	child_routine(t_info *info, t_cmd *cmd, int builtin)
 {
 	char	*path;
@@ -41,6 +54,8 @@ static void	child_routine(t_info *info, t_cmd *cmd, int builtin)
 	else
 	{
 		path = find_bin(info, cmd->token);
+		if (is_dir(path))
+			error_dir(path);
 		if (path && execve(path, cmd->token, info->envp))
 			error(ER_EXECVE, "execve", 0, 0);
 		exit(info->status);

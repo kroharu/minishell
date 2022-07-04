@@ -6,7 +6,7 @@
 /*   By: cgoth <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/04 17:33:26 by cgoth             #+#    #+#             */
-/*   Updated: 2022/07/04 17:45:07 by cgoth            ###   ########.fr       */
+/*   Updated: 2022/07/04 19:06:59 by cgoth            ###   ########.fr       */
 /*—————————————————————————————————No norme?——————————————————————————————————*/
 /*                      ⠀⣞⢽⢪⢣⢣⢣⢫⡺⡵⣝⡮⣗⢷⢽⢽⢽⣮⡷⡽⣜⣜⢮⢺⣜⢷⢽⢝⡽⣝                    */
 /*                      ⠸⡸⠜⠕⠕⠁⢁⢇⢏⢽⢺⣪⡳⡝⣎⣏⢯⢞⡿⣟⣷⣳⢯⡷⣽⢽⢯⣳⣫⠇                    */
@@ -38,6 +38,8 @@ static void	non_builtin_loop(t_info *info, t_cmd *cmd)
 		signal(SIGINT, SIG_DFL);
 		signal(SIGQUIT, sigquit_handler_child);
 		path = find_bin(info, cmd->token);
+		if (is_dir(path))
+			error_dir(path);
 		dup_hub(cmd);
 		if (path && execve(path, cmd->token, info->envp))
 			error(ER_EXECVE, "execve", 0, 0);

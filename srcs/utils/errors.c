@@ -6,7 +6,7 @@
 /*   By: cgoth <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/04 17:30:28 by cgoth             #+#    #+#             */
-/*   Updated: 2022/07/04 17:42:41 by cgoth            ###   ########.fr       */
+/*   Updated: 2022/07/04 19:09:31 by cgoth            ###   ########.fr       */
 /*—————————————————————————————————No norme?——————————————————————————————————*/
 /*                      ⠀⣞⢽⢪⢣⢣⢣⢫⡺⡵⣝⡮⣗⢷⢽⢽⢽⣮⡷⡽⣜⣜⢮⢺⣜⢷⢽⢝⡽⣝                    */
 /*                      ⠸⡸⠜⠕⠕⠁⢁⢇⢏⢽⢺⣪⡳⡝⣎⣏⢯⢞⡿⣟⣷⣳⢯⡷⣽⢽⢯⣳⣫⠇                    */
@@ -39,6 +39,12 @@ void	error_exit(int code)
 		perror("dup2");
 	free_all(g_info);
 	exit(err_code);
+}
+
+void	error_dir(char	*path)
+{
+	error(0, path, 0, "is a directory\n");
+	exit(127);
 }
 
 void	error(int err_code, char *cmd, char *input, char *text)

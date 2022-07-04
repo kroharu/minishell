@@ -6,7 +6,7 @@
 /*   By: cgoth <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/04 17:31:19 by cgoth             #+#    #+#             */
-/*   Updated: 2022/07/04 17:43:19 by cgoth            ###   ########.fr       */
+/*   Updated: 2022/07/04 19:16:26 by cgoth            ###   ########.fr       */
 /*—————————————————————————————————No norme?——————————————————————————————————*/
 /*                      ⠀⣞⢽⢪⢣⢣⢣⢫⡺⡵⣝⡮⣗⢷⢽⢽⢽⣮⡷⡽⣜⣜⢮⢺⣜⢷⢽⢝⡽⣝                    */
 /*                      ⠸⡸⠜⠕⠕⠁⢁⢇⢏⢽⢺⣪⡳⡝⣎⣏⢯⢞⡿⣟⣷⣳⢯⡷⣽⢽⢯⣳⣫⠇                    */
@@ -25,17 +25,17 @@
 
 #include "minishell.h"
 
-int	find_builtin(t_info *info, char *token)
+int	is_dir(char *path)
 {
-	int	i;
+	DIR	*dir;
 
-	i = -1;
-	while (++i < 7)
+	dir = opendir(path);
+	if (dir)
 	{
-		if (ft_strcmp(token, info->blt_names[i], -1) == 0)
-			return (i);
+		closedir(dir);
+		return (SUCCESS);
 	}
-	return (-1);
+	return (FAIL);
 }
 
 static int	dir_searcher(char *split, char *cmd)
@@ -62,11 +62,19 @@ static int	dir_searcher(char *split, char *cmd)
 
 static int	check_path(t_info *info, char **cmd)
 {
-	if (access(cmd[0], F_OK) == 0 && access(cmd[0], X_OK) == 0)
-		return (1);
-	error(ER_ACCESS, cmd[0], 0, "Permission denied\n");
-	info->status = 126;
-	return (0);
+	if (access(cmd[0], F_OK) != 0)
+	{
+		error(ER_ACCESS, cmd[0], 0, "No such file or directory\n");
+		info->status = 127;
+		return (0);
+	}
+	else if (access(cmd[0], X_OK) != 0)
+	{
+		error(ER_ACCESS, cmd[0], 0, "Permission denied\n");
+		info->status = 126;
+		return (0);
+	}
+	return (1);
 }
 
 static char	*gen_path(char **split, char *cmd, int i)

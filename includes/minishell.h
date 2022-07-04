@@ -6,7 +6,7 @@
 /*   By: ladrian <ladrian@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/04 17:19:38 by cgoth             #+#    #+#             */
-/*   Updated: 2022/07/04 17:58:10 by ladrian          ###   ########.fr       */
+/*   Updated: 2022/07/04 19:12:56 by cgoth            ###   ########.fr       */
 /*                                                                            */
 /*—————————————————————————————————No norme?——————————————————————————————————*/
 /*                      ⠀⣞⢽⢪⢣⢣⢣⢫⡺⡵⣝⡮⣗⢷⢽⢽⢽⣮⡷⡽⣜⣜⢮⢺⣜⢷⢽⢝⡽⣝                    */
@@ -182,6 +182,8 @@ void			sigquit_handler_child(int signum);
 void			sigint_empty_handler(int signum);
 void			sigint_handler_parent(int signum);
 void			sigquit_handler_parent(int signum);
+int				is_dir(char *path);
+void			error_dir(char	*path);
 
 char			*loop(char *arr, t_env *lst, t_info *info);
 char			**parse_input(char *input, t_info *info);
