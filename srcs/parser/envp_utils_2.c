@@ -1,12 +1,13 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   utils.c                                            :+:      :+:    :+:   */
+/*   envp_utils_2.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cgoth <marvin@42.fr>                       +#+  +:+       +#+        */
+/*   By: ladrian <ladrian@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/07/04 17:33:40 by cgoth             #+#    #+#             */
-/*   Updated: 2022/07/04 17:45:16 by cgoth            ###   ########.fr       */
+/*   Created: 2022/06/16 16:44:22 by ladrian           #+#    #+#             */
+/*   Updated: 2022/07/04 17:58:27 by ladrian          ###   ########.fr       */
+/*                                                                            */
 /*—————————————————————————————————No norme?——————————————————————————————————*/
 /*                      ⠀⣞⢽⢪⢣⢣⢣⢫⡺⡵⣝⡮⣗⢷⢽⢽⢽⣮⡷⡽⣜⣜⢮⢺⣜⢷⢽⢝⡽⣝                    */
 /*                      ⠸⡸⠜⠕⠕⠁⢁⢇⢏⢽⢺⣪⡳⡝⣎⣏⢯⢞⡿⣟⣷⣳⢯⡷⣽⢽⢯⣳⣫⠇                    */
@@ -25,103 +26,53 @@
 
 #include "minishell.h"
 
-int	ft_strlen(const char *str)
+void	*safe_malloc(size_t size)
 {
-	int	len;
+	void	*p;
 
-	len = 0;
-	while (str && str[len])
-		len++;
-	return (len);
+	p = malloc(size);
+	if (!p)
+		fatal_error();
+	return (p);
 }
 
-int	ft_strcmp(char *str1, char *str2, char ch)
+char	*loop(char *arr, t_env *lst, t_info *info)
 {
-	size_t	i;
-
-	if (!str1 && str2)
-		return (*str2);
-	else if (!str2 && str1)
-		return (*str1);
-	else if (str1 && str2)
-	{
-		i = 0;
-		while ((str1[i] || str2[i]) && str1[i] != ch && str2[i] != ch)
-		{
-			if (str1[i] != str2[i])
-				return (str1[i] - str2[i]);
-			i++;
-		}
-	}
-	return (0);
-}
-
-char	*ft_strnstr(char *haystack, char *needle, size_t len)
-{
-	size_t	i;
-	size_t	j;
-
-	i = 0;
-	if (!*needle)
-		return ((char *)haystack);
-	while (haystack && haystack[i] && i < len)
-	{
-		if (haystack[i] == needle[0])
-		{
-			j = 0;
-			while (needle[j] && haystack[i + j] == needle[j] && (i + j) < len)
-				j++;
-			if (!needle[j])
-				return ((char *)haystack + i);
-		}
-		i++;
-	}
-	return (NULL);
-}
-
-char	*ft_strjoin(char *s1, char *s2, int free_mode)
-{
-	int		i;
-	int		j;
+	char	*tmp;
 	char	*str;
+	int		j;
+	int		k;
 
-	i = 0;
-	j = 0;
-	str = malloc(sizeof(char) * (ft_strlen(s1) + ft_strlen(s2) + 1));
-	if (!str)
-		error_exit(ER_MALLOC);
-	while (s1 && s1[i])
+	str = arr;
+	while (lst)
 	{
-		str[i] = s1[i];
-		i++;
+		k = find_start_of_envp(&j, k, str);
+		while (str[++k] == lst->key[++j] && str[k] && lst->key[j])
+			;
+		tmp = str;
+		if (lst->key[j] == '\0' && (str[k] == '\0' || str[k] == ' '
+				|| str[k] == '\"' || str[k] == '\'' || str[k] == '$'))
+		{
+			str = envp_with_symbols(str, lst->value, lst->key);
+			lst = info->env_list;
+		}
+		else
+			str = rewrite_token(str, lst, info);
+		free(tmp);
+		lst = lst->next;
 	}
-	while (s2 && s2[j])
-	{
-		str[i + j] = s2[j];
-		j++;
-	}
-	str[i + j] = '\0';
-	if (free_mode)
-		free(s1);
 	return (str);
 }
 
-char	*ft_strdup(const char *s1)
+char	*rewrite_token(char *str, t_env *lst, t_info *info)
 {
-	int		i;
-	char	*copy;
-
-	if (!s1)
-		return (0);
-	i = 0;
-	copy = malloc(sizeof(char) *(ft_strlen(s1) + 1));
-	if (!copy)
-		error_exit(ER_MALLOC);
-	while (s1[i])
-	{
-		copy[i] = s1[i];
-		i++;
-	}
-	copy[i] = '\0';
-	return (copy);
+	if (lst->next == NULL && find_dollar(str) != -1
+		&& str[find_dollar(str) + 1] != '?')
+		str = empty_envp(str, " ", empty_envp_key(str));
+	else if (lst->next == NULL && find_dollar(str) != -1
+		&& str[find_dollar(str) + 1] == '?')
+		str = empty_envp(str, ft_itoa(info->status), empty_envp_key(str));
+	else
+		str = ft_strdup(str);
+	return (str);
 }

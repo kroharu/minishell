@@ -1,12 +1,13 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   utils.c                                            :+:      :+:    :+:   */
+/*   parser_utils.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cgoth <marvin@42.fr>                       +#+  +:+       +#+        */
+/*   By: ladrian <ladrian@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/07/04 17:33:40 by cgoth             #+#    #+#             */
-/*   Updated: 2022/07/04 17:45:16 by cgoth            ###   ########.fr       */
+/*   Created: 2022/06/30 16:44:07 by ladrian           #+#    #+#             */
+/*   Updated: 2022/07/04 17:58:32 by ladrian          ###   ########.fr       */
+/*                                                                            */
 /*—————————————————————————————————No norme?——————————————————————————————————*/
 /*                      ⠀⣞⢽⢪⢣⢣⢣⢫⡺⡵⣝⡮⣗⢷⢽⢽⢽⣮⡷⡽⣜⣜⢮⢺⣜⢷⢽⢝⡽⣝                    */
 /*                      ⠸⡸⠜⠕⠕⠁⢁⢇⢏⢽⢺⣪⡳⡝⣎⣏⢯⢞⡿⣟⣷⣳⢯⡷⣽⢽⢯⣳⣫⠇                    */
@@ -25,103 +26,49 @@
 
 #include "minishell.h"
 
-int	ft_strlen(const char *str)
+int	ft_isdigit(int c)
 {
-	int	len;
-
-	len = 0;
-	while (str && str[len])
-		len++;
-	return (len);
-}
-
-int	ft_strcmp(char *str1, char *str2, char ch)
-{
-	size_t	i;
-
-	if (!str1 && str2)
-		return (*str2);
-	else if (!str2 && str1)
-		return (*str1);
-	else if (str1 && str2)
-	{
-		i = 0;
-		while ((str1[i] || str2[i]) && str1[i] != ch && str2[i] != ch)
-		{
-			if (str1[i] != str2[i])
-				return (str1[i] - str2[i]);
-			i++;
-		}
-	}
-	return (0);
-}
-
-char	*ft_strnstr(char *haystack, char *needle, size_t len)
-{
-	size_t	i;
-	size_t	j;
-
-	i = 0;
-	if (!*needle)
-		return ((char *)haystack);
-	while (haystack && haystack[i] && i < len)
-	{
-		if (haystack[i] == needle[0])
-		{
-			j = 0;
-			while (needle[j] && haystack[i + j] == needle[j] && (i + j) < len)
-				j++;
-			if (!needle[j])
-				return ((char *)haystack + i);
-		}
-		i++;
-	}
-	return (NULL);
-}
-
-char	*ft_strjoin(char *s1, char *s2, int free_mode)
-{
-	int		i;
-	int		j;
-	char	*str;
-
-	i = 0;
-	j = 0;
-	str = malloc(sizeof(char) * (ft_strlen(s1) + ft_strlen(s2) + 1));
-	if (!str)
-		error_exit(ER_MALLOC);
-	while (s1 && s1[i])
-	{
-		str[i] = s1[i];
-		i++;
-	}
-	while (s2 && s2[j])
-	{
-		str[i + j] = s2[j];
-		j++;
-	}
-	str[i + j] = '\0';
-	if (free_mode)
-		free(s1);
-	return (str);
-}
-
-char	*ft_strdup(const char *s1)
-{
-	int		i;
-	char	*copy;
-
-	if (!s1)
+	if ((c >= '0') && (c <= '9'))
+		return (1);
+	else
 		return (0);
+}
+
+int	ft_isalpha(int c)
+{
+	if (((c >= 'A') && (c <= 'Z')) || ((c >= 'a') && (c <= 'z')))
+		return (1);
+	else
+		return (0);
+}
+
+void	ft_putendl_fd(char *s, int fd)
+{
+	ft_putstr_fd(s, fd);
+	write(fd, "\n", sizeof(char));
+}
+
+size_t	ft_strlcpy(char *dst, const char *src, size_t dstsize)
+{
+	size_t	i;
+
+	if (!(dst || src))
+		return (0);
+	if (dstsize == 0)
+		return (ft_strlen(src));
 	i = 0;
-	copy = malloc(sizeof(char) *(ft_strlen(s1) + 1));
-	if (!copy)
-		error_exit(ER_MALLOC);
-	while (s1[i])
+	while (*(src + i) && i < (dstsize - 1))
 	{
-		copy[i] = s1[i];
+		*(dst + i) = *(src + i);
 		i++;
 	}
-	copy[i] = '\0';
-	return (copy);
+	*(dst + i) = '\0';
+	return (ft_strlen(src));
+}
+
+void	ft_putstr_fd(char *s, int fd)
+{
+	if (!s)
+		return ;
+	write(fd, s, ft_strlen(s));
 }

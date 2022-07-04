@@ -1,12 +1,13 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   utils.c                                            :+:      :+:    :+:   */
+/*   special_split.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cgoth <marvin@42.fr>                       +#+  +:+       +#+        */
+/*   By: ladrian <ladrian@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/07/04 17:33:40 by cgoth             #+#    #+#             */
-/*   Updated: 2022/07/04 17:45:16 by cgoth            ###   ########.fr       */
+/*   Created: 2022/06/16 16:39:17 by ladrian           #+#    #+#             */
+/*   Updated: 2022/07/04 17:58:33 by ladrian          ###   ########.fr       */
+/*                                                                            */
 /*—————————————————————————————————No norme?——————————————————————————————————*/
 /*                      ⠀⣞⢽⢪⢣⢣⢣⢫⡺⡵⣝⡮⣗⢷⢽⢽⢽⣮⡷⡽⣜⣜⢮⢺⣜⢷⢽⢝⡽⣝                    */
 /*                      ⠸⡸⠜⠕⠕⠁⢁⢇⢏⢽⢺⣪⡳⡝⣎⣏⢯⢞⡿⣟⣷⣳⢯⡷⣽⢽⢯⣳⣫⠇                    */
@@ -25,103 +26,92 @@
 
 #include "minishell.h"
 
-int	ft_strlen(const char *str)
+t_list	*get_words(char *line, char separator)
 {
-	int	len;
+	t_list	*words;
+	char	*start;
 
-	len = 0;
-	while (str && str[len])
-		len++;
-	return (len);
-}
-
-int	ft_strcmp(char *str1, char *str2, char ch)
-{
-	size_t	i;
-
-	if (!str1 && str2)
-		return (*str2);
-	else if (!str2 && str1)
-		return (*str1);
-	else if (str1 && str2)
+	words = NULL;
+	start = line;
+	while (1)
 	{
-		i = 0;
-		while ((str1[i] || str2[i]) && str1[i] != ch && str2[i] != ch)
-		{
-			if (str1[i] != str2[i])
-				return (str1[i] - str2[i]);
-			i++;
-		}
+		line = special_strchr(line, separator, NULL);
+		if (start != line)
+			push_word(&words, start, line);
+		if (!*line)
+			break ;
+		start = ++line;
 	}
-	return (0);
+	return (words);
 }
 
-char	*ft_strnstr(char *haystack, char *needle, size_t len)
+char	*special_strchr(char *line, char c, int *quote_flags)
 {
-	size_t	i;
-	size_t	j;
+	int	flags;
 
-	i = 0;
-	if (!*needle)
-		return ((char *)haystack);
-	while (haystack && haystack[i] && i < len)
+	if (quote_flags)
+		flags = *quote_flags;
+	else
+		flags = 0;
+	while (*line)
 	{
-		if (haystack[i] == needle[0])
+		if (*line == '\'' && !(flags & 0x02))
+			flags ^= 0x01;
+		else if (*line == '\"' && !(flags & 0x01))
+			flags ^= 0x02;
+		else if (*line == c && !flags)
 		{
-			j = 0;
-			while (needle[j] && haystack[i + j] == needle[j] && (i + j) < len)
-				j++;
-			if (!needle[j])
-				return ((char *)haystack + i);
+			if (quote_flags)
+				*quote_flags = flags;
+			return (line);
 		}
-		i++;
+		line++;
 	}
-	return (NULL);
+	if (quote_flags)
+		*quote_flags = flags;
+	return (line);
 }
 
-char	*ft_strjoin(char *s1, char *s2, int free_mode)
+void	push_word(t_list **words, char *start, char *end)
 {
-	int		i;
-	int		j;
+	t_list	*new_word;
+	int		word_len;
 	char	*str;
 
-	i = 0;
-	j = 0;
-	str = malloc(sizeof(char) * (ft_strlen(s1) + ft_strlen(s2) + 1));
-	if (!str)
-		error_exit(ER_MALLOC);
-	while (s1 && s1[i])
-	{
-		str[i] = s1[i];
-		i++;
-	}
-	while (s2 && s2[j])
-	{
-		str[i + j] = s2[j];
-		j++;
-	}
-	str[i + j] = '\0';
-	if (free_mode)
-		free(s1);
-	return (str);
+	word_len = end - start + 1;
+	str = safe_malloc((word_len + 1) * sizeof(char));
+	new_word = ft_mylstnew(str);
+	if (!new_word)
+		fatal_error();
+	ft_strlcpy(str, start, word_len);
+	ft_mylstadd_back(words, new_word);
 }
 
-char	*ft_strdup(const char *s1)
+void	none(void *ptr)
 {
-	int		i;
-	char	*copy;
+	ptr = NULL;
+	return ;
+}
 
-	if (!s1)
-		return (0);
+void	**list_to_array(t_list *list, int *arr_size)
+{
+	t_list	*tmp;
+	void	**arr;
+	int		size;
+	int		i;
+
+	size = ft_lstsize(list);
+	arr = safe_malloc((size + 1) * sizeof(void *));
+	tmp = list;
 	i = 0;
-	copy = malloc(sizeof(char) *(ft_strlen(s1) + 1));
-	if (!copy)
-		error_exit(ER_MALLOC);
-	while (s1[i])
+	while (tmp)
 	{
-		copy[i] = s1[i];
+		arr[i] = tmp->content;
+		tmp = tmp->next;
 		i++;
 	}
-	copy[i] = '\0';
-	return (copy);
+	arr[size] = NULL;
+	if (arr_size)
+		*arr_size = size;
+	return (arr);
 }

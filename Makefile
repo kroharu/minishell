@@ -19,13 +19,14 @@ FILES = main.c	init.c	executor.c\
 		env_vars_utils.c	dup_utils.c\
 		redir.c\
 		find_cmd.c	free_utils.c	signals.c\
-		parser_1.c	parser_2.c	parser_3.c\
-		parser_4.c	parser_5.c	parser_6.c\
-		parser_7.c	parser_8.c	parser_9.c\
+		envp_handler.c	envp_utils.c	envp_utils_2.c\
+		error_handler.c	lst_parser_utils.c	parse_input.c\
+		parser_utils.c	pipe_handler.c	special_split.c\
 		multiple_pipe.c	exec_cmd.c solocmd.c\
 
 VPATH = srcs/\
 		srcs/builtins\
+		srcs/parser\
 
 HEADERS = includes/minishell.h\
 

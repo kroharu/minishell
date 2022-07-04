@@ -1,12 +1,13 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   utils.c                                            :+:      :+:    :+:   */
+/*   error_handler.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cgoth <marvin@42.fr>                       +#+  +:+       +#+        */
+/*   By: ladrian <ladrian@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/07/04 17:33:40 by cgoth             #+#    #+#             */
-/*   Updated: 2022/07/04 17:45:16 by cgoth            ###   ########.fr       */
+/*   Created: 2022/06/18 17:29:21 by ladrian           #+#    #+#             */
+/*   Updated: 2022/07/04 17:58:29 by ladrian          ###   ########.fr       */
+/*                                                                            */
 /*—————————————————————————————————No norme?——————————————————————————————————*/
 /*                      ⠀⣞⢽⢪⢣⢣⢣⢫⡺⡵⣝⡮⣗⢷⢽⢽⢽⣮⡷⡽⣜⣜⢮⢺⣜⢷⢽⢝⡽⣝                    */
 /*                      ⠸⡸⠜⠕⠕⠁⢁⢇⢏⢽⢺⣪⡳⡝⣎⣏⢯⢞⡿⣟⣷⣳⢯⡷⣽⢽⢯⣳⣫⠇                    */
@@ -25,103 +26,68 @@
 
 #include "minishell.h"
 
-int	ft_strlen(const char *str)
+int	error_handler(char **input, int num)
 {
-	int	len;
-
-	len = 0;
-	while (str && str[len])
-		len++;
-	return (len);
+	if ((!input && !*input) || num == 0)
+		return (0);
+	if (pipe_checker(input, num))
+		return (PIPE_ERR);
+	if (quote_checker(input))
+		return (QUOTE_ERR);
+	if (redir_checker(input))
+		return (REDIR_ERR);
+	return (0);
 }
 
-int	ft_strcmp(char *str1, char *str2, char ch)
+int	redir_checker(char **input)
 {
-	size_t	i;
+	int	i;
 
-	if (!str1 && str2)
-		return (*str2);
-	else if (!str2 && str1)
-		return (*str1);
-	else if (str1 && str2)
+	i = -1;
+	while (input[++i])
+		if ((ft_strcmp(input[i], "<", -1) == 0 || \
+				ft_strcmp(input[i], ">", -1) == 0 || \
+				ft_strcmp(input[i], "<<", -1) == 0 || \
+				ft_strcmp(input[i], ">>", -1) == 0) && \
+				(!input[i + 1] || ft_strcmp(input[i + 1], "|", -1) == 0))
+			return (1);
+	return (0);
+}
+
+int	quote_checker(char **input)
+{
+	int	flag_1;
+	int	flag_2;
+	int	i;
+	int	j;
+
+	i = -1;
+	flag_1 = 1;
+	flag_2 = 1;
+	while (input[++i])
 	{
-		i = 0;
-		while ((str1[i] || str2[i]) && str1[i] != ch && str2[i] != ch)
+		j = -1;
+		while (input[i][++j])
 		{
-			if (str1[i] != str2[i])
-				return (str1[i] - str2[i]);
-			i++;
+			if (input[i][j] == '\"')
+				flag_2 *= -1;
+			if (input[i][j] == '\'')
+				flag_1 *= -1;
 		}
+		if (flag_1 != 1 || flag_2 != 1)
+			return (1);
 	}
 	return (0);
 }
 
-char	*ft_strnstr(char *haystack, char *needle, size_t len)
+void	parse_error(int err_code)
 {
-	size_t	i;
-	size_t	j;
-
-	i = 0;
-	if (!*needle)
-		return ((char *)haystack);
-	while (haystack && haystack[i] && i < len)
-	{
-		if (haystack[i] == needle[0])
-		{
-			j = 0;
-			while (needle[j] && haystack[i + j] == needle[j] && (i + j) < len)
-				j++;
-			if (!needle[j])
-				return ((char *)haystack + i);
-		}
-		i++;
-	}
-	return (NULL);
+	if (err_code < 0)
+		error(err_code, 0, 0, "syntax error\n");
 }
 
-char	*ft_strjoin(char *s1, char *s2, int free_mode)
+void	fatal_error(void)
 {
-	int		i;
-	int		j;
-	char	*str;
-
-	i = 0;
-	j = 0;
-	str = malloc(sizeof(char) * (ft_strlen(s1) + ft_strlen(s2) + 1));
-	if (!str)
-		error_exit(ER_MALLOC);
-	while (s1 && s1[i])
-	{
-		str[i] = s1[i];
-		i++;
-	}
-	while (s2 && s2[j])
-	{
-		str[i + j] = s2[j];
-		j++;
-	}
-	str[i + j] = '\0';
-	if (free_mode)
-		free(s1);
-	return (str);
-}
-
-char	*ft_strdup(const char *s1)
-{
-	int		i;
-	char	*copy;
-
-	if (!s1)
-		return (0);
-	i = 0;
-	copy = malloc(sizeof(char) *(ft_strlen(s1) + 1));
-	if (!copy)
-		error_exit(ER_MALLOC);
-	while (s1[i])
-	{
-		copy[i] = s1[i];
-		i++;
-	}
-	copy[i] = '\0';
-	return (copy);
+	perror("fatal error: ");
+	exit(EXIT_FAILURE);
 }

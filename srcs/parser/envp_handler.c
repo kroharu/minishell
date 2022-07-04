@@ -1,12 +1,13 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   utils.c                                            :+:      :+:    :+:   */
+/*   envp_handler.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cgoth <marvin@42.fr>                       +#+  +:+       +#+        */
+/*   By: ladrian <ladrian@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/07/04 17:33:40 by cgoth             #+#    #+#             */
-/*   Updated: 2022/07/04 17:45:16 by cgoth            ###   ########.fr       */
+/*   Created: 2022/06/16 16:41:13 by ladrian           #+#    #+#             */
+/*   Updated: 2022/07/04 17:58:25 by ladrian          ###   ########.fr       */
+/*                                                                            */
 /*—————————————————————————————————No norme?——————————————————————————————————*/
 /*                      ⠀⣞⢽⢪⢣⢣⢣⢫⡺⡵⣝⡮⣗⢷⢽⢽⢽⣮⡷⡽⣜⣜⢮⢺⣜⢷⢽⢝⡽⣝                    */
 /*                      ⠸⡸⠜⠕⠕⠁⢁⢇⢏⢽⢺⣪⡳⡝⣎⣏⢯⢞⡿⣟⣷⣳⢯⡷⣽⢽⢯⣳⣫⠇                    */
@@ -25,103 +26,128 @@
 
 #include "minishell.h"
 
-int	ft_strlen(const char *str)
-{
-	int	len;
-
-	len = 0;
-	while (str && str[len])
-		len++;
-	return (len);
-}
-
-int	ft_strcmp(char *str1, char *str2, char ch)
-{
-	size_t	i;
-
-	if (!str1 && str2)
-		return (*str2);
-	else if (!str2 && str1)
-		return (*str1);
-	else if (str1 && str2)
-	{
-		i = 0;
-		while ((str1[i] || str2[i]) && str1[i] != ch && str2[i] != ch)
-		{
-			if (str1[i] != str2[i])
-				return (str1[i] - str2[i]);
-			i++;
-		}
-	}
-	return (0);
-}
-
-char	*ft_strnstr(char *haystack, char *needle, size_t len)
-{
-	size_t	i;
-	size_t	j;
-
-	i = 0;
-	if (!*needle)
-		return ((char *)haystack);
-	while (haystack && haystack[i] && i < len)
-	{
-		if (haystack[i] == needle[0])
-		{
-			j = 0;
-			while (needle[j] && haystack[i + j] == needle[j] && (i + j) < len)
-				j++;
-			if (!needle[j])
-				return ((char *)haystack + i);
-		}
-		i++;
-	}
-	return (NULL);
-}
-
-char	*ft_strjoin(char *s1, char *s2, int free_mode)
+char	*envp_with_symbols(char *str, char *value, char *key)
 {
 	int		i;
 	int		j;
-	char	*str;
-
-	i = 0;
-	j = 0;
-	str = malloc(sizeof(char) * (ft_strlen(s1) + ft_strlen(s2) + 1));
-	if (!str)
-		error_exit(ER_MALLOC);
-	while (s1 && s1[i])
-	{
-		str[i] = s1[i];
-		i++;
-	}
-	while (s2 && s2[j])
-	{
-		str[i + j] = s2[j];
-		j++;
-	}
-	str[i + j] = '\0';
-	if (free_mode)
-		free(s1);
-	return (str);
-}
-
-char	*ft_strdup(const char *s1)
-{
-	int		i;
+	int		k;
 	char	*copy;
 
-	if (!s1)
-		return (0);
-	i = 0;
-	copy = malloc(sizeof(char) *(ft_strlen(s1) + 1));
+	i = find_dollar(str);
+	copy = malloc(sizeof(char) * (ft_strlen(value)
+				+ ft_strlen(str) - cmp_key(str, key) + 2));
 	if (!copy)
-		error_exit(ER_MALLOC);
-	while (s1[i])
+		return (NULL);
+	j = -1;
+	while (++j < i)
+		copy[j] = str[j];
+	k = -1;
+	while (value[++k])
+		copy[i++] = value[k];
+	while (str[j + cmp_key(str, key)])
 	{
-		copy[i] = s1[i];
-		i++;
+		copy[i++] = str[j + cmp_key(str, key) + 1];
+		j++;
 	}
 	copy[i] = '\0';
+	return (copy);
+}
+
+void	find_envp(t_parser *parser, int envp, t_info *info)
+{
+	int		i;
+	char	*tmp;
+	char	**arr;
+	t_env	*lst;
+
+	lst = info->env_list;
+	arr = parser->input;
+	i = -1;
+	while (arr[++i])
+	{
+		if (i == envp)
+			arr[i] = loop(arr[i], lst, info);
+		else
+		{
+			tmp = arr[i];
+			arr[i] = ft_strdup(arr[i]);
+			free(tmp);
+		}
+	}
+}
+
+void	pre_find_envp(t_parser *parser, t_info *info)
+{
+	int	i;
+	int	j;
+	int	flag_1;
+	int	flag_2;
+
+	i = -1;
+	flag_1 = 1;
+	flag_2 = 1;
+	while (parser->input[++i])
+	{
+		j = -1;
+		while (parser->input[i][++j])
+		{
+			if (parser->input[i][j] == '\'')
+				flag_1 *= -1;
+			if (parser->input[i][j] == '\"' && flag_1 == 1)
+				flag_2 *= -1;
+			if (parser->input[i][j] == '$' && parser->input[i][j + 1]
+					&& (flag_2 == -1 || flag_1 == 1))
+				find_envp(parser, i, info);
+		}
+	}
+}
+
+char	*empty_envp(char *str, char *value, char *key)
+{
+	int		i;
+	int		j;
+	int		k;
+	char	*copy;
+
+	i = find_dollar(str);
+	copy = malloc(sizeof(char) * (ft_strlen(value)
+				+ ft_strlen(str) - cmp_key(str, key) + 2));
+	if (!copy)
+		return (NULL);
+	j = -1;
+	while (++j < i)
+		copy[j] = str[j];
+	k = -1;
+	while (value[++k])
+		copy[i++] = value[k];
+	while (str[j + cmp_key(str, key)])
+	{
+		copy[i++] = str[j + cmp_key(str, key) + 1];
+		j++;
+	}
+	free(key);
+	copy[i] = '\0';
+	return (copy);
+}
+
+char	*empty_envp_key(char *str)
+{
+	int		i;
+	int		j;
+	int		k;
+	char	*copy;
+
+	i = find_dollar(str);
+	j = i;
+	k = -1;
+	while (str[++i])
+		if (str[i] == ' ' || str[i] == '\'' || str[i] == '\"')
+			break ;
+	copy = malloc(sizeof(char) * (i - j + 1));
+	if (!copy)
+		return (NULL);
+	while (j < i - 1)
+		copy[++k] = str[++j];
+	copy[++k] = '\0';
 	return (copy);
 }

@@ -1,12 +1,13 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   utils.c                                            :+:      :+:    :+:   */
+/*   pipe_handler.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cgoth <marvin@42.fr>                       +#+  +:+       +#+        */
+/*   By: ladrian <ladrian@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/07/04 17:33:40 by cgoth             #+#    #+#             */
-/*   Updated: 2022/07/04 17:45:16 by cgoth            ###   ########.fr       */
+/*   Created: 2022/06/18 17:32:24 by ladrian           #+#    #+#             */
+/*   Updated: 2022/07/04 17:58:32 by ladrian          ###   ########.fr       */
+/*                                                                            */
 /*—————————————————————————————————No norme?——————————————————————————————————*/
 /*                      ⠀⣞⢽⢪⢣⢣⢣⢫⡺⡵⣝⡮⣗⢷⢽⢽⢽⣮⡷⡽⣜⣜⢮⢺⣜⢷⢽⢝⡽⣝                    */
 /*                      ⠸⡸⠜⠕⠕⠁⢁⢇⢏⢽⢺⣪⡳⡝⣎⣏⢯⢞⡿⣟⣷⣳⢯⡷⣽⢽⢯⣳⣫⠇                    */
@@ -25,103 +26,94 @@
 
 #include "minishell.h"
 
-int	ft_strlen(const char *str)
+int	find_reverse_pipe(char *token)
 {
-	int	len;
+	int	i;
 
-	len = 0;
-	while (str && str[len])
-		len++;
-	return (len);
-}
-
-int	ft_strcmp(char *str1, char *str2, char ch)
-{
-	size_t	i;
-
-	if (!str1 && str2)
-		return (*str2);
-	else if (!str2 && str1)
-		return (*str1);
-	else if (str1 && str2)
+	i = -1;
+	while (token[++i])
+		;
+	while (--i > -1)
 	{
-		i = 0;
-		while ((str1[i] || str2[i]) && str1[i] != ch && str2[i] != ch)
-		{
-			if (str1[i] != str2[i])
-				return (str1[i] - str2[i]);
-			i++;
-		}
+		if (ft_isalpha(token[i]) || ft_isdigit(token[i]))
+			break ;
+		else if (token[i] == '|')
+			return (1);
 	}
 	return (0);
 }
 
-char	*ft_strnstr(char *haystack, char *needle, size_t len)
+int	pipe_count(char *input, int *i)
 {
-	size_t	i;
-	size_t	j;
+	int	pipe_num;
+	int	a;
 
-	i = 0;
-	if (!*needle)
-		return ((char *)haystack);
-	while (haystack && haystack[i] && i < len)
-	{
-		if (haystack[i] == needle[0])
-		{
-			j = 0;
-			while (needle[j] && haystack[i + j] == needle[j] && (i + j) < len)
-				j++;
-			if (!needle[j])
-				return ((char *)haystack + i);
-		}
-		i++;
-	}
-	return (NULL);
+	a = -1;
+	pipe_num = 0;
+	while (input[++a])
+		if (input[a] == '|')
+			pipe_num++;
+	*i = a;
+	return (pipe_num);
 }
 
-char	*ft_strjoin(char *s1, char *s2, int free_mode)
+int	pipe_checker(char **input, int num)
+{
+	int	i;
+	int	j;
+
+	i = -1;
+	if (find_pipe(input[0]) || find_reverse_pipe(input[num - 1]))
+		return (1);
+	while (++i < num - 1)
+	{
+		j = -1;
+		if (find_reverse_pipe(input[i]) && find_pipe(input[i + 1]))
+			return (1);
+		while (input[i][++j + 1])
+			if (input[i][j] == '|' && input[i][j + 1] == '|')
+				return (1);
+	}
+	return (0);
+}
+
+int	find_pipe(char *token)
+{
+	int	i;
+
+	i = -1;
+	while (token && token[++i])
+	{
+		if (ft_isalpha(token[i]) || ft_isdigit(token[i]))
+			break ;
+		else if (token[i] == '|')
+			return (1);
+	}
+	return (0);
+}
+
+char	*split_pipes(char *input)
 {
 	int		i;
+	int		pipe_num;
 	int		j;
-	char	*str;
+	char	*pre_input;
 
-	i = 0;
-	j = 0;
-	str = malloc(sizeof(char) * (ft_strlen(s1) + ft_strlen(s2) + 1));
-	if (!str)
-		error_exit(ER_MALLOC);
-	while (s1 && s1[i])
+	pipe_num = pipe_count(input, &i);
+	pre_input = malloc(sizeof(char) * (i + pipe_num * 2 + 1));
+	i = -1;
+	j = -1;
+	while (input[++i])
 	{
-		str[i] = s1[i];
-		i++;
+		if (input[i] == '|')
+		{
+			pre_input[++j] = ' ';
+			pre_input[++j] = '|';
+			pre_input[++j] = ' ';
+		}
+		else
+			pre_input[++j] = input[i];
 	}
-	while (s2 && s2[j])
-	{
-		str[i + j] = s2[j];
-		j++;
-	}
-	str[i + j] = '\0';
-	if (free_mode)
-		free(s1);
-	return (str);
-}
-
-char	*ft_strdup(const char *s1)
-{
-	int		i;
-	char	*copy;
-
-	if (!s1)
-		return (0);
-	i = 0;
-	copy = malloc(sizeof(char) *(ft_strlen(s1) + 1));
-	if (!copy)
-		error_exit(ER_MALLOC);
-	while (s1[i])
-	{
-		copy[i] = s1[i];
-		i++;
-	}
-	copy[i] = '\0';
-	return (copy);
+	pre_input[++j] = '\0';
+	return (pre_input);
 }

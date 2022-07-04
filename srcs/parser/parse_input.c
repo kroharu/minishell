@@ -1,12 +1,13 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   utils.c                                            :+:      :+:    :+:   */
+/*   parse_input.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cgoth <marvin@42.fr>                       +#+  +:+       +#+        */
+/*   By: ladrian <ladrian@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/07/04 17:33:40 by cgoth             #+#    #+#             */
-/*   Updated: 2022/07/04 17:45:16 by cgoth            ###   ########.fr       */
+/*   Created: 2022/06/16 16:33:59 by ladrian           #+#    #+#             */
+/*   Updated: 2022/07/04 17:58:31 by ladrian          ###   ########.fr       */
+/*                                                                            */
 /*—————————————————————————————————No norme?——————————————————————————————————*/
 /*                      ⠀⣞⢽⢪⢣⢣⢣⢫⡺⡵⣝⡮⣗⢷⢽⢽⢽⣮⡷⡽⣜⣜⢮⢺⣜⢷⢽⢝⡽⣝                    */
 /*                      ⠸⡸⠜⠕⠕⠁⢁⢇⢏⢽⢺⣪⡳⡝⣎⣏⢯⢞⡿⣟⣷⣳⢯⡷⣽⢽⢯⣳⣫⠇                    */
@@ -25,103 +26,62 @@
 
 #include "minishell.h"
 
-int	ft_strlen(const char *str)
+char	**parse_input(char *input, t_info *info)
 {
-	int	len;
+	t_parser	parser;
+	char		*pre_input;
+	int			i;
 
-	len = 0;
-	while (str && str[len])
-		len++;
-	return (len);
+	pre_input = split_pipes(input);
+	parser.input = special_split(pre_input, ' ', &i);
+	free(pre_input);
+	if (parser.input)
+		parser.input[i] = NULL;
+	g_info->parse_status = error_handler(parser.input, i);
+	pre_find_envp(&parser, info);
+	parser.token = malloc(sizeof(char *) * (i + 1));
+	i = -1;
+	while (parser.input[++i])
+		ft_trim_qoutes(&parser, i);
+	parser.token[i] = NULL;
+	free_split(parser.input);
+	parser.input = NULL;
+	return (parser.token);
 }
 
-int	ft_strcmp(char *str1, char *str2, char ch)
+void	ft_trim_qoutes(t_parser *parser, int i)
 {
-	size_t	i;
+	int	j;
+	int	k;
+	int	flag;
 
-	if (!str1 && str2)
-		return (*str2);
-	else if (!str2 && str1)
-		return (*str1);
-	else if (str1 && str2)
+	flag = 1;
+	parser->token[i] = malloc(sizeof(char)
+			* (ft_strlen(parser->input[i]) + 1));
+	k = -1;
+	j = -1;
+	if (parser->input[i][0] == '\"' || parser->input[i][0] == '\'')
 	{
-		i = 0;
-		while ((str1[i] || str2[i]) && str1[i] != ch && str2[i] != ch)
-		{
-			if (str1[i] != str2[i])
-				return (str1[i] - str2[i]);
-			i++;
-		}
-	}
-	return (0);
-}
-
-char	*ft_strnstr(char *haystack, char *needle, size_t len)
-{
-	size_t	i;
-	size_t	j;
-
-	i = 0;
-	if (!*needle)
-		return ((char *)haystack);
-	while (haystack && haystack[i] && i < len)
-	{
-		if (haystack[i] == needle[0])
-		{
-			j = 0;
-			while (needle[j] && haystack[i + j] == needle[j] && (i + j) < len)
-				j++;
-			if (!needle[j])
-				return ((char *)haystack + i);
-		}
-		i++;
-	}
-	return (NULL);
-}
-
-char	*ft_strjoin(char *s1, char *s2, int free_mode)
-{
-	int		i;
-	int		j;
-	char	*str;
-
-	i = 0;
-	j = 0;
-	str = malloc(sizeof(char) * (ft_strlen(s1) + ft_strlen(s2) + 1));
-	if (!str)
-		error_exit(ER_MALLOC);
-	while (s1 && s1[i])
-	{
-		str[i] = s1[i];
-		i++;
-	}
-	while (s2 && s2[j])
-	{
-		str[i + j] = s2[j];
+		flag = -1;
 		j++;
 	}
-	str[i + j] = '\0';
-	if (free_mode)
-		free(s1);
-	return (str);
+	if (flag == 1)
+		while (parser->input[i][++j])
+			parser->token[i][++k] = parser->input[i][j];
+	else
+		while (parser->input[i][++j + 1])
+			parser->token[i][++k] = parser->input[i][j];
+	k++;
+	parser->token[i][k] = '\0';
 }
 
-char	*ft_strdup(const char *s1)
+char	**special_split(char *line, char separator, int *size)
 {
-	int		i;
-	char	*copy;
+	t_list	*words;
+	char	**arr;
 
-	if (!s1)
-		return (0);
-	i = 0;
-	copy = malloc(sizeof(char) *(ft_strlen(s1) + 1));
-	if (!copy)
-		error_exit(ER_MALLOC);
-	while (s1[i])
-	{
-		copy[i] = s1[i];
-		i++;
-	}
-	copy[i] = '\0';
-	return (copy);
+	words = get_words(line, separator);
+	arr = (char **)list_to_array(words, size);
+	ft_lstclear(&words, &none);
+	return (arr);
 }
